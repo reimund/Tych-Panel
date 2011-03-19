@@ -1,0 +1,25 @@
+Tych Panel 
+==========
+
+Version 0.9.0 - Sat 19 Mar 2011
+
+by Reimund Trost
+<http://code7.se/>
+
+
+Description
+-----------
+Tych Panel is an extension to Adobe Photoshop that automates diptychs and
+triptychs creation.
+
+Tych Panel is released as open source and can be used, modified and
+redistributed in any way possible.
+
+
+Installation
+------------
+
+1. Copy __scripts/Tych__ Panel to __<your photoshop directory>/Presets/Scripts__.
+2. Open __Tych Panel.gpc__ in Adobe Configurator and export it to __<your photoshop
+directory>/Plug-ins/Panels__.
+3. Enable the panel via __Window/Extensions/Tych Panel__ in Photoshop.

@@ -1,0 +1,127 @@
+body {
+	margin: 0;
+	background: #dedede;
+}
+
+div.actions span.button { margin: 0 0 3px 0; }
+div.actions div span.button a { text-align: center; }
+div.actions { margin-bottom: 10px; }
+span.button.options { float: left; }
+span.button.stack { float: right; }
+span.button.bring-it { float: right; clear: right; }
+
+span.button {
+	background: url(../img/button.png) right top no-repeat;
+	padding-right: 3px;
+	margin: 2px;
+	display: inline-block;
+	font-size: 10px;
+	color: #000;
+}
+
+span.button .first {
+	text-decoration: none;
+	display: inline-block;
+	background: url(../img/button.png) left top no-repeat;
+	height: 19px;
+	padding: 6px 10px 0 10px;
+}
+
+span.button a.icon {
+	display: inline-block;
+}
+
+span.button.l { background: url(../img/buttonl.png) right top no-repeat; }
+
+span.button.l .first {
+	background: url(../img/buttonl.png) left top no-repeat;
+	height: 38px;
+	padding: 0;
+}
+
+span.button.l a {
+	background-repeat: no-repeat;
+}
+
+span.button:hover, span.button:hover .first { background-image: url(../img/button-hover.png); }
+span.button:active, span.button:active .first { background-image: url(../img/button-down.png); }
+span.button.l:hover, span.button.l:hover .first { background-image: url(../img/buttonl-hover.png); }
+span.button.l:active, span.button.l:active .first { background-image: url(../img/buttonl-down.png); }
+	
+
+small {
+	clear: right;
+	text-align: center;
+	display: block;
+	margin: 20px 0 0 0;
+	font-size: 9px;
+	color: #555;
+}
+
+a { color: #555; }
+
+.clear {
+	height: 0;
+	clear: both;
+	font-size: 0;
+	line-height: 0;
+}
+
+span.button a.icon {
+	width: 25px;
+	height: 25px;
+	padding: 5px 6px 5px 6px;
+	background-position: 50% 50%;
+}
+
+span.button a.icon.d1 { background-image: url(../img/diptych1.png); }
+span.button a.icon.d2 { background-image: url(../img/diptych2.png); }
+span.button a.icon.d3 { background-image: url(../img/diptych3.png); }
+span.button a.icon.t1 { background-image: url(../img/triptych1.png); }
+span.button a.icon.t2 { background-image: url(../img/triptych2.png); }
+span.button a.icon.t3 { background-image: url(../img/triptych3.png); }
+span.button a.icon.q1 { background-image: url(../img/quaptych1.png); }
+span.button a.icon.q2 { background-image: url(../img/quaptych2.png); }
+span.button a.icon.q2 { background-position: 7px 50%; }
+
+span.button a.icon.t1,
+span.button a.icon.t2,
+span.button a.icon.t3 { background-position: 8px 6px; }
+span.button a.icon.q1 { background-position: 7px 6px; }
+
+div.slider-container {
+	margin: 5px 0 5px 0;
+	font-size: 9px;
+}
+
+label { margin: 0 5px 0 0; }
+span.padding { margin: 0 0 0 10px; }
+
+#slider {
+	display: inline-block;
+	width: 150px;
+}
+
+.ui-widget-content {
+	border: 1px solid #aaa;
+	background: #fff;
+	color: #222;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+	background: url(../img/slider-handle.png) 0 4px no-repeat;
+	padding-bottom: 4px;
+	font-weight: normal;
+	color: #555;
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+    }
+* html .clearfix             { zoom: 1; }
+*:first-child+html .clearfix { zoom: 1; }
