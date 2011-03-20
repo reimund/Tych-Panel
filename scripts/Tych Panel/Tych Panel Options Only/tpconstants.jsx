@@ -1,6 +1,7 @@
 ﻿// Set defaults.
 var defaults = {
-	'padding': 8,
+	'spacing': 8,
+	'keep_aspect': true,
 	'resize': false,
 	'resize_width': 800,
 	'resample_method': 'bicubic',

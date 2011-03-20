@@ -1,32 +1,30 @@
-﻿
-//@include Tych%20Panel%20Options%20Only/constants.jsx
-//@include Tych%20Panel%20Options%20Only/PSSettings.jsx
+﻿/*
+ * Name: Tych Panel Options
+ * Author: Reimund Trost (c) 2011
+ * Email: reimund@lumens.se
+ * Website: http://lumens.se/tychpanel/
+ *
+ * Description: Options dialog for the tych panel script.
+ */
 
-// Load current settings.
-var tpSettings = {};
-var settings = new Settings();
-settings.setUID("TychPanelSettingsUniqueId");
-settings.setMSG("TychPanelSettings");
-settings.setType(SettingsType.SINGLE);
-settings.loadSettings();
+
+//@include Tych%20Panel%20Options%20Only/tpconstants.jsx
+//@include Tych%20Panel%20Options%20Only/tpsettings.jsx
+//@include Tych%20Panel%20Options%20Only/PSSettings.jsx
 
 //settings.clearSettings();
 //settings.saveSettings();
 
 // Use stored settings if they exist, defaults otherwise.
-if (settings.numEntries() > 0)
-	tpSettings = settings.getEntryAt(0);
-else 
-	for (setting in defaults)
-		tpSettings[setting] = defaults[setting];
+var tpSettings = tpGetSettings();
 
 
 createDialog();
 
 function createDialog()
 {
-
 	var dlg = new Window('dialog', 'Tych Panel options');
+	var smallFont = ScriptUI.newFont(dlg.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
 
 	dlg.orientation = 'row';
 	dlg.alignChildren = 'top';
@@ -34,9 +32,13 @@ function createDialog()
 	dlg.mainGrp = dlg.add('group', undefined, 'Main');
 	dlg.mainGrp.orientation = 'column';
 	dlg.mainGrp.alignChildren = 'fill';
-
 	dlg.generalOptions = dlg.mainGrp.add('panel', undefined, 'General');
-	dlg.generalOptions.paddingGrp = dlg.generalOptions.add('group');
+	dlg.generalOptions.spacingGrp = dlg.generalOptions.add('group');
+	dlg.generalOptions.aspectGrp = dlg.generalOptions.add('group');
+	dlg.generalOptions.keepAspect = dlg.generalOptions.aspectGrp.add('checkbox', undefined, 'Keep aspect ratio on images');
+
+	dlg.generalOptions.aspectText = dlg.generalOptions.add('statictext', undefined, 'When this is unchecked, images will be cropped to match height instead.');
+	dlg.generalOptions.aspectText.graphics.font = smallFont;
 	dlg.generalOptions.resizeGrp = dlg.generalOptions.add('group');
 	dlg.generalOptions.resize = dlg.generalOptions.resizeGrp.add('checkbox', undefined, 'Resize generated images');
 	dlg.generalOptions.resizeWidth = dlg.generalOptions.add('group');
@@ -44,12 +46,14 @@ function createDialog()
 	with (dlg.generalOptions) {
 		alignChildren = "right";
 
-		resizeGrp.margins = [0, 15, 0, 0];
+		keepAspect.value = tpSettings.keep_aspect;
+
+		resizeGrp.margins = [0, 20, 0, 0];
 		resize.value = tpSettings.resize;
 
-		paddingGrp.label = paddingGrp.add('statictext', undefined, 'Image spacing');
-		paddingGrp.input = paddingGrp.add('edittext', undefined, tpSettings.padding);
-		paddingGrp.input.preferredSize = [40, 20];
+		spacingGrp.label = spacingGrp.add('statictext', undefined, 'Image spacing');
+		spacingGrp.input = spacingGrp.add('edittext', undefined, tpSettings.spacing);
+		spacingGrp.input.preferredSize = [40, 20];
 
 		resizeWidth.label = resizeWidth.add('statictext', undefined, 'Target width');
 		resizeWidth.input = resizeWidth.add('edittext', undefined, tpSettings.resize_width);
@@ -106,7 +110,8 @@ function createDialog()
 
 	dlg.okButton.onClick = function() {
 		// Get values from controls and put into the settings object.
-		tpSettings.padding = numOrDefault(dlg.generalOptions.paddingGrp.input.text, 'padding');
+		tpSettings.spacing = numOrDefault(dlg.generalOptions.spacingGrp.input.text, 'spacing');
+		tpSettings.keep_aspect = dlg.generalOptions.keepAspect.value;
 		tpSettings.resize_width = numOrDefault(dlg.generalOptions.resizeWidth.input.text, 'resize_width');
 		tpSettings.resize = dlg.generalOptions.resize.value;
 		tpSettings.autosave =dlg.output.autosave.value;
