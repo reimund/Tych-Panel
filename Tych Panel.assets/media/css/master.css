@@ -3,6 +3,7 @@ body {
 	background: #dedede;
 }
 
+body.windows { background: #d6d6d6; }
 div.actions span.button { margin: 0 0 3px 0; }
 div.actions div span.button a { text-align: center; }
 div.actions { margin-bottom: 10px; }
