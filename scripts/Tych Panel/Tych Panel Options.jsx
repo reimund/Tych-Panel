@@ -37,7 +37,7 @@ function createDialog()
 	dlg.generalOptions.aspectGrp = dlg.generalOptions.add('group');
 	dlg.generalOptions.keepAspect = dlg.generalOptions.aspectGrp.add('checkbox', undefined, 'Keep aspect ratio on images');
 
-	dlg.generalOptions.aspectText = dlg.generalOptions.add('statictext', undefined, 'When this is unchecked, images will be cropped to match height instead.');
+	dlg.generalOptions.aspectText = dlg.generalOptions.add('statictext', undefined, 'When this is unchecked, images will be cropped to match height.');
 	dlg.generalOptions.aspectText.graphics.font = smallFont;
 	dlg.generalOptions.resizeGrp = dlg.generalOptions.add('group');
 	dlg.generalOptions.resize = dlg.generalOptions.resizeGrp.add('checkbox', undefined, 'Resize generated images');

@@ -33,10 +33,9 @@
 
 
 var tpSettings = tpGetSettings();
-var WHITE = Array(255, 255, 255);
 
 
-//tpTych(6);
+//tpTych(4);
 //tpTych(Number(prompt("Tych variant?", 0, "Enter a number between 0 and 8")));
 //tpComposite();
 
@@ -75,6 +74,9 @@ function tpComposite()
 
 	// Revert settings.
 	preferences.rulerUnits = rulerUnits;
+	
+	// Hack to return keyboard focus from Flash to Photoshop.
+	Folder.appPackage.execute();
 }
 
 
@@ -203,6 +205,7 @@ function tpTych(tychVariant)
 		
 		if (required > 0) {
 			alert('This action requires ' + required + ' layers. Stack some more layers then try again.');
+			Folder.appPackage.execute();
 			return -1;
 		}	
 		
@@ -215,8 +218,11 @@ function tpTych(tychVariant)
 		if (tpSettings.autoclose)
 			doc.close(SaveOptions.DONOTSAVECHANGES);
 
+		Folder.appPackage.execute();
+
 	} else {
 		alert("You have to open a document to use this script.");
+		Folder.appPackage.execute();
 		return -1;
 	}
 }
@@ -245,7 +251,7 @@ function tpPrepareNTych(doc, spacing)
 	// Resize factor, Ie the factor used to to scale the image to fit the
 	// resize_width set in the user options.
 	var s = (tpSettings.resize_width - spacing * (doc.layers.length - 1) + 2 * doc.layers.length) / size[0];
-	var realSize = Array(s * size[0] + spacing * (doc.layers.length - 1) - 2 * doc.layers.length, s * size[1] - 2);
+	var realSize = Array(Math.round(s * size[0] + spacing * (doc.layers.length - 1) - 2 * doc.layers.length), Math.round(s * size[1] - 2));
 	var trans = tpGetTrans(doc.layers, spacing, s);
 
 	return { 'trans': trans, 'realSize': realSize};
@@ -434,7 +440,7 @@ function makeTych(tychVariant, doc)
 
 			var size = Array(tpSumWidthAtHeight(l, doc.layers.length, l[la].bounds[3].value), l[la].bounds[3].value);
 			var r = (tpSettings.resize_width - spacing * (doc.layers.length - 1) + 2 * doc.layers.length) / size[0];
-			var realSize = Array(r * size[0] + spacing * (doc.layers.length - 1) - 2 * doc.layers.length, r * size[1] - 2);
+			var realSize = Array(Math.round(r * size[0] + spacing * (doc.layers.length - 1) - 2 * doc.layers.length), Math.round(r * size[1] - 2));
 			var s = l[la].bounds[3].value / l[p].bounds[3].value;
 
 			trans = Array(
@@ -476,7 +482,7 @@ function makeTych(tychVariant, doc)
 				s1 * l[la[0]].bounds[3].value + s2 * l[la[1]].bounds[3].value)
 			);
 			var r = (tpSettings.resize_width - spacing + 4) / size[0];
-			var realSize = Array(r * size[0] + spacing - 4, r * size[1] - 2);
+			var realSize = Array(Math.round(r * size[0] + spacing - 4), Math.round(r * size[1] - 2));
 
 			trans[la[0]][0] = Array(r * s1 * 100, r * s1 * 100, AnchorPosition.TOPLEFT);
 			trans[la[0]][1][0] = tychVariant == TRIPTYCH_PORTRAIT_LANDSCAPE_GRID
@@ -489,7 +495,7 @@ function makeTych(tychVariant, doc)
 			trans[la[1]][1][1] = Math.round(realSize[1] / 2) + spacing / 2 - 1;
 
 			trans[p][0] = Array(r * 100, r * 100, AnchorPosition.TOPLEFT);
-			trans[p][1][0] = tychVariant == TRIPTYCH_PORTRAIT_LANDSCAPE_GRID ? -1 : r * l[p].bounds[2].value + spacing - 3;
+			trans[p][1][0] = tychVariant == TRIPTYCH_PORTRAIT_LANDSCAPE_GRID ? -1 : Math.round(r * l[p].bounds[2].value) + spacing - 3;
 			trans[p][1][1] = -Math.round((r * l[p].bounds[3].value - realSize[1]) / 2) - 1;
 			break;
 
@@ -501,7 +507,7 @@ function makeTych(tychVariant, doc)
 
 			var size = Array(col1_width + col2_width, row1_height + row2_height);
 			var r = (tpSettings.resize_width - spacing + 4) / size[0];
-			var realSize = Array(r * size[0] + spacing - 4, r * size[1] + spacing - 4);
+			var realSize = Array(Math.round(r * size[0] + spacing - 4), Math.round(r * size[1] + spacing - 4));
 
 			trans = Array(
 				Array(Array(r * 100, r * 100, AnchorPosition.TOPLEFT), Array(-1, -1)),
