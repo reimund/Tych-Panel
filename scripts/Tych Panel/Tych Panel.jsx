@@ -1,5 +1,5 @@
 ﻿/*
- * Name: Tych Panel 0.9.8
+ * Name: Tych Panel 0.9.81
  * Author: Reimund Trost (c) 2011
  * Email: reimund@lumens.se
  * Website: http://lumens.se/tychpanel/
@@ -34,7 +34,6 @@
 
 var tpSettings = tpGetSettings();
 var WHITE = Array(255, 255, 255);
-
 
 
 //tpTych(6);
@@ -113,16 +112,17 @@ function tpPlaceComp(src, target)
  */
 function tpStack(images)
 {
-	var doc = app.open(images[0]);
+	var last = images.length - 1;
+	var doc = app.open(images[last]);
 	doc.layers[0].isBackgroundLayer = false;
 
 	f = function() {
 		var d = doc;
 		var maxx = doc.width;
 		var maxy = doc.height;
-		for (i = 0; i < images.length; i++) {
+		for (i = last; i >= 0; i--) {
 
-			if (i > 0) {
+			if (i < last) {
 				d = app.open(images[i]);
 				d.selection.selectAll();
 
