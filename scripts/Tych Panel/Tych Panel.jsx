@@ -1,5 +1,5 @@
 ﻿/*
- * Name: Tych Panel 0.9.83
+ * Name: Tych Panel 0.9.84
  * Author: Reimund Trost (c) 2011
  * Email: reimund@lumens.se
  * Website: http://lumens.se/tychpanel/
@@ -22,7 +22,6 @@
 
 // XXX: Supress dialogs...
 // XXX: Add ability to sort images with previews before they get stacked.
-// XXX: Use own stack script instead of Adobes.
 // XXX: Keep aspect ratio option does not affect all tychs (currently only
 // n-tychs). Not really a problem since the icon buttons are a different use
 // case, however, it can be a bit non-obvious for some users.

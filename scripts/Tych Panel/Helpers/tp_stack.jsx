@@ -1,2 +1,3 @@
-var scriptFile = new File(app.path + '/Presets/Scripts/Load Files into Stack.jsx');
-$.evalFile(scriptFile, 30000);
+//@include ../Tych%20Panel.jsx
+var images = File.openDialog("Choose file(s) to stack", undefined, true);
+tpStack(images);

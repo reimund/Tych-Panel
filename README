@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 0.9.83 - Wed 30 Mar 2011
+Version 0.9.84 - Wed 30 Mar 2011
 
 by Reimund Trost
 <http://lumens.se/tychpanel/>
@@ -29,6 +29,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+0.9.84
+------
+* Use own stack script instead of Adobe's "Load Files into Stack" which acted a bit buggy when called from a html link.
 
 0.9.83
 ------
