@@ -1,10 +1,10 @@
 Tych Panel 
 ==========
 
-Version 0.9.82 - Mon 27 Mar 2011
+Version 0.9.83 - Wed 30 Mar 2011
 
 by Reimund Trost
-<http://lumens.se/>
+<http://lumens.se/tychpanel/>
 
 
 Description
@@ -25,3 +25,13 @@ Installation
 2. Open __Tych Panel.gpc__ in Adobe Configurator and export it to __<your photoshop
 directory>/Plug-ins/Panels__.
 3. Enable the panel via __Window/Extensions/Tych Panel__ in Photoshop.
+
+
+Changelog
+=========
+
+0.9.83
+------
+* Fixed 'Close on save' bug.
+* Changed to button layout to be centered and added a little top margin.
+

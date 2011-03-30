@@ -1,5 +1,5 @@
 ﻿/*
- * Name: Tych Panel 0.9.81
+ * Name: Tych Panel 0.9.83
  * Author: Reimund Trost (c) 2011
  * Email: reimund@lumens.se
  * Website: http://lumens.se/tychpanel/
@@ -20,6 +20,7 @@
 //@include Tych%20Panel%20Options%20Only/tpconstants.jsx
 //@include Tych%20Panel%20Options%20Only/tpsettings.jsx
 
+// XXX: Supress dialogs...
 // XXX: Add ability to sort images with previews before they get stacked.
 // XXX: Use own stack script instead of Adobes.
 // XXX: Keep aspect ratio option does not affect all tychs (currently only
@@ -52,13 +53,17 @@ function tpComposite()
 	var stackDoc = tpStack(images);
 	tpNTych(stackDoc);
 
-	if (tpSettings.autosave)
-		save(stackDoc);
-
 	// If there was no active document when we started we just have to fill the
 	// background and then we're done.
 	if (doc == null) {
 		tpAddBackground(stackDoc, WHITE);
+
+		if (tpSettings.autosave)
+			save(stackDoc);
+
+		if (tpSettings.autoclose)
+			stackDoc.close(SaveOptions.DONOTSAVECHANGES);
+
 		return;
 	}
 		
@@ -71,6 +76,9 @@ function tpComposite()
 	
 	if (tpSettings.autosave)
 		save(doc);
+	
+	if (tpSettings.autoclose)
+		doc.close(SaveOptions.DONOTSAVECHANGES);
 
 	// Revert settings.
 	preferences.rulerUnits = rulerUnits;

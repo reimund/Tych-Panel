@@ -1,15 +1,23 @@
 body {
-	margin: 0;
+	margin: 10px 0 0 0;
 	background: #dedede;
 }
 
 body.windows { background: #d6d6d6; }
+div.actions,
+div.buttons { 
+	text-align: center;
+}
+
+div.actions { margin: 2px 2px 3px 2px; }
+div.actions div { margin: 0 0 10px 0; }
 div.actions span.button { margin: 0 0 3px 0; }
 div.actions div span.button a { text-align: center; }
 div.actions { margin-bottom: 10px; }
-span.button.options { float: left; }
-span.button.stack { float: right; }
-span.button.bring-it { float: right; clear: right; }
+span.button.options { clear: both; }
+/*span.button.options { float: left; }*/
+/*span.button.stack { float: right; }*/
+/*span.button.bring-it { float: right; clear: right; }*/
 
 span.button {
 	background: url(../img/button.png) right top no-repeat;
