@@ -124,16 +124,10 @@ function createDialog()
 		settings.saveSettings();
 
 		dlg.close(1);
-
-		// Hack to return keyboard focus from Flash to Photoshop.
-		Folder.appPackage.execute();
 	};
 
 	dlg.cancelButton.onClick = function() {
 		dlg.close(2);
-
-		// Hack to return keyboard focus from Flash to Photoshop.
-		Folder.appPackage.execute();
 	}
 
 	dlg.generalOptions.resize.onClick = function() { dlg.generalOptions.resizeWidth.enabled = this.value; };

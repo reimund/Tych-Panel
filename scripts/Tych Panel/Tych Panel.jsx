@@ -81,9 +81,6 @@ function tpComposite()
 
 	// Revert settings.
 	preferences.rulerUnits = rulerUnits;
-	
-	// Hack to return keyboard focus from Flash to Photoshop.
-	Folder.appPackage.execute();
 }
 
 
@@ -212,9 +209,13 @@ function tpTych(tychVariant)
 		
 		if (required > 0) {
 			alert('This action requires ' + required + ' layers. Stack some more layers then try again.');
-			Folder.appPackage.execute();
 			return -1;
 		}	
+
+		// Save current unit preferences.
+		var rulerUnits = preferences.rulerUnits;
+		// Change unit preferences.
+		preferences.rulerUnits = Units.PIXELS;
 		
 		doc.suspendHistory(tpTychToHistoryName(tychVariant), 'makeTych(tychVariant, activeDocument)');
 		//makeTych(tychVariant, activeDocument);
@@ -225,11 +226,11 @@ function tpTych(tychVariant)
 		if (tpSettings.autoclose)
 			doc.close(SaveOptions.DONOTSAVECHANGES);
 
-		Folder.appPackage.execute();
-
+		// Revert settings.
+		preferences.rulerUnits = rulerUnits;
+	
 	} else {
 		alert("You have to open a document to use this script.");
-		Folder.appPackage.execute();
 		return -1;
 	}
 }

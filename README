@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 0.9.84 - Wed 30 Mar 2011
+Version 0.9.9 - Fri 1 Apr 2011
 
 by Reimund Trost
 <http://lumens.se/tychpanel/>
@@ -29,6 +29,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+0.9.9
+-----
+* Fixed unit bug where current unit in Photoshop was used rather than pixels, leading to images being resized using the wrong unit.
 
 0.9.84
 ------
