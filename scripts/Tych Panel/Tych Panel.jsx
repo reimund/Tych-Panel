@@ -93,6 +93,7 @@ function tpPlaceComp(src, target)
 	var targetHeight = target.height;
 
 	// Unlock the background (if locked) so we can put a background fill below.
+	activeDocument = target;
 	target.layers[target.layers.length - 1].isBackgroundLayer = false;
 
 	activeDocument = src;
