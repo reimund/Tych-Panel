@@ -29,8 +29,12 @@ directory>/Plug-ins/Panels__.
 Changelog
 =========
 
+0.9.92
+------
+* Fixed rounding error issue on some of the layouts (diptych 1 and 2 and quaptych grid) giving seams that were slightly off. 
+
 0.9.91
------
+------
 * Fixed compositing bug with already opened document.
 
 0.9.9

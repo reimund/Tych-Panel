@@ -1,5 +1,5 @@
 ﻿/*
- * Name: Tych Panel 0.9.84
+ * Name: Tych Panel 0.9.92
  * Author: Reimund Trost (c) 2011
  * Email: reimund@lumens.se
  * Website: http://lumens.se/tychpanel/
@@ -33,10 +33,9 @@
 
 
 var tpSettings = tpGetSettings();
-
-
-//tpTych(4);
-//tpTych(Number(prompt("Tych variant?", 0, "Enter a number between 0 and 8")));
+//var images = File.openDialog("Choose file(s) to stack", undefined, true);
+//tpStack(images);
+//tpTych(1);
 //tpComposite();
 
 function tpComposite()
@@ -218,8 +217,8 @@ function tpTych(tychVariant)
 		// Change unit preferences.
 		preferences.rulerUnits = Units.PIXELS;
 		
-		doc.suspendHistory(tpTychToHistoryName(tychVariant), 'makeTych(tychVariant, activeDocument)');
-		//makeTych(tychVariant, activeDocument);
+		//doc.suspendHistory(tpTychToHistoryName(tychVariant), 'makeTych(tychVariant, activeDocument)');
+		makeTych(tychVariant, activeDocument);
 
 		if (tpSettings.autosave)
 			save(doc);
@@ -310,7 +309,7 @@ function tpAddSeams(doc, trans, size, tychVariant)
 		doc.selection.clear();
 		doc.selection.deselect();
 	} else {
-		for (i = 1; i < doc.layers.length; i++) {
+		for (i = 0; i < doc.layers.length; i++) {
 			doc.selection.select(sel = Array(
 				Array(trans[i][1][0] - spacing + 1, 0),
 				Array(trans[i][1][0] - spacing + 1, size[1]),
@@ -458,9 +457,9 @@ function makeTych(tychVariant, doc)
 			);
 
 			trans[p][0] = Array(r * s * 100, r * s * 100, AnchorPosition.TOPLEFT);
-			trans[p][1] = Array(tychVariant == DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL ? Math.round(r * l[la].bounds[2].value) + spacing - 3 : 0, 0);
+			trans[p][1] = Array(tychVariant == DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL ? Math.round(r * l[la].bounds[2].value) + spacing - 3 : -1, 0);
 			trans[la][0] = Array(r * 100, r * 100, AnchorPosition.TOPLEFT);
-			trans[la][1] = Array(tychVariant == DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL ? 0 : Math.round(r * s * l[p].bounds[2].value) + spacing - 3, 0);
+			trans[la][1] = Array(tychVariant == DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL ? -1 : Math.round(r * s * l[p].bounds[2].value) + spacing - 3, 0);
 			break;
 
 		case TRIPTYCH_PORTRAIT_LANDSCAPE_GRID:
@@ -522,7 +521,7 @@ function makeTych(tychVariant, doc)
 				Array(Array(r * 100, r * 100, AnchorPosition.TOPLEFT), Array(-1, -1)),
 				Array(Array(r * 100, r * 100, AnchorPosition.TOPLEFT), Array(Math.round(r * col1_width) + spacing - 3, -1)),
 				Array(Array(r * 100, r * 100, AnchorPosition.TOPLEFT), Array(-1, Math.round(r * row1_height) + spacing - 3)),
-				Array(Array(r * 100, r * 100, AnchorPosition.TOPLEFT), Array(r * Math.round(col1_width) + spacing - 3, r * Math.round(row1_height) + spacing - 3))
+				Array(Array(r * 100, r * 100, AnchorPosition.TOPLEFT), Array(Math.round(r * col1_width) + spacing - 3, Math.round(r * row1_height) + spacing - 3))
 			);
 			break;
 
