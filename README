@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 0.9.92 - Sun 3 Apr 2011
+Version 0.9.93 - Tue 5 Apr 2011
 
 by Reimund Trost <reimund@code7.se>
 <http://lumens.se/tychpanel/>
@@ -28,6 +28,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+0.9.93
+------
+* Preload button images; hopefully fixing problem with button state images not showing all the time.
 
 0.9.92
 ------
