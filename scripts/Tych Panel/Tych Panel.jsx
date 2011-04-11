@@ -1,5 +1,5 @@
 ﻿/*
- * Name: Tych Panel 0.9.92
+ * Name: Tych Panel 0.9.94
  * Author: Reimund Trost (c) 2011
  * Email: reimund@lumens.se
  * Website: http://lumens.se/tychpanel/
@@ -258,7 +258,7 @@ function tpPrepareNTych(doc, spacing)
 	var size = tpGetSize(doc.layers, spacing);
 	// Resize factor, Ie the factor used to to scale the image to fit the
 	// resize_width set in the user options.
-	var s = (tpSettings.resize_width - spacing * (doc.layers.length - 1) + 2 * doc.layers.length) / size[0];
+	var s = tpSettings.resize ? (tpSettings.resize_width - spacing * (doc.layers.length - 1) + 2 * doc.layers.length) / size[0] : 1;
 	var realSize = Array(Math.round(s * size[0] + spacing * (doc.layers.length - 1) - 2 * doc.layers.length), Math.round(s * size[1] - 2));
 	var trans = tpGetTrans(doc.layers, spacing, s);
 
@@ -447,7 +447,7 @@ function makeTych(tychVariant, doc)
 			var la = 1 - p;
 
 			var size = Array(tpSumWidthAtHeight(l, doc.layers.length, l[la].bounds[3].value), l[la].bounds[3].value);
-			var r = (tpSettings.resize_width - spacing * (doc.layers.length - 1) + 2 * doc.layers.length) / size[0];
+			var r = tpSettings.resize ? (tpSettings.resize_width - spacing * (doc.layers.length - 1) + 2 * doc.layers.length) / size[0] : 1;
 			var realSize = Array(Math.round(r * size[0] + spacing * (doc.layers.length - 1) - 2 * doc.layers.length), Math.round(r * size[1] - 2));
 			var s = l[la].bounds[3].value / l[p].bounds[3].value;
 
@@ -489,7 +489,7 @@ function makeTych(tychVariant, doc)
 				l[p].bounds[2].value * 2, Math.min(l[p].bounds[3].value,
 				s1 * l[la[0]].bounds[3].value + s2 * l[la[1]].bounds[3].value)
 			);
-			var r = (tpSettings.resize_width - spacing + 4) / size[0];
+			var r = tpSettings.resize ? (tpSettings.resize_width - spacing + 4) / size[0] : 1;
 			var realSize = Array(Math.round(r * size[0] + spacing - 4), Math.round(r * size[1] - 2));
 
 			trans[la[0]][0] = Array(r * s1 * 100, r * s1 * 100, AnchorPosition.TOPLEFT);
@@ -514,7 +514,7 @@ function makeTych(tychVariant, doc)
 			var row2_height = Math.max(l[2].bounds[3].value, l[3].bounds[3].value);
 
 			var size = Array(col1_width + col2_width, row1_height + row2_height);
-			var r = (tpSettings.resize_width - spacing + 4) / size[0];
+			var r = tpSettings.resize ? (tpSettings.resize_width - spacing + 4) / size[0] : 1;
 			var realSize = Array(Math.round(r * size[0] + spacing - 4), Math.round(r * size[1] + spacing - 4));
 
 			trans = Array(
