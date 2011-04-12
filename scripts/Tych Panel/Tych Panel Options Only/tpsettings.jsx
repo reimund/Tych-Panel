@@ -1,6 +1,10 @@
 ﻿//@include PSSettings.jsx
 
 var settings = new Settings();
+settings.setUID("TychPanelSettingsUniqueId");
+settings.setMSG("TychPanelSettings");
+settings.setType(SettingsType.SINGLE);
+settings.loadSettings();
 
 /**
  * Loads settings.
@@ -8,10 +12,6 @@ var settings = new Settings();
 function tpGetSettings()
 {
 	var tpSettings = {};
-	settings.setUID("TychPanelSettingsUniqueId");
-	settings.setMSG("TychPanelSettings");
-	settings.setType(SettingsType.SINGLE);
-	settings.loadSettings();
 
 	if (settings.numEntries() > 0)
 		tpSettings = settings.getEntryAt(0);

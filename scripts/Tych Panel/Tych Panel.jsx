@@ -154,31 +154,69 @@ function tpStack(images)
 
 
 /**
- * Saves the specified document to the directory and filename set in the
- * options dialog. If the file exists a sequential number will be appended.
+ * Saves the specified document according to the output options set in the
+ * options dialog. If any of the files already exist the sequence number will
+ * be incremented.
+ *
+ * For example: Assume that the options are set to output both jpg and psd
+ * files with the file name set to "image". If the file image_001.jpg already
+ * exists, then the files will be saved to image_002.jpg and image_002.psd so
+ * that nothing is overwritten.
  */
 function save(doc)
 {
 	var basename = tpSettings.filename;
-	var paddedName = basename + '_001';
-	var jpgFile = new File(tpSettings.save_directory + '/' + paddedName + '.jpg');
-	var padding;
-	
-	// XXX: Add a timeout perhaps...
-	// If the file exist, increase the sequential number by 1.
-	while (jpgFile.exists) {
-		padding = paddedName.substr(paddedName.lastIndexOf('_') + 1);
-		paddedName = basename + '_' + zeropad(Number(padding) + 1, 3);
-		jpgFile = new File(tpSettings.save_directory + '/' + paddedName + '.jpg');
+	var padding = '001';
+	var paddedName = basename + '_' . padding;
+	//var padding;
+	var collision;
+	var file;
+
+	while(true) {
+		collision = false;
+		for (format in tpSettings.output_formats) {
+			file = new File(tpSettings.save_directory + '/' + basename + '_' + padding + '.' + format);
+			if (file.exists) {
+				collision = true;
+				break;
+			}
+		}
+		// Increase the sequential number by 1 if there is a file name collision.
+		if (collision)
+			padding = zeropad(Number(padding) + 1, 3);
+		else
+			break;
 	}
 
-	jpgSaveOptions = new JPEGSaveOptions();
-	jpgSaveOptions.embedColorProfile = true;
-	jpgSaveOptions.formatOptions = FormatOptions.STANDARDBASELINE;
-	jpgSaveOptions.matte = MatteType.NONE;
-	jpgSaveOptions.quality = tpSettings.jpeg_quality;
+	var options = {
+		'jpg': getJpegSaveOptions,
+		'psd': getPsdSaveOptions
+	};
 
-	doc.saveAs(jpgFile, jpgSaveOptions, true, Extension.LOWERCASE);
+	for (format in tpSettings.output_formats)
+		if (tpSettings.output_formats[format])
+			doc.saveAs(getOutputFile(padding), options[format](), true, Extension.LOWERCASE);
+}
+
+
+/**
+ * Increment the sequence number of the given file name.
+ */
+function incFilename(file, type, start, pad)
+{
+	var basename = tpSettings.filename;
+	var padding = zeropad(start, pad);;
+	var paddedName = basename + '_' + padding;
+	// XXX: Add a timeout perhaps...
+	// If the file exist, increase the sequential number by 1.
+	while (file.exists) {
+		padding = paddedName.substr(paddedName.lastIndexOf('_') + 1);
+
+	//if (type=='psd')alert(padding);
+		paddedName = basename + '_' + zeropad(Number(padding) + 1, pad);
+		file = new File(tpSettings.save_directory + '/' + paddedName + '.' + type);
+	}
+	return { 'file': file, 'paddedName': paddedName, 'padding': Number(padding) };
 }
 
 
@@ -678,5 +716,34 @@ function zeropad(n, l) {
 	var pad = '0';
 	while (n.length < l) {n = pad + n;}
 	return n;
+}
+
+
+function getJpegSaveOptions()
+{
+	options = new JPEGSaveOptions();
+	options.embedColorProfile = true;
+	options.formatOptions = FormatOptions.STANDARDBASELINE;
+	options.matte = MatteType.NONE;
+	options.quality = tpSettings.jpeg_quality;
+	return options;
+}
+
+
+function getPsdSaveOptions()
+{
+	options = new PhotoshopSaveOptions();
+	options.layers = true;
+	options.embedColorProfile = true;
+	options.annotations = true;
+	options.alphaChannels = true;
+	options.spotColors = true;
+	return options;
+}
+
+
+function getOutputFile(padding)
+{
+	return new File(tpSettings.save_directory + '/' + tpSettings.filename + '_' + padding); 
 }
 

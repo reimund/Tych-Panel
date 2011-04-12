@@ -7,6 +7,7 @@ var defaults = {
 	'resample_method': 'bicubic',
 	'autosave': false,
 	'autoclose': false,
+	'output_formats': { 'jpg': true, 'psd': false },
 	'save_directory': '~',
 	'filename': 'image',
 	'jpeg_quality': 12

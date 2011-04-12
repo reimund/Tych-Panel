@@ -4,7 +4,7 @@
  * Email: reimund@lumens.se
  * Website: http://lumens.se/tychpanel/
  *
- * Description: Options dialog for the tych panel script.
+ * Description: Options dialog for the Tych Panel script.
  */
 
 
@@ -17,7 +17,6 @@
 
 // Use stored settings if they exist, defaults otherwise.
 var tpSettings = tpGetSettings();
-
 
 createDialog();
 
@@ -72,6 +71,10 @@ function createDialog()
 	dlg.output.filename.label = dlg.output.filename.add('statictext', undefined, 'File name');
 	dlg.output.filename.input = dlg.output.filename.add('edittext', undefined, tpSettings.filename);
 
+	dlg.output.savetypes = dlg.output.add('group');
+	dlg.output.jpeg = dlg.output.savetypes.add('checkbox', undefined, 'Jpeg');
+	dlg.output.psd = dlg.output.savetypes.add('checkbox', undefined, 'Psd');
+
 	dlg.output.quality = dlg.output.add('group');
 	dlg.output.quality.label = dlg.output.quality.add('statictext', undefined, 'JPEG Quality');
 	dlg.output.quality.slider = dlg.output.quality.add('slider', undefined, tpSettings.jpeg_quality);
@@ -92,7 +95,13 @@ function createDialog()
 		filename.enabled = autosave.value;
 		filename.input.preferredSize = [200, 20];
 
-		quality.enabled = autosave.value;
+		savetypes.margins = [0, 20, 0, 0];
+		jpeg.value = tpSettings.output_formats.jpg;
+		jpeg.enabled = autosave.value;
+		psd.value = tpSettings.output_formats.psd;
+		psd.enabled = autosave.value;
+
+		quality.enabled = autosave.value && dlg.output.jpeg.value;
 		quality.slider.minvalue = 0;
 		quality.slider.maxvalue = 12;
 		quality.input.preferredSize = [35, 20];
@@ -114,8 +123,10 @@ function createDialog()
 		tpSettings.keep_aspect = dlg.generalOptions.keepAspect.value;
 		tpSettings.resize_width = numOrDefault(dlg.generalOptions.resizeWidth.input.text, 'resize_width');
 		tpSettings.resize = dlg.generalOptions.resize.value;
-		tpSettings.autosave =dlg.output.autosave.value;
-		tpSettings.autoclose =dlg.output.autoclose.value;
+		tpSettings.autosave = dlg.output.autosave.value;
+		tpSettings.autoclose = dlg.output.autoclose.value;
+		tpSettings.output_formats.jpg = dlg.output.jpeg.value;
+		tpSettings.output_formats.psd = dlg.output.psd.value;
 		tpSettings.jpeg_quality = Math.round(dlg.output.quality.slider.value);
 		tpSettings.save_directory = dlg.output.directory.input.text;
 		tpSettings.filename = dlg.output.filename.input.text;
@@ -136,9 +147,12 @@ function createDialog()
 		dlg.output.autoclose.enabled = this.value;
 		dlg.output.directory.enabled = this.value;
 		dlg.output.filename.enabled = this.value;
-		dlg.output.quality.enabled = this.value;
+		dlg.output.jpeg.enabled = this.value;
+		dlg.output.psd.enabled = this.value;
+		dlg.output.quality.enabled = this.value && dlg.output.jpeg.value;
 	};
 
+	dlg.output.jpeg.onClick = function() { dlg.output.quality.enabled = this.value; }
 	dlg.output.quality.slider.onChange = function() { dlg.output.quality.input.text = Math.round(this.value); }
 	dlg.output.quality.slider.onChanging = function() { dlg.output.quality.input.text = Math.round(this.value); }
 
