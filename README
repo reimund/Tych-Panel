@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 0.9.94 - Mon 11 Apr 2011
+Version 0.9.95 - Thur 28 Apr 2011
 
 by Reimund Trost <reimund@code7.se>
 <http://lumens.se/tychpanel/>
@@ -28,6 +28,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+0.9.95
+------
+* Fixed triptych bug that made seams the wrong size and the background to not be filled.
 
 0.9.94
 ------

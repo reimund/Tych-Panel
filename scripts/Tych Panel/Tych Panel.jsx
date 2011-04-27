@@ -35,8 +35,9 @@
 var tpSettings = tpGetSettings();
 //var images = File.openDialog("Choose file(s) to stack", undefined, true);
 //tpStack(images);
-//tpTych(1);
+//tpTych(5);
 //tpComposite();
+
 
 function tpComposite()
 {
@@ -278,8 +279,8 @@ function tpAddSeams(doc, trans, size, tychVariant)
 	if (tychVariant == TRIPTYCH_PORTRAIT_LANDSCAPE_GRID
 			|| tychVariant == TRIPTYCH_LANDSCAPE_PORTRAIT_GRID) {
 		// Index of portrait layer.
-		var p = l[0].bounds[3].value > l[1].bounds[3].value ? 0 : 2;
-		p = l[1].bounds[3] .value> l[2].bounds[3].value ? 1 : p;
+		var p = lheight(l[0]) > lheight(l[1]) ? 0 : 2;
+		p = lheight(l[1]) > lheight(l[2]) ? 1 : p;
 
 		// Indicies of landscape layers.
 		var la;
@@ -289,6 +290,7 @@ function tpAddSeams(doc, trans, size, tychVariant)
 
 		var v = tychVariant == TRIPTYCH_PORTRAIT_LANDSCAPE_GRID ? la[0] : p;
 
+		// Select vertical seam.
 		doc.selection.select(sel = Array(
 			Array(trans[v][1][0] - spacing + 1, 0),
 			Array(trans[v][1][0] - spacing + 1, size[1]),
@@ -297,6 +299,7 @@ function tpAddSeams(doc, trans, size, tychVariant)
 		));
 		clearSelected(doc);
 
+		// Select horizontal seam.
 		doc.selection.select(sel = Array(
 			Array(0, trans[la[1]][1][1] - spacing + 1),
 			Array(size[0], trans[la[1]][1][1] - spacing + 1),
@@ -620,6 +623,7 @@ function tpSumWidthAtHeight(layers, max, height) {
 	return totalWidth;
 }
 
+
 /**
  * Gets the height of the shortest of the specified layers.
  */
@@ -632,6 +636,14 @@ function tpMinHeight(layers)
 	return minWidth;
 }
 
+
+/**
+ * Computes the height of a layer in the current unit.
+ */
+function lheight(layer)
+{
+	return layer.bounds[3].value - layer.bounds[1].value;
+}
 
 
 /**
