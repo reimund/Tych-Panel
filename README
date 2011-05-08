@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 0.9.95 - Thur 28 Apr 2011
+Version 0.9.96 - Sun 8 May 2011
 
 by Reimund Trost <reimund@code7.se>
 <http://lumens.se/tychpanel/>
@@ -28,6 +28,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+0.9.96
+------
+* Removed workaround for panel background color. If the color doesn't match in PS, you should update your Photoshop.
 
 0.9.95
 ------

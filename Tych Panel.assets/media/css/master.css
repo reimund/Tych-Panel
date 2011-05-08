@@ -1,9 +1,8 @@
 body {
 	margin: 10px 0 0 0;
-	background: #dedede;
+	background: #d6d6d6;
 }
 
-body.windows { background: #d6d6d6; }
 div.actions,
 div.buttons { 
 	text-align: center;
