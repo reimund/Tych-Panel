@@ -1,9 +1,7 @@
 //@include tpconstants.jsx
 var iconLeft = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/left-arrow.png');
 var iconRight = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/right-arrow.png');
-var current_item = null;
-//var images = Array();
-
+var image_list;
 
 
 function reorderDialog()
@@ -21,26 +19,24 @@ function reorderDialog()
 	list_container.orientation = 'row';
 	list_container.margins = 0;
 
-	var image_list = new ImageList([
+	image_list = new ImageList([
 		File('/Users/reimund/Sites/20110305_087.jpg'),
 		File('/Users/reimund/Sites/20110305_087_90.jpg'),
 		File('/Users/reimund/Sites/20110305_206.jpg'),
 		File('/Users/reimund/Sites/20110305_371.jpg'),
 		File('/Users/reimund/Sites/20110424_282_.jpg')
-	]);
+	], list_container);
 
-	image_list.build(list_container);
+	image_list.select(0);
 
 	moveButtons = dialog.main_grp.add('group');
-	/*
-	buildImageList(imgGrp);
 
 	moveLeftButton = moveButtons.add('iconbutton', [0, 0, 44, 32], iconLeft);
-	moveLeftButton.graphics.font = largeFont;
+	moveLeftButton.graphics.font = large_font;
 	moveLeftButton.onClick = moveLeft;
 
 	moveRightButton = moveButtons.add('iconbutton', [0, 0, 44, 32], iconRight);
-	moveRightButton.graphics.font = largeFont;
+	moveRightButton.graphics.font = large_font;
 	moveRightButton.onClick = moveRight;
 
 	buttonGrp = dialog.add('group');
@@ -58,38 +54,102 @@ function reorderDialog()
 		dialog.close(2);
 	}
 
-	*/
 	dialog.show(); 
 
 }
 
-
-var ImageList = function(files)
+/*
+ * Image list constructor. Creates an image item for each specified image file.
+ */
+var ImageList = function(files, container)
 {
 	this.files = files;
 	this.items = Array();
-}
+	this.current_item = -1;
+	this.length = files.length
 
-ImageList.prototype.build = function(container) {
-
-	for (i in this.files) {
-		
-		// The item root node will act as a border.
-
-		//clearItem(imgItem);
-
-		//if (current_item == null) {
-			//current_item = imgItem;
-			//selectItem(current_item);
-		//}
-		//images[i] = imgItem;
-		this.items[i] = new ImageListItem(container, this.files[i]);
-	}
-
+	for (i in this.files)
+		this.items[i] = new ImageItem(container, this.files[i], Number(i));
 }
 
 
-var ImageListItem = function(container, file)
+/*
+ * Selects the item at the specified index.
+ */
+ImageList.prototype.select = function(index)
+{
+	if (this.current_item != -1)
+		this.items[this.current_item].deselect();
+
+	this.items[index].select();
+	this.current_item = index;
+}
+
+
+/*
+ * Deselects the item at the specified index.
+ */
+ImageList.prototype.deselect = function(index)
+{
+	this.items[index].deselect();
+	this.current_item = -1;
+}
+
+
+/*
+ * Toggles the selection of the item at the specified index.
+ */
+ImageList.prototype.toggleSelect = function(index)
+{
+	if (this.current_item == index)
+		this.deselect(index);
+	else
+		this.select(index);
+}
+
+/*
+ * Sets the image for the specified image item.
+ */
+ImageList.prototype.setImage = function(index, file) { this.items[index].setImage(file); }
+
+
+/*
+ * Sets the label for the specified image item.
+ */
+ImageList.prototype.setLabel = function(index, text) { this.items[index].setLabel(text); }
+
+
+/*
+ * Sets both the image and the label for the specified image item. The label
+ * text is the filename part of the specified file.
+ */
+ImageList.prototype.setItem = function(index, file)
+{
+	this.items[index].setImage(file);
+	this.items[index].setLabel(file.name);
+}
+
+
+/*
+ * Swaps the contents of the specified image items.
+ */
+ImageList.prototype.swap = function(i1, i2)
+{
+	var image = this.items[i1].image.image;
+	var text = this.items[i1].label.text;
+
+	this.items[i1].image.image = this.items[i2].image.image;
+	this.items[i1].label.text = this.items[i2].label.text;
+	this.items[i2].image.image = image;
+	this.items[i2].label.text = text;
+}
+
+
+/*
+ * Image list item constructor. Creates the objects needed to present an image
+ * with a label and border.
+ */
+var ImageItem = function(container, file, index)
 {
 	var border = container.add('group');
 	border.margins = 1;
@@ -116,29 +176,50 @@ var ImageListItem = function(container, file)
 	this.item_container = item_container;
 	this.label = label_container.add('statictext', undefined, file.name);
 	this.label_container = label_container;
+	this.index = index;
 
 	this.deselect();
 }
 
 
-ImageListItem.prototype.select = function()
+/*
+ * Sets the image of the image item.
+ */
+ImageItem.prototype.setImage = function(file) { this.image.image = file; }
+
+
+/*
+ * Sets the label text of the image item.
+ */
+ImageItem.prototype.setLabel = function(text) { this.label.text = text; }
+
+
+/*
+ * Selects the image item, making it light blue.
+ */
+ImageItem.prototype.select = function()
 {
 	setBackgroundColor(this.item_container, [0.69, 0.84, 1]);
-	//setBackgroundColor(this.label_container, [0.69, 0.84, 1]);
 	setBackgroundColor(this.border, [0.65, 0.65, 0.65]);
 	this.selected = true;
 }
 
 
-ImageListItem.prototype.deselect = function()
+/*
+ * Deselects the image item, making it white.
+ */
+ImageItem.prototype.deselect = function()
 {
 	setBackgroundColor(this.item_container, [1, 1, 1]);
-	//setBackgroundColor(this.label_container, [1, 1, 1]);
 	setBackgroundColor(this.border, [0.8, 0.8, 0.8]);
 	this.selected = false;
 }
 
-ImageListItem.prototype.toggleSelection = function()
+
+/*
+ * Toggles the selection of the image item.
+ */
+ImageItem.prototype.toggleSelection = function()
 {
 	if (!this.selected)
 		this.select();
@@ -146,71 +227,26 @@ ImageListItem.prototype.toggleSelection = function()
 		this.deselect();
 }
 
-//function initImageItem(item, image_file)
-//{
-	//item.image = item.add('Image', [0, 0, 200, 200], image_file); 
-	//item.image.onDraw = drawImage;
 
-	//return item;
-//}
-
-// XXX: Find way to move a single item.
 function moveLeft()
 {
-	//var files = this.window.imgGrp.image_files;
-	//current_item.remove(current_item.image);
-	//current_item.image = current_item.add('Image', [0, 0, 200, 200], files[1]); 
-	//current_item.image.onDraw = drawImage;
-	
-	if (current_item == null || current_item.index == 0)
+	if (image_list.current_item == -1 || image_list.current_item == 0)
 		return;
 
-	swapImages(this.window.imgGrp, current_item.index, current_item.index - 1);
+	image_list.swap(image_list.current_item, image_list.current_item - 1);
+	image_list.select(image_list.current_item - 1);
 }
 
 
 function moveRight()
 {
+	if (image_list.current_item == -1 || image_list.current_item == image_list.length - 1)
+		return;
+
+	var majs = (image_list.current_item) + 1;
+	image_list.swap(image_list.current_item, (image_list.current_item + 1));
+	image_list.select(image_list.current_item + 1);
 }
-
-
-function swapImages(container, index_one, index_two)
-{
-	var files = container.image_files;
-	
-	removeChildren(images[index_one]);
-	removeChildren(images[index_two]);
-
-	initImageItem(images[index_one], container.image_files[index_two]);
-	initImageItem(images[index_two], container.image_files[index_one]);
-
-	//image_one = images[index_one].add('Image', [0, 0, 200, 200], files[index_two]); 
-	//image_two = images[index_two].add('Image', [0, 0, 200, 200], files[index_one]); 
-
-	//images[index_one].image = image_two;
-	//images[index_two].image = image_one;
-
-	//$.writeln(index_one);
-	//$.writeln(images[index_one].image);
-	//$.writeln(index_two);
-	//$.writeln(images[index_two].image);
-
-	//image_one.onDraw = drawImage;
-	//image_two.onDraw = drawImage;
-
-	current_item = images[index_two];
-	clearItem(images[index_one]);
-	selectItem(images[index_two]);
-	
-}
-
-
-//function removeChildren(element)
-//{
-	//for (var i = element.children.length - 1; i >= 0; i--)
-		//if (element.children[i].type != 'group')
-			//element.remove(i);
-//}
 
 
 function clickItem()
@@ -219,39 +255,7 @@ function clickItem()
 
 	if (item == null)
 		item = this.parent.item
-
-	item.toggleSelection();
-
-	if (current_item != item && current_item != undefined)
-		current_item.deselect();
-	
-	if (item.selected)
-		current_item = item;
-}
-
-function toggleItem(item)
-{
-	if (!item.selected)
-		selectItem(item);
-	else
-		clearItem(item);
-}
-
-
-function selectItem(item)
-{
-	setBackgroundColor(item, [0.69, 0.84, 1]);
-	setBackgroundColor(item.labelGrp, [0.69, 0.84, 1]);
-	setBackgroundColor(item.border, [0.65, 0.65, 0.65]);
-	item.selected = true;
-}
-
-function clearItem(item)
-{
-	setBackgroundColor(item, [1, 1, 1]);
-	setBackgroundColor(item.labelGrp, [1, 1, 1]);
-	setBackgroundColor(item.border, [0.8, 0.8, 0.8]);
-	item.selected = false;
+	image_list.toggleSelect(item.index);
 }
 
 
