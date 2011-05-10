@@ -92,7 +92,7 @@ ImageList.prototype.reordered = function()
 {
 	var files = Array();
 	for (i in this.items)
-		files[i] = this.items[i].image.image;
+		files[i] = File(this.items[i].image.image.pathname);
 
 	return files;
 }

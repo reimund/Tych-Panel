@@ -4,6 +4,7 @@ var defaults = {
 	'keep_aspect': true,
 	'resize': false,
 	'resize_width': 800,
+	'reorder': true,
 	'resample_method': 'bicubic',
 	'autosave': false,
 	'autoclose': false,

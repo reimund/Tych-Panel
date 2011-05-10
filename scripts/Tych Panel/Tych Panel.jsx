@@ -19,6 +19,7 @@
 
 //@include Tych%20Panel%20Options%20Only/tpconstants.jsx
 //@include Tych%20Panel%20Options%20Only/tpsettings.jsx
+//@include Tych%20Panel%20Options%20Only/tpreorder.jsx
 
 // XXX: Supress dialogs...
 // XXX: Add ability to sort images with previews before they get stacked.
@@ -49,6 +50,10 @@ function tpComposite()
 	var	doc = documents.length > 0 ? activeDocument : null;
 
 	var images = File.openDialog("Choose file(s) to add to composite", undefined, true);
+
+	if (images.length > 1 && tpSettings.reorder)
+		images = tpReorder(images);
+
 	var stackDoc = tpStack(images);
 	tpNTych(stackDoc);
 

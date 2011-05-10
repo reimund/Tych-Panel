@@ -33,7 +33,6 @@ function tpReorder(files)
 	list_container.margins = 0;
 
 	image_list = new ImageList(files, list_container);
-
 	image_list.select(0);
 
 	moveButtons = dialog.main_grp.add('group');
@@ -53,7 +52,7 @@ function tpReorder(files)
 	buttonGrp.cancelButton = buttonGrp.add('button', undefined, 'Cancel');
 
 	buttonGrp.okButton.onClick = function() {
-		sorted_files = image_list.reordered();
+		reordered_files = image_list.reordered();
 		dialog.close(1);
 	};
 

@@ -12,7 +12,7 @@
 //@include Tych%20Panel%20Options%20Only/tpsettings.jsx
 //@include Tych%20Panel%20Options%20Only/PSSettings.jsx
 
-//settings.clearSettings();
+//settings.clearSettings()
 //settings.saveSettings();
 
 // Use stored settings if they exist, defaults otherwise.
@@ -22,27 +22,32 @@ createDialog();
 
 function createDialog()
 {
-	var dlg = new Window('dialog', 'Tych Panel options');
-	var smallFont = ScriptUI.newFont(dlg.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
+	var dialog = new Window('dialog', 'Tych Panel options');
+	var smallFont = ScriptUI.newFont(dialog.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
 
-	dlg.orientation = 'row';
-	dlg.alignChildren = 'top';
+	dialog.orientation = 'row';
+	dialog.alignChildren = 'top';
 
-	dlg.mainGrp = dlg.add('group', undefined, 'Main');
-	dlg.mainGrp.orientation = 'column';
-	dlg.mainGrp.alignChildren = 'fill';
-	dlg.generalOptions = dlg.mainGrp.add('panel', undefined, 'General');
-	dlg.generalOptions.spacingGrp = dlg.generalOptions.add('group');
-	dlg.generalOptions.aspectGrp = dlg.generalOptions.add('group');
-	dlg.generalOptions.keepAspect = dlg.generalOptions.aspectGrp.add('checkbox', undefined, 'Keep aspect ratio on images');
+	dialog.main_grp = dialog.add('group', undefined, 'Main');
+	dialog.main_grp.orientation = 'column';
+	dialog.main_grp.alignChildren = 'fill';
+	dialog.general = dialog.main_grp.add('panel', undefined, 'General');
+	dialog.general.spacingGrp = dialog.general.add('group');
+	dialog.general.aspectGrp = dialog.general.add('group');
+	dialog.general.keepAspect = dialog.general.aspectGrp.add('checkbox', undefined, 'Keep aspect ratio on images');
 
-	dlg.generalOptions.aspectText = dlg.generalOptions.add('statictext', undefined, 'When this is unchecked, images will be cropped to match height.');
-	dlg.generalOptions.aspectText.graphics.font = smallFont;
-	dlg.generalOptions.resizeGrp = dlg.generalOptions.add('group');
-	dlg.generalOptions.resize = dlg.generalOptions.resizeGrp.add('checkbox', undefined, 'Resize generated images');
-	dlg.generalOptions.resizeWidth = dlg.generalOptions.add('group');
+	dialog.general.aspectText = dialog.general.add('statictext', undefined, 'When this is unchecked, images will be cropped to match height.');
+	dialog.general.aspectText.graphics.font = smallFont;
+	dialog.general.resizeGrp = dialog.general.add('group');
+	dialog.general.resize = dialog.general.resizeGrp.add('checkbox', undefined, 'Resize generated images');
+	dialog.general.resizeWidth = dialog.general.add('group');
 
-	with (dlg.generalOptions) {
+	reorder_grp = dialog.general.add('group');
+	reorder_grp.margins = [0, 10, 0, 0];
+	dialog.general.reorder = reorder_grp.add('checkbox', undefined, 'Open reorder dialog on ‘Just Bring it’');
+	dialog.general.reorder.value = tpSettings.reorder;
+
+	with (dialog.general) {
 		alignChildren = "right";
 
 		keepAspect.value = tpSettings.keep_aspect;
@@ -60,29 +65,30 @@ function createDialog()
 		resizeWidth.enabled = resize.value;
 	}
 
-	dlg.output = dlg.mainGrp.add('panel', undefined, 'Output');
-	dlg.output.autosave = dlg.output.add('checkbox', undefined, 'Save generated images');
+	dialog.output = dialog.main_grp.add('panel', undefined, 'Output');
+	dialog.output.autosave = dialog.output.add('checkbox', undefined, 'Save generated images');
 
-	dlg.output.directory = dlg.output.add('group');
-	dlg.output.directory.input = dlg.output.directory.add('edittext', undefined, new Folder(tpSettings.save_directory).fsName);
-	dlg.output.directory.browseButton = dlg.output.directory.add('button', undefined, 'Browse...');
+	dialog.output.directory = dialog.output.add('group');
+	dialog.output.directory.input = dialog.output.directory.add('edittext', undefined, new Folder(tpSettings.save_directory).fsName);
+	dialog.output.directory.browseButton = dialog.output.directory.add('button', undefined, 'Browse...');
 
-	dlg.output.filename = dlg.output.add('group');
-	dlg.output.filename.label = dlg.output.filename.add('statictext', undefined, 'File name');
-	dlg.output.filename.input = dlg.output.filename.add('edittext', undefined, tpSettings.filename);
+	dialog.output.filename = dialog.output.add('group');
+	dialog.output.filename.label = dialog.output.filename.add('statictext', undefined, 'File name');
+	dialog.output.filename.input = dialog.output.filename.add('edittext', undefined, tpSettings.filename);
 
-	dlg.output.savetypes = dlg.output.add('group');
-	dlg.output.jpeg = dlg.output.savetypes.add('checkbox', undefined, 'Jpeg');
-	dlg.output.psd = dlg.output.savetypes.add('checkbox', undefined, 'Psd');
+	dialog.output.savetypes = dialog.output.add('group');
+	dialog.output.jpeg = dialog.output.savetypes.add('checkbox', undefined, 'Jpeg');
+	dialog.output.psd = dialog.output.savetypes.add('checkbox', undefined, 'Psd');
 
-	dlg.output.quality = dlg.output.add('group');
-	dlg.output.quality.label = dlg.output.quality.add('statictext', undefined, 'JPEG Quality');
-	dlg.output.quality.slider = dlg.output.quality.add('slider', undefined, tpSettings.jpeg_quality);
-	dlg.output.quality.input = dlg.output.quality.add('edittext', undefined, tpSettings.jpeg_quality);
+	reorder_grp.margins = [0, 10, 0, 0];
+	dialog.output.quality = dialog.output.add('group');
+	dialog.output.quality.label = dialog.output.quality.add('statictext', undefined, 'JPEG Quality');
+	dialog.output.quality.slider = dialog.output.quality.add('slider', undefined, tpSettings.jpeg_quality);
+	dialog.output.quality.input = dialog.output.quality.add('edittext', undefined, tpSettings.jpeg_quality);
 
-	dlg.output.autoclose = dlg.output.add('checkbox', undefined, 'Close on save');
+	dialog.output.autoclose = dialog.output.add('checkbox', undefined, 'Close on save');
 
-	with (dlg.output) {
+	with (dialog.output) {
 		alignChildren = "right";
 		autosave.value = tpSettings.autosave;
 
@@ -101,7 +107,7 @@ function createDialog()
 		psd.value = tpSettings.output_formats.psd;
 		psd.enabled = autosave.value;
 
-		quality.enabled = autosave.value && dlg.output.jpeg.value;
+		quality.enabled = autosave.value && dialog.output.jpeg.value;
 		quality.slider.minvalue = 0;
 		quality.slider.maxvalue = 12;
 		quality.input.preferredSize = [35, 20];
@@ -111,57 +117,58 @@ function createDialog()
 		};
 	}
 
-	dlg.buttonGrp = dlg.add('group', undefined, undefined);
-	dlg.buttonGrp.orientation = 'column';
-	dlg.okButton = dlg.buttonGrp.add('button', undefined, 'Ok');
-	dlg.cancelButton = dlg.buttonGrp.add('button', undefined, 'Cancel');
+	dialog.buttonGrp = dialog.add('group', undefined, undefined);
+	dialog.buttonGrp.orientation = 'column';
+	dialog.okButton = dialog.buttonGrp.add('button', undefined, 'Ok');
+	dialog.cancelButton = dialog.buttonGrp.add('button', undefined, 'Cancel');
 
 
-	dlg.okButton.onClick = function() {
+	dialog.okButton.onClick = function() {
 		// Get values from controls and put into the settings object.
-		tpSettings.spacing = numOrDefault(dlg.generalOptions.spacingGrp.input.text, 'spacing');
-		tpSettings.keep_aspect = dlg.generalOptions.keepAspect.value;
-		tpSettings.resize_width = numOrDefault(dlg.generalOptions.resizeWidth.input.text, 'resize_width');
-		tpSettings.resize = dlg.generalOptions.resize.value;
-		tpSettings.autosave = dlg.output.autosave.value;
-		tpSettings.autoclose = dlg.output.autoclose.value;
-		tpSettings.output_formats.jpg = dlg.output.jpeg.value;
-		tpSettings.output_formats.psd = dlg.output.psd.value;
-		tpSettings.jpeg_quality = Math.round(dlg.output.quality.slider.value);
-		tpSettings.save_directory = dlg.output.directory.input.text;
-		tpSettings.filename = dlg.output.filename.input.text;
+		tpSettings.spacing = numOrDefault(dialog.general.spacingGrp.input.text, 'spacing');
+		tpSettings.keep_aspect = dialog.general.keepAspect.value;
+		tpSettings.resize_width = numOrDefault(dialog.general.resizeWidth.input.text, 'resize_width');
+		tpSettings.resize = dialog.general.resize.value;
+		tpSettings.reorder = dialog.general.reorder.value;
+		tpSettings.autosave = dialog.output.autosave.value;
+		tpSettings.autoclose = dialog.output.autoclose.value;
+		tpSettings.output_formats.jpg = dialog.output.jpeg.value;
+		tpSettings.output_formats.psd = dialog.output.psd.value;
+		tpSettings.jpeg_quality = Math.round(dialog.output.quality.slider.value);
+		tpSettings.save_directory = dialog.output.directory.input.text;
+		tpSettings.filename = dialog.output.filename.input.text;
 
 		settings.addEntry('tp_settings', tpSettings);
 		settings.saveSettings();
 
-		dlg.close(1);
+		dialog.close(1);
 	};
 
-	dlg.cancelButton.onClick = function() {
-		dlg.close(2);
+	dialog.cancelButton.onClick = function() {
+		dialog.close(2);
 	}
 
-	dlg.generalOptions.resize.onClick = function() { dlg.generalOptions.resizeWidth.enabled = this.value; };
+	dialog.general.resize.onClick = function() { dialog.general.resizeWidth.enabled = this.value; };
 
-	dlg.output.autosave.onClick = function() {
-		dlg.output.autoclose.enabled = this.value;
-		dlg.output.directory.enabled = this.value;
-		dlg.output.filename.enabled = this.value;
-		dlg.output.jpeg.enabled = this.value;
-		dlg.output.psd.enabled = this.value;
-		dlg.output.quality.enabled = this.value && dlg.output.jpeg.value;
+	dialog.output.autosave.onClick = function() {
+		dialog.output.autoclose.enabled = this.value;
+		dialog.output.directory.enabled = this.value;
+		dialog.output.filename.enabled = this.value;
+		dialog.output.jpeg.enabled = this.value;
+		dialog.output.psd.enabled = this.value;
+		dialog.output.quality.enabled = this.value && dialog.output.jpeg.value;
 	};
 
-	dlg.output.jpeg.onClick = function() { dlg.output.quality.enabled = this.value; }
-	dlg.output.quality.slider.onChange = function() { dlg.output.quality.input.text = Math.round(this.value); }
-	dlg.output.quality.slider.onChanging = function() { dlg.output.quality.input.text = Math.round(this.value); }
+	dialog.output.jpeg.onClick = function() { dialog.output.quality.enabled = this.value; }
+	dialog.output.quality.slider.onChange = function() { dialog.output.quality.input.text = Math.round(this.value); }
+	dialog.output.quality.slider.onChanging = function() { dialog.output.quality.input.text = Math.round(this.value); }
 
-	dlg.output.quality.input.onChange = function() {
-		dlg.output.quality.slider.value = numOrDefault(Math.round(Number(this.text)), 'jpeg_quality');
-		this.text = dlg.output.quality.slider.value;
+	dialog.output.quality.input.onChange = function() {
+		dialog.output.quality.slider.value = numOrDefault(Math.round(Number(this.text)), 'jpeg_quality');
+		this.text = dialog.output.quality.slider.value;
 	}
 
-	dlg.show(); 
+	dialog.show(); 
 }
 
 
