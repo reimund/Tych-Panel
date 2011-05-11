@@ -77,11 +77,14 @@ ImageList.prototype.swap = function(i1, i2)
 {
 	var image = this.items[i1].image.image;
 	var text = this.items[i1].label.text;
+	var file = this.items[i1].file;
 
 	this.items[i1].image.image = this.items[i2].image.image;
 	this.items[i1].label.text = this.items[i2].label.text;
+	this.items[i1].file = this.items[i2].file;
 	this.items[i2].image.image = image;
 	this.items[i2].label.text = text;
+	this.items[i2].file = file;
 }
 
 
@@ -92,7 +95,7 @@ ImageList.prototype.reordered = function()
 {
 	var files = Array();
 	for (i in this.items)
-		files[i] = File(this.items[i].image.image.pathname);
+		files[i] = this.items[i].file;
 
 	return files;
 }

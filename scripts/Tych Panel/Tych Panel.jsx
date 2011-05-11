@@ -1,5 +1,5 @@
 ﻿/*
- * Name: Tych Panel 0.9.94
+ * Name: Tych Panel 1.1
  * Author: Reimund Trost (c) 2011
  * Email: reimund@lumens.se
  * Website: http://lumens.se/tychpanel/
@@ -21,8 +21,6 @@
 //@include Tych%20Panel%20Options%20Only/tpsettings.jsx
 //@include Tych%20Panel%20Options%20Only/tpreorder.jsx
 
-// XXX: Supress dialogs...
-// XXX: Add ability to sort images with previews before they get stacked.
 // XXX: Keep aspect ratio option does not affect all tychs (currently only
 // n-tychs). Not really a problem since the icon buttons are a different use
 // case, however, it can be a bit non-obvious for some users.
@@ -54,6 +52,12 @@ function tpComposite()
 	if (images.length > 1 && tpSettings.reorder)
 		images = tpReorder(images);
 
+	if (images == undefined) {
+		// Reorder window was dismiess, revert settings and stop script.
+		preferences.rulerUnits = rulerUnits;
+		return;
+	}
+	
 	var stackDoc = tpStack(images);
 	tpNTych(stackDoc);
 

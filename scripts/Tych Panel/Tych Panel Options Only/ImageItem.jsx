@@ -1,3 +1,5 @@
+var placeholder = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/thumbnail-unavailable.png');
+
 /*
  * Image list item constructor. Creates the objects needed to present an image
  * with a label and border.
@@ -13,14 +15,21 @@ var ImageItem = function(container, file, index)
 	item_container.onClick = clickItem;
 	item_container.item = this;
 
-	var image = item_container.add('Image', [0, 0, 200, 200], file); 
-	image.onDraw = drawImage;
+	var image;
+
+	try {
+		image = item_container.add('Image', [0, 0, 200, 200], file); 
+	} catch (err) {
+		//$.writeln(err);
+		image = item_container.add('Image', [0, 0, 200, 200], placeholder);
+	}
 	image.onClick = clickItem;
 
 	var label_container = item_container.add('group');
 	label_container.margins = [0, 8, 0, 0];
 	label_container.orientation = 'column';
 	label_container.size = [200, 30];
+	label_container.onClick = clickItem;
 
 	this.file = file;
 	this.container = container;
@@ -29,6 +38,7 @@ var ImageItem = function(container, file, index)
 	this.item_container = item_container;
 	this.label = label_container.add('statictext', undefined, file.name);
 	this.label_container = label_container;
+	this.label.onClick = clickItem;
 	this.index = index;
 
 	this.deselect();
@@ -83,26 +93,23 @@ ImageItem.prototype.toggleSelection = function()
 
 /*
  * Draws image within its bounding box.
+ * Written by Marc Autret.
  */
-function drawImage(drawState)
-{
+Image.prototype.onDraw = function()
+{ 
+	if (!this.image) return;
 
-    try {
-        // Fit image to bounds.
-        if (this.image) {
-			var s = this.image.size.width > this.image.size.height
-				? this.size.width / this.image.size.width
-				: this.size.height / this.image.size.height
+	var WH = this.size,
+		wh = this.image.size,
+		k = Math.min(WH[0] / wh[0], WH[1] / wh[1]),
+		xy;
 
-			var image_width = s * this.image.size.width;
-			var image_height = s * this.image.size.height;
-
-            this.graphics.drawImage(this.image, 0, 0, image_width, image_height);
-        }
-    } catch (err) {
-        // Disable 'onDraw' handling if an error occurs.
-        this.onDraw = undefined;
-    }
+	// Resize proportionally.
+	wh = [k * wh[0], k * wh[1]];
+	// Center.
+	xy = [(WH[0] - wh[0]) / 2, (WH[1] - wh[1]) / 2 ];
+	this.graphics.drawImage(this.image, xy[0], xy[1], wh[0], wh[1]);
+	WH = wh = xy = null;
 }
 
 
@@ -115,6 +122,7 @@ function setBackgroundColor(element, color)
 	gfx.backgroundColor = gfx.newBrush(gfx.BrushType.SOLID_COLOR, color);
 }
 
+
 /*
  * Click handler for image items.
  */
@@ -122,8 +130,8 @@ function clickItem()
 {
 	var item = this.item;
 
-	if (item == null)
-		item = this.parent.item
+	if (item == null) item = this.parent.item
+	if (item == null) item = this.parent.parent.item;
 
 	image_list.toggleSelect(item.index);
 }

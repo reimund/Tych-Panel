@@ -7,19 +7,11 @@ var iconRight = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Pa
 var image_list;
 
 
-//tpReorder([
-	//File('/Users/reimund/Sites/20110305_087.jpg'),
-	//File('/Users/reimund/Sites/20110305_087_90.jpg'),
-	//File('/Users/reimund/Sites/20110305_206.jpg'),
-	//File('/Users/reimund/Sites/20110305_371.jpg'),
-	//File('/Users/reimund/Sites/20110424_282_.jpg')
-//]);
-
-
 function tpReorder(files)
 {
 	var dialog = new Window('dialog', 'Reorder images');
 	var large_font = ScriptUI.newFont(dialog.graphics.font.name, ScriptUI.FontStyle.REGULAR, 20);
+	$.writeln(dialog.graphics.font.name);
 	var reordered_files;
 
 	dialog.orientation = 'row';
