@@ -20,7 +20,6 @@ var ImageItem = function(container, file, index)
 	try {
 		image = item_container.add('Image', [0, 0, 200, 200], file); 
 	} catch (err) {
-		//$.writeln(err);
 		image = item_container.add('Image', [0, 0, 200, 200], placeholder);
 	}
 	image.onClick = clickItem;

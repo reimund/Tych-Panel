@@ -15,8 +15,9 @@ function tpGetSettings()
 
 	if (settings.numEntries() > 0)
 		tpSettings = settings.getEntryAt(0);
-	else
-		for (setting in defaults)
+
+	for (setting in defaults)
+		if (tpSettings[setting] == undefined)
 			tpSettings[setting] = defaults[setting];
 
 	return tpSettings;

@@ -11,7 +11,6 @@ function tpReorder(files)
 {
 	var dialog = new Window('dialog', 'Reorder images');
 	var large_font = ScriptUI.newFont(dialog.graphics.font.name, ScriptUI.FontStyle.REGULAR, 20);
-	$.writeln(dialog.graphics.font.name);
 	var reordered_files;
 
 	dialog.orientation = 'row';
