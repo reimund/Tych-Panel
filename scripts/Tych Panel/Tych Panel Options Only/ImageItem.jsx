@@ -4,7 +4,7 @@ var placeholder = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych 
  * Image list item constructor. Creates the objects needed to present an image
  * with a label and border.
  */
-var ImageItem = function(container, file, index)
+var ImageItem = function(container, file, index, thumbnail)
 {
 	var border = container.add('group');
 	border.margins = 1;
@@ -18,9 +18,12 @@ var ImageItem = function(container, file, index)
 	var image;
 
 	try {
-		image = item_container.add('Image', [0, 0, 200, 200], file); 
+		if (thumbnail != undefined)
+			image = item_container.add('Image', [0, 0, 256, 256], thumbnail);
+		else
+			image = item_container.add('Image', [0, 0, 256, 256], file);
 	} catch (err) {
-		image = item_container.add('Image', [0, 0, 200, 200], placeholder);
+		image = item_container.add('Image', [0, 0, 256, 256], placeholder);
 	}
 	image.onClick = clickItem;
 
@@ -39,6 +42,7 @@ var ImageItem = function(container, file, index)
 	this.label_container = label_container;
 	this.label.onClick = clickItem;
 	this.index = index;
+	this.thumbnail = thumbnail;
 
 	this.deselect();
 }

@@ -35,7 +35,7 @@ var tpSettings = tpGetSettings();
 //var images = File.openDialog("Choose file(s) to stack", undefined, true);
 //tpStack(images);
 //tpTych(5);
-//tpComposite();
+tpComposite();
 
 
 function tpComposite()
@@ -47,10 +47,17 @@ function tpComposite()
 
 	var	doc = documents.length > 0 ? activeDocument : null;
 
-	var images = File.openDialog("Choose file(s) to add to composite", undefined, true);
+	// XXX: This should be an option.
+	// Use bridge selection if there is one.
+	var bridge_selection = getBridgeSelection();
+	var images = bridge_selection[0];
+	var thumbs = bridge_selection[1];
+
+	if (images.length == 0)
+		images = File.openDialog("Choose file(s) to add to composite", undefined, true);
 
 	if (images.length > 1 && tpSettings.reorder)
-		images = tpReorder(images);
+		images = tpReorder(images, thumbs);
 
 	if (images == undefined) {
 		// Reorder window was dismiess, revert settings and stop script.
@@ -756,3 +763,52 @@ function getOutputFile(padding)
 	return new File(tpSettings.save_directory + '/' + tpSettings.filename + '_' + padding); 
 }
 
+
+/**
+ * Gets a list of the files currently selected in Adobe Bridge and their
+ * thumbnails. Modified version of snippet by Paul Riggot.
+ */
+function getBridgeSelection()
+{
+	function script()
+	{
+		var selected = app.document.selections;
+		var images = [];
+		var thumbnails = [];
+
+		for (var i in selected) {
+			if (selected[i].type =='file') {
+				image_file = new File(encodeURI(selected[i].spec.fsName));
+				thumb_file = File(Folder.temp + '/scriptUI.' + i + '.jpg');
+
+				thumb = new Thumbnail(image_file);
+				bitmap_data = thumb.core.thumbnail.thumbnail;
+				bitmap_data.exportTo(thumb_file, 100);
+
+				images.push(image_file);
+				thumbnails.push(thumb_file);
+			}
+		}
+
+		var image_files = [images.toSource(), thumbnails.toSource()];
+		return image_files.toSource();
+	}
+
+	var selected;
+	var bt = new BridgeTalk();
+
+	bt.target = "bridge";
+	bt.body = "var ftn = " + script.toSource() + "; ftn();";
+	bt.onResult = function(in_bt) { selected = eval(in_bt.body); }
+	bt.onError = function(in_bt) { selected = new Array(); }
+	bt.send(8);
+	bt.pump();
+
+	for (i in selected)
+		selected[i] = eval(selected[i]);
+	
+	if (undefined == selected)
+		selected = new Array();
+
+	return selected; 
+}

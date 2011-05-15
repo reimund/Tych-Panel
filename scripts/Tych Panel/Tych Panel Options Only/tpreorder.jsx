@@ -6,8 +6,11 @@ var iconLeft = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Pan
 var iconRight = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/right-arrow.png');
 var image_list;
 
-
-function tpReorder(files)
+/**
+ * Opens a window with thumbnails that lets you reorder the specified images.
+ * If thumbs are specified, these files will be used for thumbnails.
+ */
+function tpReorder(files, thumbs)
 {
 	var dialog = new Window('dialog', 'Reorder images');
 	var large_font = ScriptUI.newFont(dialog.graphics.font.name, ScriptUI.FontStyle.REGULAR, 20);
@@ -23,7 +26,7 @@ function tpReorder(files)
 	list_container.orientation = 'row';
 	list_container.margins = 0;
 
-	image_list = new ImageList(files, list_container);
+	image_list = new ImageList(files, list_container, thumbs);
 	image_list.select(0);
 
 	moveButtons = dialog.main_grp.add('group');

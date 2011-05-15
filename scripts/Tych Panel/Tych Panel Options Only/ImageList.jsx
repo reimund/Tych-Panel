@@ -1,15 +1,16 @@
 /*
  * Image list constructor. Creates an image item for each specified image file.
  */
-var ImageList = function(files, container)
+var ImageList = function(files, container, thumbnails)
 {
 	this.files = files;
 	this.items = Array();
 	this.current_item = -1;
-	this.length = files.length
+	this.length = files.length;
+	this.thumbnails = thumbnails;
 
 	for (i in this.files)
-		this.items[i] = new ImageItem(container, this.files[i], Number(i));
+		this.items[i] = new ImageItem(container, this.files[i], Number(i), this.thumbnails[i]);
 }
 
 
