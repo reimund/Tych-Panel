@@ -35,7 +35,7 @@ var tpSettings = tpGetSettings();
 //var images = File.openDialog("Choose file(s) to stack", undefined, true);
 //tpStack(images);
 //tpTych(5);
-tpComposite();
+//tpComposite();
 
 
 function tpComposite()
@@ -49,22 +49,37 @@ function tpComposite()
 
 	// XXX: This should be an option.
 	// Use bridge selection if there is one.
-	var bridge_selection = getBridgeSelection();
-	var images = bridge_selection[0];
-	var thumbs = bridge_selection[1];
 
-	if (images.length == 0)
+	var images, thumbs;
+	if (BridgeTalk.isRunning('bridge')) {
+		var bridge_selection = getBridgeSelection();
+		images = bridge_selection[0];
+		thumbs = bridge_selection[1];
+	}
+
+	if (images == undefined || images.length == 0)
 		images = File.openDialog("Choose file(s) to add to composite", undefined, true);
 
 	if (images.length > 1 && tpSettings.reorder)
 		images = tpReorder(images, thumbs);
 
 	if (images == undefined) {
-		// Reorder window was dismiess, revert settings and stop script.
+		// No images were selected or the reorder window was dismissed. Revert
+		// settings and stop the script.
 		preferences.rulerUnits = rulerUnits;
 		return;
 	}
 	
+	// If the user opens a file that is already open we will have a document
+	// collision problem. To solve it we duplicate the open, colliding document
+	// to get a copy of it with a new name. We then close the original
+	// document.
+	try {
+		var docc = documents.getByName(images[images.length - 1].name);
+		doc = docc.duplicate();
+		docc.close(SaveOptions.DONOTSAVECHANGES);
+	} catch (err) { }
+
 	var stackDoc = tpStack(images);
 	tpNTych(stackDoc);
 

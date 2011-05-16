@@ -10,7 +10,10 @@ var ImageList = function(files, container, thumbnails)
 	this.thumbnails = thumbnails;
 
 	for (i in this.files)
-		this.items[i] = new ImageItem(container, this.files[i], Number(i), this.thumbnails[i]);
+		if (this.thumbnails != undefined && this.thumbnails.length == this.files.length)
+			this.items[i] = new ImageItem(container, this.files[i], Number(i), this.thumbnails[i]);
+		else
+			this.items[i] = new ImageItem(container, this.files[i], Number(i));
 }
 
 
