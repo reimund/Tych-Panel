@@ -5,6 +5,7 @@ var defaults = {
 	'resize': false,
 	'resize_width': 800,
 	'reorder': true,
+	'use_bridge_selection': false,
 	'resample_method': 'bicubic',
 	'autosave': false,
 	'autoclose': false,

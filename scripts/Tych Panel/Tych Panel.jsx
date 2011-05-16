@@ -46,12 +46,10 @@ function tpComposite()
 	preferences.rulerUnits = Units.PIXELS;
 
 	var	doc = documents.length > 0 ? activeDocument : null;
-
-	// XXX: This should be an option.
-	// Use bridge selection if there is one.
-
 	var images, thumbs;
-	if (BridgeTalk.isRunning('bridge')) {
+
+	// Use bridge selection if there is one.
+	if (tpSettings.use_bridge_selection && BridgeTalk.isRunning('bridge')) {
 		var bridge_selection = getBridgeSelection();
 		images = bridge_selection[0];
 		thumbs = bridge_selection[1];
@@ -74,11 +72,13 @@ function tpComposite()
 	// collision problem. To solve it we duplicate the open, colliding document
 	// to get a copy of it with a new name. We then close the original
 	// document.
-	try {
-		var docc = documents.getByName(images[images.length - 1].name);
-		doc = docc.duplicate();
-		docc.close(SaveOptions.DONOTSAVECHANGES);
-	} catch (err) { }
+	for (i in images) {
+		try {
+			var docc = documents.getByName(images[i].name);
+			doc = docc.duplicate();
+			docc.close(SaveOptions.DONOTSAVECHANGES);
+		} catch (err) { }
+	}
 
 	var stackDoc = tpStack(images);
 	tpNTych(stackDoc);

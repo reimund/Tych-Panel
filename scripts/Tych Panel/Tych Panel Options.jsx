@@ -28,36 +28,33 @@ function createDialog()
 	dialog.orientation = 'row';
 	dialog.alignChildren = 'top';
 
-	dialog.main_grp = dialog.add('group', undefined, 'Main');
-	dialog.main_grp.orientation = 'column';
-	dialog.main_grp.alignChildren = 'fill';
-	dialog.general = dialog.main_grp.add('panel', undefined, 'General');
-	dialog.general.spacingGrp = dialog.general.add('group');
-	dialog.general.aspectGrp = dialog.general.add('group');
-	dialog.general.keepAspect = dialog.general.aspectGrp.add('checkbox', undefined, 'Keep aspect ratio on images');
+	dialog.main_group = dialog.add('group', undefined, 'Main');
+	dialog.main_group.orientation = 'column';
+	dialog.main_group.alignChildren = 'fill';
+
+	// General section.
+	dialog.general = dialog.main_group.add('panel', undefined, 'General');
+	dialog.general.spacing_group = dialog.general.add('group');
+	dialog.general.aspect_group = dialog.general.add('group');
+	dialog.general.keepAspect = dialog.general.aspect_group.add('checkbox', undefined, 'Keep aspect ratio on images');
 
 	dialog.general.aspectText = dialog.general.add('statictext', undefined, 'When this is unchecked, images will be cropped to match height.');
 	dialog.general.aspectText.graphics.font = smallFont;
-	dialog.general.resizeGrp = dialog.general.add('group');
-	dialog.general.resize = dialog.general.resizeGrp.add('checkbox', undefined, 'Resize generated images');
+	dialog.general.resize_group = dialog.general.add('group');
+	dialog.general.resize = dialog.general.resize_group.add('checkbox', undefined, 'Resize generated images');
 	dialog.general.resizeWidth = dialog.general.add('group');
-
-	reorder_grp = dialog.general.add('group');
-	reorder_grp.margins = [0, 10, 0, 0];
-	dialog.general.reorder = reorder_grp.add('checkbox', undefined, 'Open reorder dialog on ‘Just Bring it’');
-	dialog.general.reorder.value = tpSettings.reorder;
 
 	with (dialog.general) {
 		alignChildren = "right";
 
 		keepAspect.value = tpSettings.keep_aspect;
 
-		resizeGrp.margins = [0, 20, 0, 0];
+		resize_group.margins = [0, 20, 0, 0];
 		resize.value = tpSettings.resize;
 
-		spacingGrp.label = spacingGrp.add('statictext', undefined, 'Image spacing');
-		spacingGrp.input = spacingGrp.add('edittext', undefined, tpSettings.spacing);
-		spacingGrp.input.preferredSize = [40, 20];
+		spacing_group.label = spacing_group.add('statictext', undefined, 'Image spacing');
+		spacing_group.input = spacing_group.add('edittext', undefined, tpSettings.spacing);
+		spacing_group.input.preferredSize = [40, 20];
 
 		resizeWidth.label = resizeWidth.add('statictext', undefined, 'Target width');
 		resizeWidth.input = resizeWidth.add('edittext', undefined, tpSettings.resize_width);
@@ -65,7 +62,21 @@ function createDialog()
 		resizeWidth.enabled = resize.value;
 	}
 
-	dialog.output = dialog.main_grp.add('panel', undefined, 'Output');
+	// Just bring it section.
+	dialog.jbi = dialog.main_group.add('panel', undefined, 'Just Bring it');
+	dialog.jbi.alignChildren = "right";
+
+	reorder_group = dialog.jbi.add('group');
+	reorder_group.margins = [0, 10, 0, 0];
+	dialog.jbi.reorder = reorder_group.add('checkbox', undefined, 'Enable reorder dialog');
+	dialog.jbi.reorder.value = tpSettings.reorder;
+
+	bridge_group = dialog.jbi.add('group');
+	dialog.jbi.use_bridge = bridge_group.add('checkbox', undefined, 'Use Adobe Bridge selection');
+	dialog.jbi.use_bridge.value = tpSettings.use_bridge_selection;
+
+	// Output section.
+	dialog.output = dialog.main_group.add('panel', undefined, 'Output');
 	dialog.output.autosave = dialog.output.add('checkbox', undefined, 'Save generated images');
 
 	dialog.output.directory = dialog.output.add('group');
@@ -80,7 +91,7 @@ function createDialog()
 	dialog.output.jpeg = dialog.output.savetypes.add('checkbox', undefined, 'Jpeg');
 	dialog.output.psd = dialog.output.savetypes.add('checkbox', undefined, 'Psd');
 
-	reorder_grp.margins = [0, 10, 0, 0];
+	reorder_group.margins = [0, 10, 0, 0];
 	dialog.output.quality = dialog.output.add('group');
 	dialog.output.quality.label = dialog.output.quality.add('statictext', undefined, 'JPEG Quality');
 	dialog.output.quality.slider = dialog.output.quality.add('slider', undefined, tpSettings.jpeg_quality);
@@ -117,19 +128,20 @@ function createDialog()
 		};
 	}
 
-	dialog.buttonGrp = dialog.add('group', undefined, undefined);
-	dialog.buttonGrp.orientation = 'column';
-	dialog.okButton = dialog.buttonGrp.add('button', undefined, 'Ok');
-	dialog.cancelButton = dialog.buttonGrp.add('button', undefined, 'Cancel');
+	dialog.button_group = dialog.add('group', undefined, undefined);
+	dialog.button_group.orientation = 'column';
+	dialog.okButton = dialog.button_group.add('button', undefined, 'Ok');
+	dialog.cancelButton = dialog.button_group.add('button', undefined, 'Cancel');
 
 
 	dialog.okButton.onClick = function() {
 		// Get values from controls and put into the settings object.
-		tpSettings.spacing = numOrDefault(dialog.general.spacingGrp.input.text, 'spacing');
+		tpSettings.spacing = numOrDefault(dialog.general.spacing_group.input.text, 'spacing');
 		tpSettings.keep_aspect = dialog.general.keepAspect.value;
 		tpSettings.resize_width = numOrDefault(dialog.general.resizeWidth.input.text, 'resize_width');
 		tpSettings.resize = dialog.general.resize.value;
-		tpSettings.reorder = dialog.general.reorder.value;
+		tpSettings.reorder = dialog.jbi.reorder.value;
+		tpSettings.use_bridge_selection = dialog.jbi.use_bridge.value;
 		tpSettings.autosave = dialog.output.autosave.value;
 		tpSettings.autoclose = dialog.output.autoclose.value;
 		tpSettings.output_formats.jpg = dialog.output.jpeg.value;
