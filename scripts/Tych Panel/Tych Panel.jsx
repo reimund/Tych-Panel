@@ -20,6 +20,7 @@
 //@include Tych%20Panel%20Options%20Only/tpconstants.jsx
 //@include Tych%20Panel%20Options%20Only/tpsettings.jsx
 //@include Tych%20Panel%20Options%20Only/tpreorder.jsx
+//@include Tych%20Panel%20Options%20Only/layerMaskLib.9.jsx
 
 // XXX: Keep aspect ratio option does not affect all tychs (currently only
 // n-tychs). Not really a problem since the icon buttons are a different use
@@ -35,7 +36,7 @@ var tpSettings = tpGetSettings();
 //var images = File.openDialog("Choose file(s) to stack", undefined, true);
 //tpStack(images);
 //tpTych(5);
-//tpComposite();
+tpComposite();
 
 
 function tpComposite()
@@ -152,7 +153,11 @@ function tpStack(images)
 {
 	var last = images.length - 1;
 	var doc = app.open(images[last]);
+	doc.flatten();
 	doc.layers[0].isBackgroundLayer = false;
+
+	if (tpSettings.convert_to_smartobject)
+		tpMakeSmartObject();
 
 	f = function() {
 		var d = doc;
@@ -162,6 +167,7 @@ function tpStack(images)
 
 			if (i < last) {
 				d = app.open(images[i]);
+				d.flatten();
 				d.selection.selectAll();
 
 				if (d.layers.length > 1)
@@ -175,12 +181,34 @@ function tpStack(images)
 				activeDocument = doc;
 				doc.paste();
 				doc.layers[0].translate(-doc.layers[0].bounds[0].value, -doc.layers[0].bounds[1].value);
+
+				if (tpSettings.convert_to_smartobject)
+					tpMakeSmartObject();
 			}
+
 		}
 		doc.resizeCanvas(maxx, maxy, AnchorPosition.TOPLEFT);
+
+		// If mask option is enabled, add a layer mask to each layer.
+		if (tpSettings.mask_layers)
+			for (i = 0; i < doc.layers.length; i++)
+				tpMask(doc.layers[i]);
 	}
 	doc.suspendHistory('Stack images', 'f()');
 	return doc;
+}
+
+
+function tpMask(layer)
+{
+	layer.parent.activeLayer = layer;
+	layer.parent.selection.select(sel = Array(
+		Array(layer.bounds[0].value, layer.bounds[1].value),
+		Array(layer.bounds[0].value, layer.bounds[3].value),
+		Array(layer.bounds[2].value, layer.bounds[3].value),
+		Array(layer.bounds[2].value, layer.bounds[1].value)
+	));
+	layerMask.makeFromSelection(true);
 }
 
 
@@ -345,6 +373,7 @@ function tpAddSeams(doc, trans, size, tychVariant)
 	var l = doc.layers;
 	var spacing = tpSettings.spacing;
 
+
 	if (tychVariant == TRIPTYCH_PORTRAIT_LANDSCAPE_GRID
 			|| tychVariant == TRIPTYCH_LANDSCAPE_PORTRAIT_GRID) {
 		// Index of portrait layer.
@@ -375,10 +404,21 @@ function tpAddSeams(doc, trans, size, tychVariant)
 			Array(size[0], trans[la[1]][1][1] + 1),
 			Array(0, trans[la[1]][1][1] + 1),
 		));
+
 		doc.activeLayer = doc.layers[la[0]];
-		doc.selection.clear();
+
+		if (tpSettings.mask_layers)
+			fillLayerMask(BLACK);
+		else
+			doc.selection.clear();
+
 		doc.activeLayer = doc.layers[la[1]];
-		doc.selection.clear();
+
+		if (tpSettings.mask_layers)
+			fillLayerMask(BLACK);
+		else
+			doc.selection.clear();
+
 		doc.selection.deselect();
 	} else {
 		for (i = 0; i < doc.layers.length; i++) {
@@ -413,9 +453,49 @@ function clearSelected(doc)
 {
 	for (j = 0; j < doc.layers.length; j++) {
 		doc.activeLayer = doc.layers[j];
-		doc.selection.clear();
+
+		if (overlapsSelection(doc.activeLayer))
+			if (tpSettings.mask_layers)
+				fillLayerMask(BLACK);
+			else
+				doc.selection.clear();
 	}
 	doc.selection.deselect();
+}
+
+
+/**
+ * Fills the selection of the active layer's layer mask with the specified
+ * color. Works on the active document.
+ */
+function fillLayerMask(color)
+{
+	var fillColor = new SolidColor();
+
+	fillColor.rgb.red = color[0];
+	fillColor.rgb.green = color[1];
+	fillColor.rgb.blue = color[2];
+	
+	layerMask.editMode(true);
+	activeDocument.selection.fill(fillColor);
+}
+
+
+/**
+ * Checks if the specified layer overlaps with the currentSelection.
+ */
+function overlapsSelection(layer)
+{
+	var s = layer.parent.selection.bounds;
+	var l = layer.bounds;
+	var overlaps = true;
+
+	if (s[2].value < l[0].value
+			|| s[0].value > l[2].value
+			|| s[3].value < l[1].value
+			|| s[1].value > l[3].value) 
+		overlaps = false;
+	return overlaps;
 }
 
 
@@ -472,9 +552,12 @@ function tpArrange(doc, t)
 		if (i >= t.length) break;
 		
 		// Check if the layer should be resized.
+		try {
 		if (t[i][0] != null)
 			doc.layers[i].resize(t[i][0][0], t[i][0][1], t[i][0][2]);
-
+} catch (e) {
+$.writeln(t[i][0][0] + ' ' + t[i][0][1] + ' ' + t[i][0][2]);
+$.writeln(e); }
 		// Check if the layer should be moved.
 		if (t[i][1] != null) {
 			doc.layers[i].translate(t[i][1][0], t[i][1][1]);
@@ -572,7 +655,7 @@ function makeTych(tychVariant, doc)
 			trans[la[1]][0] = Array(r * s2 * 100, r * s2 * 100, AnchorPosition.TOPLEFT);
 			trans[la[1]][1][0] = tychVariant == TRIPTYCH_PORTRAIT_LANDSCAPE_GRID
 				? Math.round(r * l[p].bounds[2].value) + spacing - 3 : 0;
-			trans[la[1]][1][1] = Math.round(realSize[1] / 2) + spacing / 2 - 1;
+			trans[la[1]][1][1] = Math.round(realSize[1] / 2 + spacing / 2) - 1;
 
 			trans[p][0] = Array(r * 100, r * 100, AnchorPosition.TOPLEFT);
 			trans[p][1][0] = tychVariant == TRIPTYCH_PORTRAIT_LANDSCAPE_GRID ? -1 : Math.round(r * l[p].bounds[2].value) + spacing - 3;
@@ -827,3 +910,13 @@ function getBridgeSelection()
 
 	return selected; 
 }
+
+
+/**
+ * Converts the current activeDocument.activeLayer to a smart object.
+ */
+function tpMakeSmartObject()
+{
+	executeAction(stringIDToTypeID("newPlacedLayer"), undefined, DialogModes.NO);
+}
+

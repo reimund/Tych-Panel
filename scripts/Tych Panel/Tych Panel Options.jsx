@@ -43,6 +43,12 @@ function createDialog()
 	dialog.general.resize_group = dialog.general.add('group');
 	dialog.general.resize = dialog.general.resize_group.add('checkbox', undefined, 'Resize generated images');
 	dialog.general.resizeWidth = dialog.general.add('group');
+	dialog.general.smartobject_group = dialog.general.add('group');
+	dialog.general.smartobject = dialog.general.smartobject_group.add('checkbox', undefined, 'Convert to smart objects');
+	dialog.general.smartobject.value = tpSettings.convert_to_smartobject;
+	dialog.general.layermask_group = dialog.general.add('group');
+	dialog.general.layermask = dialog.general.layermask_group.add('checkbox', undefined, 'Mask layers');
+	dialog.general.layermask.value = tpSettings.mask_layers;
 
 	with (dialog.general) {
 		alignChildren = "right";
@@ -140,6 +146,8 @@ function createDialog()
 		tpSettings.keep_aspect = dialog.general.keepAspect.value;
 		tpSettings.resize_width = numOrDefault(dialog.general.resizeWidth.input.text, 'resize_width');
 		tpSettings.resize = dialog.general.resize.value;
+		tpSettings.convert_to_smartobject = dialog.general.smartobject.value;
+		tpSettings.mask_layers = dialog.general.layermask.value;
 		tpSettings.reorder = dialog.jbi.reorder.value;
 		tpSettings.use_bridge_selection = dialog.jbi.use_bridge.value;
 		tpSettings.autosave = dialog.output.autosave.value;

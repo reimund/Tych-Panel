@@ -5,6 +5,8 @@ var defaults = {
 	'resize': false,
 	'resize_width': 800,
 	'reorder': true,
+	'use_layer_masks': false,
+	'convert_to_smartobject': false,
 	'use_bridge_selection': false,
 	'resample_method': 'bicubic',
 	'autosave': false,
@@ -25,3 +27,4 @@ var QUAPTYCH_GRID = 6;
 var QUAPTYCH_HORIZONTAL = 7;
 
 var WHITE = Array(255, 255, 255);
+var BLACK = Array(0, 0, 0);
