@@ -486,9 +486,17 @@ function fillLayerMask(color)
  */
 function overlapsSelection(layer)
 {
-	var s = layer.parent.selection.bounds;
+	var s;
 	var l = layer.bounds;
 	var overlaps = true;
+
+	try {
+		s = layer.parent.selection.bounds;
+	} catch (e) {
+		// bounds doesn't exist, ie there is no selection, thus it can't
+		// overlap.
+		return false;
+	}
 
 	if (s[2].value < l[0].value
 			|| s[0].value > l[2].value
@@ -534,7 +542,7 @@ function tpGetTrans(layers, spacing, resizeFactor)
 				)
 			);
 		} else {
-			trans.push(Array(null, Array(tpSumWidth(l, i) + spacing * i, -(l[i].bounds[3] - minh) / 2)));
+			trans.push(Array(null, Array(tpSumWidth(l, i) + spacing * i, -Math.round((l[i].bounds[3] - minh) / 2))));
 		}
 	}
 
