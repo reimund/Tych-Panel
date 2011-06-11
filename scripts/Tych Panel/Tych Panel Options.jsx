@@ -8,9 +8,9 @@
  */
 
 
-//@include Tych%20Panel%20Options%20Only/tpconstants.jsx
-//@include Tych%20Panel%20Options%20Only/tpsettings.jsx
-//@include Tych%20Panel%20Options%20Only/PSSettings.jsx
+//@include Tych%20Panel%20Only/tpconstants.jsx
+//@include Tych%20Panel%20Only/tpsettings.jsx
+//@include Tych%20Panel%20Only/PSSettings.jsx
 
 //settings.clearSettings()
 //settings.saveSettings();
