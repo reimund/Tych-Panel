@@ -10,7 +10,7 @@ var image_list;
  * Opens a window with thumbnails that lets you reorder the specified images.
  * If thumbs are specified, these files will be used for thumbnails.
  */
-function tpReorder(files, thumbs)
+function tp_reorder(files, thumbs)
 {
 	var dialog = new Window('dialog', 'Reorder images');
 	var large_font = ScriptUI.newFont(dialog.graphics.font.name, ScriptUI.FontStyle.REGULAR, 20);
@@ -29,28 +29,30 @@ function tpReorder(files, thumbs)
 	image_list = new ImageList(files, list_container, thumbs);
 	image_list.select(0);
 
-	moveButtons = dialog.main_grp.add('group');
+	move_buttons = dialog.main_grp.add('group');
 
-	moveLeftButton = moveButtons.add('iconbutton', [0, 0, 44, 32], iconLeft);
-	moveLeftButton.graphics.font = large_font;
-	moveLeftButton.onClick = moveLeft;
+	move_left_button = move_buttons.add('iconbutton', [0, 0, 44, 32], iconLeft);
+	move_left_button.graphics.font = large_font;
+	move_left_button.onClick = move_left;
 
-	moveRightButton = moveButtons.add('iconbutton', [0, 0, 44, 32], iconRight);
-	moveRightButton.graphics.font = large_font;
-	moveRightButton.onClick = moveRight;
+	move_right_button = move_buttons.add('iconbutton', [0, 0, 44, 32], iconRight);
+	move_right_button.graphics.font = large_font;
+	move_right_button.onClick = move_right;
 
-	buttonGrp = dialog.add('group');
-	buttonGrp.orientation = 'column';
+	button_group = dialog.add('group');
+	button_group.orientation = 'column';
 
-	buttonGrp.okButton = buttonGrp.add('button', undefined, 'Ok');
-	buttonGrp.cancelButton = buttonGrp.add('button', undefined, 'Cancel');
+	button_group.ok_button = button_group.add('button', undefined, 'Ok');
+	button_group.cancel_button = button_group.add('button', undefined, 'Cancel');
 
-	buttonGrp.okButton.onClick = function() {
+	button_group.ok_button.onClick = function()
+	{
 		reordered_files = image_list.reordered();
 		dialog.close(1);
 	};
 
-	buttonGrp.cancelButton.onClick = function() {
+	button_group.cancel_button.onClick = function()
+	{
 		dialog.close(2);
 	}
 
@@ -59,7 +61,7 @@ function tpReorder(files, thumbs)
 }
 
 
-function moveLeft()
+function move_left()
 {
 	if (image_list.current_item == -1 || image_list.current_item == 0)
 		return;
@@ -69,7 +71,7 @@ function moveLeft()
 }
 
 
-function moveRight()
+function move_right()
 {
 	if (image_list.current_item == -1 || image_list.current_item == image_list.length - 1)
 		return;

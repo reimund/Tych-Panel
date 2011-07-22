@@ -39,18 +39,19 @@ Tych.prototype.select = function()
 		thumbs = bridge_selection[1];
 	}
 
-	if (images == undefined || images.length == 0)
+	if (images == undefined || images.length < 1)
 		images = File.openDialog("Choose file(s) to add to composite", undefined, true);
 
-	if (images.length > 1 && this.settings.reorder)
-		images = tpReorder(images, thumbs);
+	if (images != undefined && images.length > 1 && this.settings.reorder)
+		images = tp_reorder(images, thumbs);
 
-	if (images == undefined) {
+	if (images == undefined || images.length < 1) {
 		// No images were selected or the reorder window was dismissed. Revert
 		// settings and stop the script.
 		this.revert();
 		return false;
 	}
+
 
 	// If the user opens a file that is already open we will have a document
 	// collision problem. To solve it we duplicate the open, colliding document
@@ -208,6 +209,21 @@ Tych.prototype.finish = function()
 	// Make a reference to the document that should be saved.
 	this.save_doc = this.comp_target_doc == null ? this.doc : this.comp_target_doc;
 	
+	// Unlink all layer masks.
+	if (this.save_doc.layerSets.length > 0) {
+		for (var i = 0; i < this.save_doc.layerSets.length; i++) {
+			for (var j = 0; j < this.save_doc.layerSets[i].layers.length; j++) {
+				this.save_doc.activeLayer = this.save_doc.layerSets[i].layers[j];
+				layerMask.link(false);
+			}
+		}
+	} else {
+		for (var i = 0; i < this.save_doc.layers.length; i++) {
+			this.save_doc.activeLayer = this.save_doc.layers[i];
+			layerMask.link(false);
+		}
+	}
+
 	if (this.save_doc.layers[this.save_doc.layers.length - 1].name == 'Background')
 		tp_fill_background(this.save_doc, WHITE);
 	else 
@@ -227,8 +243,12 @@ Tych.prototype.finish = function()
 Tych.prototype.layout_and_composite = function()
 {
 	// Select the images to layout.
-	this.select();
-
+	if (!this.select()) {
+		// Abort if no images are selected.
+		this.revert();
+		return;
+	}
+	
 	// Stack it up.
 	this.stack();
 
@@ -253,28 +273,58 @@ Tych.prototype.layout_and_composite = function()
  */
 Tych.prototype.place_comp = function(src, target)
 {
+	var i, placement;
 	var src_height = src.height;
 	var target_height = target.height;
 
-	// Unlock the background (if locked) so we can put a background fill below.
 	activeDocument = target;
+
+	// Get rid of outside pixels;
+	//target.crop([0, 0, target.width, target.height]);
+
+	if (target.layerSets.length == 0) {
+		var layers_to_move = [];
+		for (i = 0; i < target.layers.length - 1; i++)
+			layers_to_move[i] = target.layers[i];
+
+		var row_1 = target.layerSets.add();
+		row_1.name = 'Row 1';
+
+		this.move_into_set(layers_to_move, row_1);
+	}
+
+
+	var row_n = target.layerSets.add();
+	var layer_count = target.layers.length;
+	row_n.name = 'Row ' + target.layerSets.length;
+	target.activeLayer = row_n;
+
+	// Unlock the background (if locked) so we can put a background fill below.
 	target.layers[target.layers.length - 1].isBackgroundLayer = false;
 
-	activeDocument = src;
-	src.selection.selectAll();
-	src.selection.copy(true);
+	for (i = 0; i < src.layers.length; i++)
+		this.copy_layer_to_document(src.layers[i], target);
+
+	//return;
+
+	layers_to_move = [];
+	for (i = 0; i < src.layers.length; i++)
+		layers_to_move[i] = target.layers[i];
+
+	this.move_into_set(layers_to_move, row_n);
+
 	src.close(SaveOptions.DONOTSAVECHANGES);
+
+	/*
 	activeDocument = target;
 	target.activeLayer = target.layers[0];
 	
-	// Get rid of outside pixels;
-	target.crop([0, 0, target.width, target.height]);
+	*/
 
-	target.paste();
+	activeDocument = target;
 	target.resizeCanvas(target.width, target.height + src_height + this.settings.spacing, AnchorPosition.TOPLEFT);
 
-	// XXX: Why don't I use translate here?
-	target.layers[0].applyOffset(0, target_height - target.activeLayer.bounds[1] + this.settings.spacing, OffsetUndefinedAreas.SETTOBACKGROUND);
+	row_n.translate(0, target_height - target.activeLayer.bounds[1] + this.settings.spacing);
 }
 
 
@@ -290,16 +340,15 @@ Tych.prototype.place_comp = function(src, target)
  */
 Tych.prototype.save = function()
 {
-	var basename = this.filename;
+	var basename = this.settings.filename + '_';
 	var padding = '001';
-	var paddedName = basename + '_' . padding;
 	var collision;
 	var file;
 
 	while(true) {
 		collision = false;
 		for (format in this.settings.output_formats) {
-			file = new File(this.settings.save_directory + '/' + basename + '_' + padding + '.' + format);
+			file = new File(this.settings.save_directory + '/' + basename + padding + '.' + format);
 			if (file.exists) {
 				collision = true;
 				break;
@@ -320,7 +369,7 @@ Tych.prototype.save = function()
 	for (format in this.settings.output_formats)
 		if (this.settings.output_formats[format])
 			this.save_doc.saveAs(
-				new File(this.settings.save_directory + '/' + this.filename + '_' + padding),
+				new File(this.settings.save_directory + '/' + basename + padding),
 				options[format], true, Extension.LOWERCASE);
 }
 
@@ -334,6 +383,10 @@ Tych.prototype.make = function()
 {
 	this.trans.apply();
 	this.add_seams();
+
+	// Get rid of outside pixels;
+	//this.save_doc = this.comp_target_doc == null ? this.doc : this.comp_target_doc;
+	this.doc.crop([0, 0, this.doc.width, this.doc.height]);
 }
 
 
@@ -418,7 +471,6 @@ Tych.prototype.add_seams = function()
 			this.clear_selected();
 		}
 	}
-
 }
 
 
@@ -465,7 +517,92 @@ Tych.prototype.get_psd_save_options = function()
 }
 
 
-var t = new Tych(tpGetSettings());
+Tych.prototype.move_into_set = function(layers, set)
+{
+	activeDocument = layers[0].parent;
+	for (i = 0; i < layers.length; i++)
+		layers[i].move(set, ElementPlacement.INSIDE);
+}
+
+
+/*
+Tych.prototype.test_copy = function()
+{
+	var i;
+	for (i = 0; i < activeDocument.layers.length; i++) {
+		//src.activeLayer = src.layers[i];
+		$.writeln(i + ' hhj');
+		this.copy_layer_to_document(activeDocument.layers[i], documents[0]);
+		$.writeln(i + ' say what');
+
+	}
+}
+*/
+
+/**
+ * Copies the specified layer to the bottom of the layer stack of the given
+ * document.
+ */
+Tych.prototype.copy_layer_to_document = function(layer, target)
+{
+	activeDocument = layer.parent;
+	var temp = layer.parent.activeLayer;
+	layer.parent.activeLayer = layer;
+
+	for (i = 0; i < documents.length; i++) {
+		if (documents[i] == target)
+			target_index = i;
+
+		if (documents[i] == activeDocument)
+			active_index = i;
+	}
+
+	// We must iterate through the document stack in order to copy the layer to
+	// a specific document. It works by copying it one document at a time until
+	// it's in the right document.
+	for (i = active_index; i >= target_index; i--) {
+
+		this.copy_layer_to_previous_document();
+
+		if (i != active_index)
+			// Remove when not the in target
+			documents[i].activeLayer.remove();
+
+		if (i - 1 == target_index) break;
+
+		activeDocument = documents[i - 1];
+
+	}
+	activeDocument = layer.parent;
+	layer.parent.activeLayer = temp;
+}
+
+
+/**
+ * Copies the active layer of the active document to the document beneath it
+ * in the document stack.
+ */
+Tych.prototype.copy_layer_to_previous_document = function()
+{
+	var desc = new ActionDescriptor();
+	var ref = new ActionReference();
+
+	ref.putEnumerated(
+		charIDToTypeID('Lyr '),
+		charIDToTypeID('Ordn'),
+		charIDToTypeID('Trgt')
+	);
+
+	desc.putReference(charIDToTypeID('null'), ref);
+	var docRef = new ActionReference();
+	docRef.putOffset(charIDToTypeID('Dcmn'), -1);
+	desc.putReference(charIDToTypeID('T   '), docRef);
+	desc.putInteger(charIDToTypeID('Vrsn'), 5);
+	executeAction(charIDToTypeID('Dplc'), desc, DialogModes.NO);
+}
+
+
+var t = new Tych(tp_get_settings());
 //t.layout(QUAPTYCH_GRID);
 //t.layout(DIPTYCH_HORIZONTAL);
 //t.layout(DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL);
@@ -474,3 +611,4 @@ var t = new Tych(tpGetSettings());
 //t.layout(TRIPTYCH_LANDSCAPE_PORTRAIT_GRID);
 //t.layout(QUAPTYCH_GRID);
 //t.layout_and_composite();
+//t.test_copy();

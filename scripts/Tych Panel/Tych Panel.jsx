@@ -29,6 +29,6 @@
 // this one, since these can be built with the 'Just bring it' button anyway.
 
 
-var t = new Tych(tpGetSettings());
+var t = new Tych(tp_get_settings());
 //t.layout_and_composite();
 //t.layout();

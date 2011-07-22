@@ -4,9 +4,7 @@ body {
 }
 
 div.actions,
-div.buttons { 
-	text-align: center;
-}
+div.buttons { text-align: center; }
 
 div.actions { margin: 2px 2px 3px 2px; }
 div.actions div { margin: 0 0 10px 0; }
@@ -14,9 +12,16 @@ div.actions span.button { margin: 0 0 3px 0; }
 div.actions div span.button a { text-align: center; }
 div.actions { margin-bottom: 10px; }
 span.button.options { clear: both; }
-/*span.button.options { float: left; }*/
-/*span.button.stack { float: right; }*/
-/*span.button.bring-it { float: right; clear: right; }*/
+
+span.button.add-row a.icon {
+	background-position: -1px -2px;
+	background-image: url(../img/plus.png);
+}
+
+span.button.options a.icon {
+	background-position: -1px -1px;
+	background-image: url(../img/gear.png);
+}
 
 span.button {
 	background: url(../img/button.png) right top no-repeat;
@@ -27,34 +32,31 @@ span.button {
 	color: #000;
 }
 
-span.button .first {
-	text-decoration: none;
+span.button .inner {
 	display: inline-block;
 	background: url(../img/button.png) left top no-repeat;
 	height: 19px;
-	padding: 6px 10px 0 10px;
+	padding: 6px 10px 4px 10px;
 }
 
-span.button a.icon {
-	display: inline-block;
-}
-
+span.button a.icon { display: inline-block; }
 span.button.l { background: url(../img/buttonl.png) right top no-repeat; }
 
-span.button.l .first {
+span.button.l span {
 	background: url(../img/buttonl.png) left top no-repeat;
 	height: 38px;
 	padding: 0;
 }
 
-span.button.l a {
+span.button a {
+	text-decoration: none;
 	background-repeat: no-repeat;
 }
 
-span.button:hover, span.button:hover .first { background-image: url(../img/button-hover.png); }
-span.button:active, span.button:active .first { background-image: url(../img/button-down.png); }
-span.button.l:hover, span.button.l:hover .first { background-image: url(../img/buttonl-hover.png); }
-span.button.l:active, span.button.l:active .first { background-image: url(../img/buttonl-down.png); }
+span.button:hover, span.button:hover .inner { background-image: url(../img/button-hover.png); }
+span.button:active, span.button:active .inner { background-image: url(../img/button-down.png); }
+span.button.l:hover, span.button.l:hover .inner { background-image: url(../img/buttonl-hover.png); }
+span.button.l:active, span.button.l:active .inner { background-image: url(../img/buttonl-down.png); }
 	
 
 small {
@@ -75,7 +77,9 @@ a { color: #555; }
 	line-height: 0;
 }
 
-span.button a.icon {
+span.button a.icon { padding: 0 6px 5px 18px; }
+
+span.button.l a.icon {
 	width: 25px;
 	height: 25px;
 	padding: 5px 6px 5px 6px;
@@ -124,12 +128,13 @@ span.padding { margin: 0 0 0 10px; }
 }
 
 .clearfix:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
-    }
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
 * html .clearfix             { zoom: 1; }
-*:first-child+html .clearfix { zoom: 1; }
+*:inner-child+html .clearfix { zoom: 1; }

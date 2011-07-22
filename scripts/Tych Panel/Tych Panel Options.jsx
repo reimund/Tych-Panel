@@ -16,11 +16,11 @@
 //settings.saveSettings();
 
 // Use stored settings if they exist, defaults otherwise.
-var tpSettings = tpGetSettings();
+var tp_settings = tp_get_settings();
 
-createDialog();
+create_dialog();
 
-function createDialog()
+function create_dialog()
 {
 	var dialog = new Window('dialog', 'Tych Panel options');
 	var smallFont = ScriptUI.newFont(dialog.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
@@ -45,25 +45,25 @@ function createDialog()
 	dialog.general.resizeWidth = dialog.general.add('group');
 	dialog.general.smartobject_group = dialog.general.add('group');
 	dialog.general.smartobject = dialog.general.smartobject_group.add('checkbox', undefined, 'Convert to smart objects');
-	dialog.general.smartobject.value = tpSettings.convert_to_smartobject;
+	dialog.general.smartobject.value = tp_settings.convert_to_smartobject;
 	dialog.general.layermask_group = dialog.general.add('group');
 	dialog.general.layermask = dialog.general.layermask_group.add('checkbox', undefined, 'Mask layers');
-	dialog.general.layermask.value = tpSettings.mask_layers;
+	dialog.general.layermask.value = tp_settings.mask_layers;
 
 	with (dialog.general) {
 		alignChildren = "right";
 
-		keepAspect.value = tpSettings.keep_aspect;
+		keepAspect.value = tp_settings.keep_aspect;
 
 		resize_group.margins = [0, 20, 0, 0];
-		resize.value = tpSettings.resize;
+		resize.value = tp_settings.resize;
 
 		spacing_group.label = spacing_group.add('statictext', undefined, 'Image spacing');
-		spacing_group.input = spacing_group.add('edittext', undefined, tpSettings.spacing);
+		spacing_group.input = spacing_group.add('edittext', undefined, tp_settings.spacing);
 		spacing_group.input.preferredSize = [40, 20];
 
 		resizeWidth.label = resizeWidth.add('statictext', undefined, 'Target width');
-		resizeWidth.input = resizeWidth.add('edittext', undefined, tpSettings.resize_width);
+		resizeWidth.input = resizeWidth.add('edittext', undefined, tp_settings.resize_width);
 		resizeWidth.input.preferredSize = [50, 20];
 		resizeWidth.enabled = resize.value;
 	}
@@ -75,23 +75,23 @@ function createDialog()
 	reorder_group = dialog.jbi.add('group');
 	reorder_group.margins = [0, 10, 0, 0];
 	dialog.jbi.reorder = reorder_group.add('checkbox', undefined, 'Enable reorder dialog');
-	dialog.jbi.reorder.value = tpSettings.reorder;
+	dialog.jbi.reorder.value = tp_settings.reorder;
 
 	bridge_group = dialog.jbi.add('group');
 	dialog.jbi.use_bridge = bridge_group.add('checkbox', undefined, 'Use Adobe Bridge selection');
-	dialog.jbi.use_bridge.value = tpSettings.use_bridge_selection;
+	dialog.jbi.use_bridge.value = tp_settings.use_bridge_selection;
 
 	// Output section.
 	dialog.output = dialog.main_group.add('panel', undefined, 'Output');
 	dialog.output.autosave = dialog.output.add('checkbox', undefined, 'Save generated images');
 
 	dialog.output.directory = dialog.output.add('group');
-	dialog.output.directory.input = dialog.output.directory.add('edittext', undefined, new Folder(tpSettings.save_directory).fsName);
+	dialog.output.directory.input = dialog.output.directory.add('edittext', undefined, new Folder(tp_settings.save_directory).fsName);
 	dialog.output.directory.browseButton = dialog.output.directory.add('button', undefined, 'Browse...');
 
 	dialog.output.filename = dialog.output.add('group');
 	dialog.output.filename.label = dialog.output.filename.add('statictext', undefined, 'File name');
-	dialog.output.filename.input = dialog.output.filename.add('edittext', undefined, tpSettings.filename);
+	dialog.output.filename.input = dialog.output.filename.add('edittext', undefined, tp_settings.filename);
 
 	dialog.output.savetypes = dialog.output.add('group');
 	dialog.output.jpeg = dialog.output.savetypes.add('checkbox', undefined, 'Jpeg');
@@ -100,16 +100,16 @@ function createDialog()
 	reorder_group.margins = [0, 10, 0, 0];
 	dialog.output.quality = dialog.output.add('group');
 	dialog.output.quality.label = dialog.output.quality.add('statictext', undefined, 'JPEG Quality');
-	dialog.output.quality.slider = dialog.output.quality.add('slider', undefined, tpSettings.jpeg_quality);
-	dialog.output.quality.input = dialog.output.quality.add('edittext', undefined, tpSettings.jpeg_quality);
+	dialog.output.quality.slider = dialog.output.quality.add('slider', undefined, tp_settings.jpeg_quality);
+	dialog.output.quality.input = dialog.output.quality.add('edittext', undefined, tp_settings.jpeg_quality);
 
 	dialog.output.autoclose = dialog.output.add('checkbox', undefined, 'Close on save');
 
 	with (dialog.output) {
 		alignChildren = "right";
-		autosave.value = tpSettings.autosave;
+		autosave.value = tp_settings.autosave;
 
-		autoclose.value = tpSettings.autoclose;
+		autoclose.value = tp_settings.autoclose;
 		autoclose.enabled = autosave.value;
 
 		directory.enabled = autosave.value;
@@ -119,9 +119,9 @@ function createDialog()
 		filename.input.preferredSize = [200, 20];
 
 		savetypes.margins = [0, 20, 0, 0];
-		jpeg.value = tpSettings.output_formats.jpg;
+		jpeg.value = tp_settings.output_formats.jpg;
 		jpeg.enabled = autosave.value;
-		psd.value = tpSettings.output_formats.psd;
+		psd.value = tp_settings.output_formats.psd;
 		psd.enabled = autosave.value;
 
 		quality.enabled = autosave.value && dialog.output.jpeg.value;
@@ -140,37 +140,40 @@ function createDialog()
 	dialog.cancelButton = dialog.button_group.add('button', undefined, 'Cancel');
 
 
-	dialog.okButton.onClick = function() {
+	dialog.okButton.onClick = function()
+	{
 		// Get values from controls and put into the settings object.
-		tpSettings.spacing = numOrDefault(dialog.general.spacing_group.input.text, 'spacing');
-		tpSettings.keep_aspect = dialog.general.keepAspect.value;
-		tpSettings.resize_width = numOrDefault(dialog.general.resizeWidth.input.text, 'resize_width');
-		tpSettings.resize = dialog.general.resize.value;
-		tpSettings.convert_to_smartobject = dialog.general.smartobject.value;
-		tpSettings.mask_layers = dialog.general.layermask.value;
-		tpSettings.reorder = dialog.jbi.reorder.value;
-		tpSettings.use_bridge_selection = dialog.jbi.use_bridge.value;
-		tpSettings.autosave = dialog.output.autosave.value;
-		tpSettings.autoclose = dialog.output.autoclose.value;
-		tpSettings.output_formats.jpg = dialog.output.jpeg.value;
-		tpSettings.output_formats.psd = dialog.output.psd.value;
-		tpSettings.jpeg_quality = Math.round(dialog.output.quality.slider.value);
-		tpSettings.save_directory = dialog.output.directory.input.text;
-		tpSettings.filename = dialog.output.filename.input.text;
+		tp_settings.spacing = num_or_default(dialog.general.spacing_group.input.text, 'spacing');
+		tp_settings.keep_aspect = dialog.general.keepAspect.value;
+		tp_settings.resize_width = num_or_default(dialog.general.resizeWidth.input.text, 'resize_width');
+		tp_settings.resize = dialog.general.resize.value;
+		tp_settings.convert_to_smartobject = dialog.general.smartobject.value;
+		tp_settings.mask_layers = dialog.general.layermask.value;
+		tp_settings.reorder = dialog.jbi.reorder.value;
+		tp_settings.use_bridge_selection = dialog.jbi.use_bridge.value;
+		tp_settings.autosave = dialog.output.autosave.value;
+		tp_settings.autoclose = dialog.output.autoclose.value;
+		tp_settings.output_formats.jpg = dialog.output.jpeg.value;
+		tp_settings.output_formats.psd = dialog.output.psd.value;
+		tp_settings.jpeg_quality = Math.round(dialog.output.quality.slider.value);
+		tp_settings.save_directory = dialog.output.directory.input.text;
+		tp_settings.filename = dialog.output.filename.input.text;
 
-		settings.addEntry('tp_settings', tpSettings);
+		settings.addEntry('tp_settings', tp_settings);
 		settings.saveSettings();
 
 		dialog.close(1);
 	};
 
-	dialog.cancelButton.onClick = function() {
+	dialog.cancelButton.onClick = function()
+	{
 		dialog.close(2);
 	}
 
 	dialog.general.resize.onClick = function() { dialog.general.resizeWidth.enabled = this.value; };
 
-	dialog.output.autosave.onClick = function() {
+	dialog.output.autosave.onClick = function()
+	{
 		dialog.output.autoclose.enabled = this.value;
 		dialog.output.directory.enabled = this.value;
 		dialog.output.filename.enabled = this.value;
@@ -179,12 +182,25 @@ function createDialog()
 		dialog.output.quality.enabled = this.value && dialog.output.jpeg.value;
 	};
 
+	dialog.general.smartobject.onClick = function()
+	{
+		if (dialog.general.smartobject.value)
+			dialog.general.layermask.value = dialog.general.smartobject.value;
+	}
+
+	dialog.general.layermask.onClick = function()
+	{
+		if (!dialog.general.layermask.value)
+			dialog.general.smartobject.value = dialog.general.layermask.value;
+	}
+
 	dialog.output.jpeg.onClick = function() { dialog.output.quality.enabled = this.value; }
 	dialog.output.quality.slider.onChange = function() { dialog.output.quality.input.text = Math.round(this.value); }
 	dialog.output.quality.slider.onChanging = function() { dialog.output.quality.input.text = Math.round(this.value); }
 
-	dialog.output.quality.input.onChange = function() {
-		dialog.output.quality.slider.value = numOrDefault(Math.round(Number(this.text)), 'jpeg_quality');
+	dialog.output.quality.input.onChange = function()
+	{
+		dialog.output.quality.slider.value = num_or_default(Math.round(Number(this.text)), 'jpeg_quality');
 		this.text = dialog.output.quality.slider.value;
 	}
 
@@ -192,7 +208,7 @@ function createDialog()
 }
 
 
-function numOrDefault(str, name)
+function num_or_default(str, name)
 {
 	var value = Number(str);
 	return isNaN(value) ? defaults[name] : value;

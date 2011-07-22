@@ -9,16 +9,16 @@ settings.loadSettings();
 /**
  * Loads settings.
  */
-function tpGetSettings()
+function tp_get_settings()
 {
-	var tpSettings = {};
+	var tp_settings = {};
 
 	if (settings.numEntries() > 0)
-		tpSettings = settings.getEntryAt(0);
+		tp_settings = settings.getEntryAt(0);
 
 	for (setting in defaults)
-		if (tpSettings[setting] == undefined)
-			tpSettings[setting] = defaults[setting];
+		if (tp_settings[setting] == undefined)
+			tp_settings[setting] = defaults[setting];
 
-	return tpSettings;
+	return tp_settings;
 }
