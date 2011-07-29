@@ -611,9 +611,6 @@ Tych.prototype.copy_layer_to_previous_document = function()
 
 var t = new Tych(tp_get_settings());
 //t.layout(QUAPTYCH_GRID);
-//t.layout(DIPTYCH_HORIZONTAL);
-//t.layout(DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL);
-//t.layout(DIPTYCH_PORTRAIT_LANDSCAPE_HORIZONTAL);
 //t.layout(TRIPTYCH_PORTRAIT_LANDSCAPE_GRID);
 //t.layout(TRIPTYCH_LANDSCAPE_PORTRAIT_GRID);
 //t.layout(QUAPTYCH_GRID);

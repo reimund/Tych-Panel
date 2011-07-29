@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <gpc defaultLocale="sv_SE" version="2" keySequence="66" currentLocale="sv_SE">
   <target id="PHSP-12"/>
-  <ConfiguratorPanel name="Tych Panel" width="222" height="220" init="doInit" close="doClose" persistent="False">
+  <ConfiguratorPanel name="Tych Panel" width="222" height="110" init="doInit" close="doClose" persistent="False">
     <onInit><![CDATA[]]></onInit>
     <onClose><![CDATA[]]></onClose>
     <eventListeners>
@@ -12,7 +12,7 @@
         <param id="onClose"/>
       </function>
     </eventListeners>
-    <html _itemId="widget_html" toolTip="$$$/Configurator/Widget/HTML/desc" backwardToolTip="$$$/Configurator/Widget/HTML/backwardToolTip" forwardToolTip="$$$/Configurator/Widget/HTML/forwardToolTip" browseListToolTip="$$$/Configurator/Widget/HTML/browseListToolTip" locationTextToolTip="$$$/Configurator/Widget/HTML/locationTextToolTip" offlinePromptTitle="$$$/Configurator/Widget/HTML/offlinePromptTitle" offlinePromptDetail="$$$/Configurator/Widget/HTML/offlinePromptDetail" netUnAvailablePromptTitle="$$$/Configurator/Widget/HTML/netUnAvailablePromptTitle" netUnAvailablePromptDetail="$$$/Configurator/Widget/HTML/netUnAvailablePromptDetail" loadingText="$$$/Configurator/Widget/HTML/loadingText" homeText="$$$/Configurator/Widget/HTML/homeText" reloadText="$$$/Configurator/Widget/HTML/reloadText" reloadLabel="$$$/Configurator/Widget/HTML/reloadLabel" escCloseText="$$$/Configurator/Widget/HTML/escCloseText" showNavBar="$$$/Configurator/Attribute/showNavBar/value###36" location="$$$/Configurator/key_###37" homeLocation="$$$/Configurator/key_###38" width="234" height="178" cfgVisible="$$$/Configurator/Attribute/visible/value###39" top="0" bottom="0" left="0" right="0">
+    <html _itemId="widget_html" toolTip="$$$/Configurator/Widget/HTML/desc" backwardToolTip="$$$/Configurator/Widget/HTML/backwardToolTip" forwardToolTip="$$$/Configurator/Widget/HTML/forwardToolTip" browseListToolTip="$$$/Configurator/Widget/HTML/browseListToolTip" locationTextToolTip="$$$/Configurator/Widget/HTML/locationTextToolTip" offlinePromptTitle="$$$/Configurator/Widget/HTML/offlinePromptTitle" offlinePromptDetail="$$$/Configurator/Widget/HTML/offlinePromptDetail" netUnAvailablePromptTitle="$$$/Configurator/Widget/HTML/netUnAvailablePromptTitle" netUnAvailablePromptDetail="$$$/Configurator/Widget/HTML/netUnAvailablePromptDetail" loadingText="$$$/Configurator/Widget/HTML/loadingText" homeText="$$$/Configurator/Widget/HTML/homeText" reloadText="$$$/Configurator/Widget/HTML/reloadText" reloadLabel="$$$/Configurator/Widget/HTML/reloadLabel" escCloseText="$$$/Configurator/Widget/HTML/escCloseText" showNavBar="$$$/Configurator/Attribute/showNavBar/value###36" location="$$$/Configurator/key_###37" homeLocation="$$$/Configurator/key_###38" width="222" height="180" cfgVisible="$$$/Configurator/Attribute/visible/value###39" top="0" bottom="0" left="0" right="0">
       <htmlText><![CDATA[$$$/Configurator/key_###40]]></htmlText>
     </html>
   </ConfiguratorPanel>

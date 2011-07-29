@@ -22,16 +22,9 @@ TychTransformations.prototype.compute = function(tych_variant)
 	switch (this.tych_variant) {
 
 		case NTYCH_HORIZONTAL:
-		case DIPTYCH_HORIZONTAL:
-		case TRIPTYCH_HORIZONTAL:
-		case QUAPTYCH_HORIZONTAL:
 			this.compute_ntych_matrix();
 			break;
 
-		case DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL:
-		case DIPTYCH_PORTRAIT_LANDSCAPE_HORIZONTAL:
-			this.compute_diptych_matrices();
-			break;
 
 		case TRIPTYCH_PORTRAIT_LANDSCAPE_GRID:
 		case TRIPTYCH_LANDSCAPE_PORTRAIT_GRID:
@@ -120,45 +113,6 @@ TychTransformations.prototype.compute_ntych_matrix = function()
 			m.push(Array(null, Array(tp_sum_width(l, i) + this.settings.spacing * i, -Math.round((l[i].bounds[3] - minh) / 2))));
 		}
 	}
-
-	this.matrix = m;
-}
-
-
-/**
- * Computes the transformation matrix for:
- * - DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL
- * - DIPTYCH_PORTRAIT_LANDSCAPE_HORIZONTAL.
- */
-TychTransformations.prototype.compute_diptych_matrices = function()
-{
-	var l = this.layers;
-	var spacing = this.settings.spacing;
-	var m = [[null, null], [null, null]];
-
-	var b0 = l[0].bounds[2];
-	var b1 = l[1].bounds[2];
-	// Index of portrait layer.
-	var p = l[0].bounds[2].value > l[1].bounds[2].value ? 1 : 0;
-	// Index of landscape layer.
-	var la = 1 - p;
-
-	var size = Array(tp_sum_width_at_height(l, this.n, l[la].bounds[3].value), l[la].bounds[3].value);
-	
-	// Resize factor.
-	var r = this.settings.resize ? (this.settings.resize_width - spacing * (this.n - 1) + 2 * this.n) / size[0] : 1;
-
-	// Target canvas size.
-	this.target_size = Array(Math.round(r * size[0] + spacing * (this.n - 1) - 2 * this.n), Math.round(r * size[1] - 2));
-	
-	// Resize factor 2...
-	var s = l[la].bounds[3].value / l[p].bounds[3].value;
-
-
-	m[p][0] = Array(r * s * 100, r * s * 100, AnchorPosition.TOPLEFT);
-	m[p][1] = Array(this.tych_variant == DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL ? Math.round(r * l[la].bounds[2].value) + spacing - 3 : -1, 0);
-	m[la][0] = Array(r * 100, r * 100, AnchorPosition.TOPLEFT);
-	m[la][1] = Array(this.tych_variant == DIPTYCH_LANDSCAPE_PORTRAIT_HORIZONTAL ? -1 : Math.round(r * s * l[p].bounds[2].value) + spacing - 3, 0);
 
 	this.matrix = m;
 }
