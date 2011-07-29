@@ -81,21 +81,22 @@ Tych.prototype.revert = function()
  */
 Tych.prototype.stack = function()
 {
+	var tych = this;
 	var last = this.images.length - 1;
 	var doc = app.open(this.images[last]);
 
-	doc.flatten();
-	doc.layers[0].isBackgroundLayer = false;
-
-	if (this.settings.convert_to_smartobject)
-		tp_make_smart_object();
-
-	var tych = this;
 
 	f = function() {
 		var d = doc;
 		var maxx = doc.width;
 		var maxy = doc.height;
+
+		d.flatten();
+		d.layers[0].isBackgroundLayer = false;
+
+		if (tych.settings.convert_to_smartobject)
+			tp_make_smart_object();
+
 		for (i = last; i >= 0; i--) {
 
 			if (i < last) {
@@ -252,19 +253,25 @@ Tych.prototype.layout_and_composite = function()
 	// Stack it up.
 	this.stack();
 
-	// Compute transformations (prepare for layout).
-	this.trans.compute(NTYCH_HORIZONTAL);
-	
-	// Layout the selected images according to the transformations just
-	// computed.
-	this.make();
+	var thiss = this;
 
-	// Composite the result.
-	if (this.comp_target_doc != null)
-		this.place_comp(this.doc, this.comp_target_doc);
+	var g = function() {
+		// Compute transformations (prepare for layout).
+		thiss.trans.compute(NTYCH_HORIZONTAL);
+		
+		// Layout the selected images according to the transformations just
+		// computed.
+		thiss.make();
 
-	// Save, close etc.
-	this.finish();
+		// Composite the result.
+		if (thiss.comp_target_doc != null)
+			thiss.place_comp(thiss.doc, thiss.comp_target_doc);
+
+		// Save, close etc.
+		thiss.finish();
+	}
+
+	this.doc.suspendHistory('Make ntych', 'g()');
 }
 
 

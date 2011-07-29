@@ -22,6 +22,8 @@ Features:
 * Reorder images with thumbnails.
 * Added option to use selected images in Adobe Bridge as input.
 * Save as PSD.
+* Convert images to smart objects.
+* Use unlinked layer masks instead of cropping images.
 
 Bug fixes:
 * Compositing images with the same name in different iterations now work as expected.
@@ -29,12 +31,10 @@ Bug fixes:
 On the list:
 * Support image formats with layers.
 * Background color option.
-* Convert images to smart objects.
 * Ability to rearrange layers over and over again with the layout buttons.
 * Image spacing in percent.
 * Target height option.
 * Outer border width and color options.
-* Use unlinked layer masks instead of cropping images.
 * Apply an arbitrary number of actions.
 * Smarter quaptych.
 * More layouts.
