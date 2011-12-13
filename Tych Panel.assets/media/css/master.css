@@ -4,18 +4,27 @@ body {
 }
 
 div.actions,
-div.buttons { text-align: center; }
+div.templates { text-align: center; }
 
+div.templates { margin-top: 10px; }
 div.actions { margin: 2px 2px 3px 2px; }
-div.actions div { margin: 0 0 10px 0; }
-div.actions span.button { margin: 0 0 3px 0; }
+div.actions div { margin: 0 0 0 0; }
+div.actions span.button { margin: 0 0 6px 0; }
 div.actions div span.button a { text-align: center; }
-div.actions { margin-bottom: 10px; }
+div.actions { margin-bottom: 0; }
 span.button.options { clear: both; }
 
+div.actions span.button.add-row a.icon,
+div.actions span.button.add-column a.icon { padding-left: 25px; }
+
 span.button.add-row a.icon {
-	background-position: -1px -2px;
-	background-image: url(../img/plus.png);
+	background-position: -3px -6px;
+	background-image: url(../img/add-row.png);
+}
+
+span.button.add-column a.icon {
+	background-position: -5px -6px;
+	background-image: url(../img/add-column.png);
 }
 
 span.button.options a.icon {
@@ -36,7 +45,7 @@ span.button .inner {
 	display: inline-block;
 	background: url(../img/button.png) left top no-repeat;
 	height: 19px;
-	padding: 6px 10px 4px 10px;
+	padding: 6px 2px 4px 10px;
 }
 
 span.button a.icon { display: inline-block; }

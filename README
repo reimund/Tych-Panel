@@ -38,6 +38,7 @@ On the list:
 * Apply an arbitrary number of actions.
 * Smarter quaptych.
 * More layouts.
+* Remove the annoying popup about not being able to use the clipboard in external applications.
 * Ability to decide when to apply actions - before resizing, after resizing and on end result.
 * Added option to run Tych Panel on selected images via Adobe Photoshop Lightroom.
 
