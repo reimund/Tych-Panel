@@ -25,6 +25,8 @@
 // XXX: Ability to apply post- and pre-processing actions.
 // XXX: Fix bugs on windows. For now, the duplicate-workaround will do.
 // XXX: Custom background color.
+// XXX: Toggle button/check box that decides if new tychs should be composited
+// into an already open document.
 // XXX: More layouts: 3x2, 3x3, 3x4, 4x2, 4x3, 4x4 etc. EDIT: I think I'll skip
 // this one, since these can be built with the 'Just bring it' button anyway.
 

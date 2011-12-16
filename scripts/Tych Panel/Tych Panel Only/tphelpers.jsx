@@ -26,6 +26,15 @@ function tp_make_smart_object()
 
 
 /**
+ * Inverts the current selection.
+ */
+function tp_invert_selection()
+{
+	executeAction(charIDToTypeID("Invs"), undefined, DialogModes.NO);
+}
+
+
+/**
  * Pads the given number n with l zeroes.
  */
 function tp_zero_pad(n, l)
@@ -129,6 +138,21 @@ function tp_sum_width(layers, max)
 
 
 /**
+ * Computes the total width of the specified layers.
+ */
+function tp_sum_height(layers, max)
+{
+	var total_height = 0;
+	for (var i = 0; i < layers.length; i++) {
+		if (max != null && i == max) break;
+		total_height += layers[i].bounds[3].value - layers[i].bounds[1].value;
+	}
+
+	return total_height;
+}
+
+
+/**
  * Computes the total width of the specified layers as if they were scaled
  * (keeping aspect ratio) to fit the specified height.
  */
@@ -148,6 +172,25 @@ function tp_sum_width_at_height(layers, max, height) {
 
 
 /**
+ * Computes the total height of the specified layers as if they were scaled
+ * (keeping aspect ratio) to fit the specified width.
+ */
+function tp_sum_height_at_width(layers, max, width) {
+	if (width == null) return tp_sum_height(layers, max);
+
+	var total_height = 0;
+	var s;
+	for (var i = 0; i < layers.length; i++) {
+		if (max != null && i == max) break;
+		s = width / (layers[i].bounds[2].value - layers[i].bounds[0].value);
+		total_height += s * (layers[i].bounds[3].value - layers[i].bounds[1].value);
+	}
+
+	return total_height;
+}
+
+
+/**
  * Computes the height of a layer in the current unit.
  */
 function tp_lheight(layer)
@@ -161,9 +204,22 @@ function tp_lheight(layer)
  */
 function tp_min_height(layers)
 {
+	var min_height = Number.MAX_VALUE;
+	for (var i = 0; i < layers.length; i++)
+		min_height = Math.min(min_height, layers[i].bounds[3].value - layers[i].bounds[1].value);
+
+	return min_height;
+}
+
+
+/**
+ * Gets the width of the thinnest of the specified layers.
+ */
+function tp_min_width(layers)
+{
 	var min_width = Number.MAX_VALUE;
 	for (var i = 0; i < layers.length; i++)
-		min_width = Math.min(min_width, layers[i].bounds[3].value - layers[i].bounds[1].value);
+		min_width = Math.min(min_width, layers[i].bounds[2].value - layers[i].bounds[0].value);
 
 	return min_width;
 }

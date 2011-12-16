@@ -1,2 +1,2 @@
 //@include ../Tych%20Panel.jsx
-t.layout(QUAPTYCH_GRID);
+t.create(QUAPTYCH_GRID);
