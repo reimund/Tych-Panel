@@ -13,9 +13,12 @@ div.actions span.button { margin: 0 0 6px 0; }
 div.actions div span.button a { text-align: center; }
 div.actions { margin-bottom: 0; }
 span.button.options { clear: both; }
+span.button.options .inner { padding: 6px 0px 4px 7px; }
+div.actions span.button.options a.icon { padding-left: 10px; }
 
 div.actions span.button.add-row a.icon,
 div.actions span.button.add-column a.icon { padding-left: 25px; }
+
 
 span.button.add-row a.icon {
 	background-position: -3px -6px;
