@@ -1,4 +1,4 @@
-//@include tpconstants.jsx
+//@include constants.jsx
 //@include ImageList.jsx
 //@include ImageItem.jsx
 
