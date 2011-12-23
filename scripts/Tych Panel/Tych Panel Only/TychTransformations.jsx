@@ -3,12 +3,13 @@
  * Prepares the creation of an n-tych by doing some preparatory calculations on
  * the given layers with the specified settings.
  */
-var TychTransformations = function(layers, settings)
+var TychTransformations = function(tych)
 {
-	this.layers = layers;
-	this.settings = settings;
-	this.doc = layers[0].parent;
-	this.n = layers.length;
+	this.tych = tych;
+	this.layers = tych.doc.layers;
+	this.settings = tych.settings;
+	this.doc = tych.doc;
+	this.n = this.layers.length;
 }
 
 
@@ -94,8 +95,8 @@ TychTransformations.prototype.apply = function()
 			l.translate(m[i][1][0], m[i][1][1]);
 
 	}
-		
 	this.layers[0].parent.resizeCanvas(this.target_size[0], this.target_size[1], AnchorPosition.TOPLEFT);
+		
 
 	// Remove the fuzzy 1px wide outer edge from each layer.
 	this.clear_spacings();
@@ -125,18 +126,21 @@ TychTransformations.prototype.clear_spacings = function(i)
 		}
 	} else if (this.tych_variant == NTYCH_VERTICAL) {
 
-		for (i = 0; i < this.n; i++) {
+		for (i = 1; i < this.n; i++) {
 			this.doc.selection.select(sel = [
-				[0, m[i][1] - spacing + 1], // Upper left corner.
-				[0, m[i][1] + 1], // Lower left corner.
+				[0, m[i][1][1] - spacing + 1], // Upper left corner.
+				[0, m[i][1][1] + 1], // Lower left corner.
 				[width, m[i][1][1] + 1], // Lower right corner.
 				[width, m[i][1][1] - spacing + 1] // Upper right corner.
 			]);
-			
+
+
 			if (sel[2][0] > 0)
 				this.clear_selected();
 		}
 	}
+	//if (this.settings.composite && documents.length > 1)
+		//exit();
 
 	// XXX: Clear the spacings for all predefined templates.
 }
@@ -170,7 +174,7 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 {
 	// Get the width of the smallest layer, width-wise (before applying
 	// transformations).
-	var minw, size, s1, s2, m, l;
+	var minw, target_width, size, s1, s2, m, l;
 
 	l = this.layers;
 	minw = tp_min_width(l);
@@ -185,10 +189,16 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 	
 	// Computes the resize factor, Ie the factor used to to scale the image to
 	// fit the resize_width set in the user options.
-	s1 = this.settings.resize
-		//? (this.settings.resize_width - this.settings.spacing * (this.n - 1) + 2 * this.n + 2) / size[0]
-		? this.settings.resize_width / size[0]
-		: 1;
+	if (this.settings.composite && documents.length > 1) {
+		// If the result is going to be composited, the target_width must be
+		// changed so that the result will be aligned with the target document.
+		s1 = (this.tych.comp_target_doc.height.value - this.settings.spacing * (this.n - 1) + 2 * this.n) / size[1];
+	} else {
+		s1 = this.settings.fit_width
+			? (this.settings.resize_width + 2) / size[0]
+			: 1;
+	}
+	
 
 	// Computes the size the canvas need to be after arranging all the layers
 	// into position.
@@ -196,10 +206,14 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 		Math.round(s1 * size[0]) - 2,
 		Math.round(s1 * size[1] + this.settings.spacing * (this.n - 1) - 2 * this.n)
 	];
+	
 
 	// Finally compute the matrix...
 	for (var i = 0; i < this.n; i++) {
 		if (this.settings.keep_aspect) {
+			// Multiply the resize factor with this second resize factor since
+			// each image also need to be resized individually in order to
+			// align with other images.
 			s2 = minw / (l[i].bounds[2].value - l[i].bounds[0].value);
 			m.push(
 				[
@@ -237,11 +251,20 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 	else
 		size = [tp_sum_width(this.layers), minh];
 	
-	// Computes the resize factor, Ie the factor used to to scale the image to
-	// fit the resize_width set in the user options.
-	s1 = this.settings.resize
-		? (this.settings.resize_width - this.settings.spacing * (this.n - 1) + 2 * this.n) / size[0]
-		: 1;
+	if (this.settings.composite && documents.length > 1) {
+		// If the result is going to be composited, the target_width must be
+		// changed so that the result will be aligned with the target document.
+		//s1 = (this.tych.comp_target_doc.height.value - this.settings.spacing * (this.n - 1) + 2 * this.n) / size[1];
+		s1 = this.settings.resize
+			? (this.tych.comp_target_doc.width.value - this.settings.spacing * (this.n - 1) + 2 * this.n) / size[0]
+			: 1;
+	} else {
+		// Computes the resize factor, Ie the factor used to to scale the image to
+		// fit the resize_width set in the user options.
+		s1 = this.settings.resize
+			? (this.settings.resize_width - this.settings.spacing * (this.n - 1) + 2 * this.n) / size[0]
+			: 1;
+	}
 
 
 	// Computes the size the canvas need to be after arranging all the layers
