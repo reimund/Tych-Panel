@@ -44,13 +44,6 @@ var TychOptions = function(tp_settings)
 						preferredSize: [40, 20] \
 					} \
 				}, \
-				aspect_group: Group { \
-					keep_aspect: Checkbox { \
-						text: 'Keep aspect ratio on pictures', \
-						value: " + tp_settings.keep_aspect + " \
-					} \
-				}, \
-				aspect_text: StaticText { text: 'When disabled, images will be cropped as needed.' }, \
 				resize_label: Group { \
 					text: StaticText { text: 'Resize to fit' }, \
 					margins: [0, 20, 0, 0] \
@@ -115,12 +108,9 @@ var TychOptions = function(tp_settings)
 				alignChildren: 'right', \
 				composite_group: Group { \
 					composite: Checkbox { \
-						text: 'Composite result', \
+						text: 'Composite with active document', \
 						value: " + tp_settings.composite + " \
 					}, \
-				}, \
-				composite_text: StaticText { \
-					text: 'When enabled, the result will be combined with the previous open document.' \
 				}, \
 				maintain_label: Group { \
 					text: StaticText { text: 'When adding rows and columns, maintain' }, \
@@ -214,9 +204,8 @@ var TychOptions = function(tp_settings)
 	w.main_group.general.resize_width_group.input.enabled = w.main_group.general.resize_to_fit.width_button.value;
 	w.main_group.general.resize_height_group.input.enabled = w.main_group.general.resize_to_fit.height_button.value;
 
-	smallFont = ScriptUI.newFont(w.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
-	w.main_group.general.aspect_text.graphics.font = smallFont;
-	w.main_group.compositing.composite_text.graphics.font = smallFont;
+	//smallFont = ScriptUI.newFont(w.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
+	//w.main_group.compositing.composite_text.graphics.font = smallFont;
 
 	this.w = w;
 	this.tp_settings = tp_settings;
@@ -291,7 +280,6 @@ TychOptions.prototype.setup_events = function()
 	{
 		// Get values from controls and store them in the settings object.
 		tp_settings.spacing = num_or_default(general.spacing_group.input.text, 'spacing');
-		tp_settings.keep_aspect = general.aspect_group.keep_aspect.value;
 		tp_settings.fit_width = general.resize_to_fit.width_button.value
 		tp_settings.fit_height = general.resize_to_fit.height_button.value
 		tp_settings.resize_width = num_or_default(general.resize_width_group.input.text, 'resize_width');
@@ -300,6 +288,7 @@ TychOptions.prototype.setup_events = function()
 		tp_settings.mask_layers = general.layer_mask_group.layer_mask.value;
 		tp_settings.reorder = general.reorder_group.reorder.value;
 		tp_settings.use_bridge_selection = general.bridge_group.use_bridge.value;
+		tp_settings.composite = compositing.composite_group.composite.value;
 		tp_settings.maintain_width = compositing.maintain_group.maintain_width.value;
 		tp_settings.maintain_height = compositing.maintain_group.maintain_height.value;
 		tp_settings.autosave = output.autosave.value;

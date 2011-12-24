@@ -1,7 +1,6 @@
 ﻿// Set defaults.
 var defaults = {
 	'spacing': 8,
-	'keep_aspect': true,
 	'fit_width': false,
 	'fit_height': false,
 	'resize_width': 800,

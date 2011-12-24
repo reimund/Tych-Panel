@@ -182,10 +182,7 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 
 	// Computes the size of this tych's layers side by side, before applying
 	// transformations.
-	if (this.settings.keep_aspect)
-		size = [minw, tp_sum_height_at_width(this.layers, this.n, minw)];
-	else
-		size = [minw, tp_sum_height(this.layers)];
+	size = [minw, tp_sum_height_at_width(this.layers, this.n, minw)];
 	
 	// Computes the resize factor, Ie the factor used to to scale the image to
 	// fit the resize_width set in the user options.
@@ -213,20 +210,16 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 
 	// Finally compute the matrix...
 	for (var i = 0; i < this.n; i++) {
-		if (this.settings.keep_aspect) {
-			// Multiply the resize factor with this second resize factor since
-			// each image also need to be resized individually in order to
-			// align with other images.
-			s2 = minw / (l[i].bounds[2].value - l[i].bounds[0].value);
-			m.push(
-				[
-					[s1 * s2 * 100, s1 * s2 * 100, AnchorPosition.TOPLEFT],
-					[-1, Math.round(tp_sum_height_at_width(l, i, minw) * s1) + this.settings.spacing * i - (i * 2) - 1]
-				]
-			);
-		} else {
-			m.push([null, -Math.round((l[i].bounds[2] - minw) / 2), [tp_sum_height(l, i) + this.settings.spacing * i]]);
-		}
+		// Multiply the resize factor with this second resize factor since
+		// each image also need to be resized individually in order to
+		// align with other images.
+		s2 = minw / (l[i].bounds[2].value - l[i].bounds[0].value);
+		m.push(
+			[
+				[s1 * s2 * 100, s1 * s2 * 100, AnchorPosition.TOPLEFT],
+				[-1, Math.round(tp_sum_height_at_width(l, i, minw) * s1) + this.settings.spacing * i - (i * 2) - 1]
+			]
+		);
 	}
 
 	this.matrix = m;
@@ -249,10 +242,7 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 
 	// Computes the size of this tych's layers side by side, before applying
 	// transformations.
-	if (this.settings.keep_aspect)
-		size = [tp_sum_width_at_height(this.layers, this.n, minh), minh];
-	else
-		size = [tp_sum_width(this.layers), minh];
+	size = [tp_sum_width_at_height(this.layers, this.n, minh), minh];
 	
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
@@ -279,17 +269,13 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 
 	// Finally compute the matrix...
 	for (var i = 0; i < this.n; i++) {
-		if (this.settings.keep_aspect) {
-			s2 = minh / (l[i].bounds[3].value - l[i].bounds[1].value);
-			m.push(
-				[
-					[s1 * s2 * 100, s1 * s2 * 100, AnchorPosition.TOPLEFT],
-					[Math.round(tp_sum_width_at_height(l, i, minh) * s1) + this.settings.spacing * i - (i * 2) - 1, -1]
-				]
-			);
-		} else {
-			m.push([null, [tp_sum_width(l, i) + this.settings.spacing * i, -Math.round((l[i].bounds[3] - minh) / 2)]]);
-		}
+		s2 = minh / (l[i].bounds[3].value - l[i].bounds[1].value);
+		m.push(
+			[
+				[s1 * s2 * 100, s1 * s2 * 100, AnchorPosition.TOPLEFT],
+				[Math.round(tp_sum_width_at_height(l, i, minh) * s1) + this.settings.spacing * i - (i * 2) - 1, -1]
+			]
+		);
 	}
 
 	this.matrix = m;
