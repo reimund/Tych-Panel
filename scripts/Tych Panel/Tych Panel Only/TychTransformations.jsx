@@ -58,53 +58,24 @@ TychTransformations.prototype.apply = function()
 
 		l = this.doc.layers[i];
 		this.doc.activeLayer = l;
-
 		
 		// Check if the layer should be resized.
 		if (m[i][0] != null)
 			l.resize(m[i][0][0], m[i][0][1], m[i][0][2]);
 
-
-		// XXX: Bleh, I thought this would be a working general implementation
-		// for all tychs, but in the end, I sometimes got rounding errors
-		// making the spacings off.
-		//// Nudge away from canvas boundaries so that invert selection works
-		//// appropriately.
-		//l.translate(1, 1);
-
-		//// Select the layer (contracted 1px).
-		//this.doc.selection.select(sel = [
-			//[l.bounds[0].value + 1, l.bounds[1].value + 1], // Upper left corner.
-			//[l.bounds[0].value + 1, l.bounds[3].value - 1], // Lower left corner.
-			//[l.bounds[2].value - 1, l.bounds[3].value - 1], // Lower right corner.
-			//[l.bounds[2].value - 1, l.bounds[1].value + 1] // Upper right corner.
-		//]);
-
-		//tp_invert_selection();
-
-		//if (this.settings.mask_layers)
-			//tp_fill_layer_mask(BLACK);
-		//else
-			//this.doc.selection.clear();
-
-		//this.doc.selection.deselect();
-		//l.translate(-1, -1);
-		
 		// Check if the layer should be moved.
 		if (m[i][1] != null)
 			l.translate(m[i][1][0], m[i][1][1]);
 
 	}
 	this.layers[0].parent.resizeCanvas(this.target_size[0], this.target_size[1], AnchorPosition.TOPLEFT);
-		
-
-	// Remove the fuzzy 1px wide outer edge from each layer.
-	this.clear_spacings();
-
-
 }
 
 
+/*
+ * XXX: Remove this function entirely.
+ */
+/*
 TychTransformations.prototype.clear_spacings = function(i)
 {
 	var m = this.matrix;
@@ -144,6 +115,7 @@ TychTransformations.prototype.clear_spacings = function(i)
 
 	// XXX: Clear the spacings for all predefined templates.
 }
+*/
 
 
 /** 
@@ -151,6 +123,7 @@ TychTransformations.prototype.clear_spacings = function(i)
  *
  * If masks are enabled, layers are cleared by masking out the selected parts.
  */
+ /* XXX: Maybe need to rewrite this function entirely, or perhaps it can be removed.
 TychTransformations.prototype.clear_selected = function()
 {
 	for (j = 0; j < this.n; j++) {
@@ -164,6 +137,7 @@ TychTransformations.prototype.clear_selected = function()
 	}
 	this.doc.selection.deselect();
 }
+*/
 
 
 /**
@@ -174,11 +148,12 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 {
 	// Get the width of the smallest layer, width-wise (before applying
 	// transformations).
-	var minw, target_width, size, s1, s2, m, l;
+	var minw, target_width, size, s1, s2, s3, m, l, h0, h1, r;
 
 	l = this.layers;
 	minw = tp_min_width(l);
 	m = [];
+	r = 0;
 
 	// Computes the size of this tych's layers side by side, before applying
 	// transformations.
@@ -189,22 +164,23 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
 		// changed so that the result will be aligned with the target document.
-		s1 = (this.tych.comp_target_doc.height.value - this.settings.spacing * (this.n - 1) + 2 * this.n) / size[1];
+		s1 = this.tych.comp_target_doc.height.value / size[1];
+		//s1 = (this.tych.comp_target_doc.height.value - this.settings.spacing * (this.n - 1)) / size[1];
 	} else {
 		if (this.settings.fit_width)
-			s1 = (this.settings.resize_width + 2) / size[0];
+			s1 = (this.settings.resize_width + 1) / size[0];
 		else if (this.settings.fit_height)
 			s1 = (this.settings.resize_height) / size[1];
 		else
-			s1 = (size[0] + 2) / size[0];
+			s1 = (size[0] + 2 * 0) / size[0];
 	}
 	
 
 	// Computes the size the canvas need to be after arranging all the layers
 	// into position.
 	this.target_size = [
-		Math.round(s1 * size[0]) - 2,
-		Math.round(s1 * size[1] + this.settings.spacing * (this.n - 1) - 2 * this.n)
+		Math.round(s1 * size[0]) - 1, // Crop away pixels that don't match the pixel grid.
+		Math.round(s1 * size[1])// + this.settings.spacing * (this.n - 1) - 4)
 	];
 	
 
@@ -214,10 +190,20 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 		// each image also need to be resized individually in order to
 		// align with other images.
 		s2 = minw / (l[i].bounds[2].value - l[i].bounds[0].value);
+
+		h0 = l[i].bounds[3].value - l[1].bounds[1].value;
+		h1 = Math.round(s1 * s2 * h0 - r);
+
+		// Use a third resize factor to adjust the resizing so it scales to even pixels.
+		s3 = h1 / (s1 * s2 * h0);
+
+		// Store the remainder so we can add or subtract it to the next layer.
+		r = h1 - s1 * s2 * h0;
+
 		m.push(
 			[
-				[s1 * s2 * 100, s1 * s2 * 100, AnchorPosition.TOPLEFT],
-				[-1, Math.round(tp_sum_height_at_width(l, i, minw) * s1) + this.settings.spacing * i - (i * 2) - 1]
+				[s1 * s2 * s3 * 100, s1 * s2 * s3 * 100, AnchorPosition.TOPLEFT],
+				[0, Math.round(tp_sum_height_at_width(l, i, minw) * s1) + this.settings.spacing * i]
 			]
 		);
 	}
@@ -234,11 +220,12 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 {
 	// Get the height of the smallest layer, height-wise (before applying
 	// transformations).
-	var minh, size, s1, s2, m, l;
+	var minh, size, s1, s2, s3, m, l, w0, w1, r;
 	
 	l = this.layers;
 	minh = tp_min_height(this.layers);
 	m = [];
+	r = 0;
 
 	// Computes the size of this tych's layers side by side, before applying
 	// transformations.
@@ -247,14 +234,14 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
 		// changed so that the result will be aligned with the target document.
-		s1 = (this.tych.comp_target_doc.width.value - this.settings.spacing * (this.n - 1) + 2 * this.n) / size[0]
+		s1 = (this.tych.comp_target_doc.width.value - this.settings.spacing * (this.n - 1)) / size[0]
 	} else {
 		// Computes the resize factor, Ie the factor used to to scale the image to
 		// fit the resize_width set in the user options.
 		if (this.settings.fit_width)
-			s1 = (this.settings.resize_width - this.settings.spacing * (this.n - 1) + 2 * this.n) / size[0]
+			s1 = (this.settings.resize_width - this.settings.spacing * (this.n - 1)) / size[0];
 		else if (this.settings.fit_height)
-			s1 = (this.settings.resize_height + 2) / size[1];
+			s1 = (this.settings.resize_height + 1) / size[1];
 		else
 			s1 = 1;
 	}
@@ -263,17 +250,31 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 	// Computes the size the canvas need to be after arranging all the layers
 	// into position.
 	this.target_size = [
-		Math.round(s1 * size[0] + this.settings.spacing * (this.n - 1) - 2 * this.n),
-		Math.round(s1 * size[1] - 2)
+		Math.round(s1 * size[0] + this.settings.spacing * (this.n - 1)),
+		Math.round(s1 * size[1] - 1) // Crop away one line of pixels since we
+		                             // might get uneven pixels in the y direction.
 	];
 
 	// Finally compute the matrix...
 	for (var i = 0; i < this.n; i++) {
+		// Multiply the resize factor with this second resize factor since
+		// each image also need to be resized individually in order to
+		// align with other images.
 		s2 = minh / (l[i].bounds[3].value - l[i].bounds[1].value);
+
+		w0 = l[i].bounds[2].value - l[0].bounds[1].value;
+		w1 = Math.round(s1 * s2 * w0 - r);
+
+		// Use a third resize factor to adjust the resizing so it scales to even pixels.
+		s3 = w1 / (s1 * s2 * w0);
+
+		// Store the remainder so we can add or subtract it to the next layer.
+		r = w1 - s1 * s2 * w0;
+
 		m.push(
 			[
-				[s1 * s2 * 100, s1 * s2 * 100, AnchorPosition.TOPLEFT],
-				[Math.round(tp_sum_width_at_height(l, i, minh) * s1) + this.settings.spacing * i - (i * 2) - 1, -1]
+				[s1 * s2 * s3 * 100, s1 * s2 * s3 * 100, AnchorPosition.TOPLEFT],
+				[Math.round(tp_sum_width_at_height(l, i, minh) * s1) + this.settings.spacing * i, 0]
 			]
 		);
 	}
