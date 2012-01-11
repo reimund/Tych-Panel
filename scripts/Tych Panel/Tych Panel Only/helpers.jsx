@@ -226,6 +226,36 @@ function tp_min_width(layers)
 
 
 /**
+ * Contracts the active layer the specified number pixels.
+ */
+function tp_contract_layer(size, use_mask)
+{
+	var x0, y0, w, h;
+
+	x0 = activeDocument.activeLayer.bounds[0].value;
+	x1 = activeDocument.activeLayer.bounds[2].value;
+	y0 = activeDocument.activeLayer.bounds[1].value;
+	y1 = activeDocument.activeLayer.bounds[3].value;
+
+	activeDocument.selection.select([
+		[x0 + size, y0 + size],
+		[x0 + size, y1 - size],
+		[x1 - size, y1 - size],
+		[x1 - size, y0 + size]
+	]);
+
+	activeDocument.selection.invert();
+
+	if (use_mask)
+		tp_fill_layer_mask(BLACK);
+	else
+		activeDocument.selection.clear();
+
+	activeDocument.selection.deselect();
+}
+
+
+/**
  * Gets a list of the files currently selected in Adobe Bridge and their
  * thumbnails. Modified version of snippet by Paul Riggot.
  */

@@ -50,94 +50,33 @@ TychTransformations.prototype.compute = function(tych_variant)
  */
 TychTransformations.prototype.apply = function()
 {
-	var m = this.matrix;
-	var l;
+	var m, l, w, h;
+
+	m = this.matrix;
 
 	for(i = 0; i < this.layers.length; i++) {
 		if (i >= m.length) break;
 
 		l = this.doc.layers[i];
+		w = l.bounds[2].value - l.bounds[0].value;
+		h = l.bounds[3].value - l.bounds[1].value;
 		this.doc.activeLayer = l;
 		
 		// Check if the layer should be resized.
-		if (m[i][0] != null)
-			l.resize(m[i][0][0], m[i][0][1], m[i][0][2]);
+		if (m[i][0] != null) {
+			// Resize layer 1 px larger than the target size.
+			l.resize((((m[i][0][0]) * w + 2) / w) * 100, (((m[i][0][1]) * h + 2) / h) * 100, m[i][0][2]);
+			// Remove 1px from each side of the layer.
+			tp_contract_layer(1, this.mask_layers);
+		}
 
 		// Check if the layer should be moved.
 		if (m[i][1] != null)
-			l.translate(m[i][1][0], m[i][1][1]);
+			l.translate(m[i][1][0] - 1, m[i][1][1] - 1);
 
 	}
 	this.layers[0].parent.resizeCanvas(this.target_size[0], this.target_size[1], AnchorPosition.TOPLEFT);
 }
-
-
-/*
- * XXX: Remove this function entirely.
- */
-/*
-TychTransformations.prototype.clear_spacings = function(i)
-{
-	var m = this.matrix;
-	var spacing = this.settings.spacing;
-	var width = this.target_size[0];
-	var height = this.target_size[1];
-
-	if (this.tych_variant == NTYCH_HORIZONTAL) {
-		for (i = 0; i < this.n; i++) {
-			this.doc.selection.select(sel = [
-				[m[i][1][0] - spacing + 1, 0], // Upper left corner.
-				[m[i][1][0] - spacing + 1, height], // Lower left corner.
-				[m[i][1][0] + 1, height], // Lower right corner.
-				[m[i][1][0] + 1, 0] // Upper right corner.
-			]);
-			
-			if (sel[2][0] > 0)
-				this.clear_selected();
-		}
-	} else if (this.tych_variant == NTYCH_VERTICAL) {
-
-		for (i = 1; i < this.n; i++) {
-			this.doc.selection.select(sel = [
-				[0, m[i][1][1] - spacing + 1], // Upper left corner.
-				[0, m[i][1][1] + 1], // Lower left corner.
-				[width, m[i][1][1] + 1], // Lower right corner.
-				[width, m[i][1][1] - spacing + 1] // Upper right corner.
-			]);
-
-
-			if (sel[2][0] > 0)
-				this.clear_selected();
-		}
-	}
-	//if (this.settings.composite && documents.length > 1)
-		//exit();
-
-	// XXX: Clear the spacings for all predefined templates.
-}
-*/
-
-
-/** 
- * Clears the selected area on all layers.
- *
- * If masks are enabled, layers are cleared by masking out the selected parts.
- */
- /* XXX: Maybe need to rewrite this function entirely, or perhaps it can be removed.
-TychTransformations.prototype.clear_selected = function()
-{
-	for (j = 0; j < this.n; j++) {
-		this.doc.activeLayer = this.doc.layers[j];
-
-		if (tp_overlaps_selection(this.doc.activeLayer))
-			if (this.settings.mask_layers)
-				tp_fill_layer_mask(BLACK);
-			else
-				this.doc.selection.clear();
-	}
-	this.doc.selection.deselect();
-}
-*/
 
 
 /**
@@ -202,7 +141,7 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 
 		m.push(
 			[
-				[s1 * s2 * s3 * 100, s1 * s2 * s3 * 100, AnchorPosition.TOPLEFT],
+				[s1 * s2 * s3, s1 * s2 * s3, AnchorPosition.TOPLEFT],
 				[0, Math.round(tp_sum_height_at_width(l, i, minw) * s1) + this.settings.spacing * i]
 			]
 		);
@@ -273,7 +212,7 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 
 		m.push(
 			[
-				[s1 * s2 * s3 * 100, s1 * s2 * s3 * 100, AnchorPosition.TOPLEFT],
+				[s1 * s2 * s3, s1 * s2 * s3, AnchorPosition.TOPLEFT],
 				[Math.round(tp_sum_width_at_height(l, i, minh) * s1) + this.settings.spacing * i, 0]
 			]
 		);
