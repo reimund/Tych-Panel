@@ -199,7 +199,7 @@ var TychOptions = function(tp_settings)
 	var w =  new Window(window_res, 'Tych Panel options');
 
 	w.main_group.output.quality.enabled = w.main_group.output.autosave.value
-		&& w.main_group.output.jpeg.value;
+		&& w.main_group.output.save_types.jpeg.value;
 
 	w.main_group.general.resize_width_group.input.enabled = w.main_group.general.resize_to_fit.width_button.value;
 	w.main_group.general.resize_height_group.input.enabled = w.main_group.general.resize_to_fit.height_button.value;

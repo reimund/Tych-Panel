@@ -26,15 +26,6 @@ function tp_make_smart_object()
 
 
 /**
- * Inverts the current selection.
- */
-function tp_invert_selection()
-{
-	executeAction(charIDToTypeID("Invs"), undefined, DialogModes.NO);
-}
-
-
-/**
  * Pads the given number n with l zeroes.
  */
 function tp_zero_pad(n, l)
@@ -65,24 +56,6 @@ function tp_mask(layer)
 
 
 /**
- * Fills the selection of the active layer's layer mask with the specified
- * color. Works on the active document.
- */
-function tp_fill_layer_mask(color)
-{
-	var fill_color = new SolidColor();
-
-	fill_color.rgb.red = color[0];
-	fill_color.rgb.green = color[1];
-	fill_color.rgb.blue = color[2];
-	
-	layerMask.editMode(true);
-	activeDocument.selection.fill(fill_color);
-	layerMask.editMode(false);
-}
-
-
-/**
  * Add a background layer and fill it with the specified color.
  */
 function tp_add_background(doc, color)
@@ -93,32 +66,6 @@ function tp_add_background(doc, color)
 	fill_layer.name = 'Background';
 	fill_layer.move(doc.layers[doc.layers.length - 1], ElementPlacement.PLACEAFTER);
 	tp_fill_background(doc, color);
-}
-
-
-/**
- * Checks if the specified layer overlaps with the currentSelection.
- */
-function tp_overlaps_selection(layer)
-{
-	var s;
-	var l = layer.bounds;
-	var overlaps = true;
-
-	try {
-		s = layer.parent.selection.bounds;
-	} catch (e) {
-		// Bounds does not exist, which means there is no selection, thus it
-		// cannot overlap.
-		return false;
-	}
-
-	if (s[2].value < l[0].value
-			|| s[0].value > l[2].value
-			|| s[3].value < l[1].value
-			|| s[1].value > l[3].value) 
-		overlaps = false;
-	return overlaps;
 }
 
 
@@ -226,36 +173,6 @@ function tp_min_width(layers)
 
 
 /**
- * Contracts the active layer the specified number pixels.
- */
-function tp_contract_layer(size, use_mask)
-{
-	var x0, y0, w, h;
-
-	x0 = activeDocument.activeLayer.bounds[0].value;
-	x1 = activeDocument.activeLayer.bounds[2].value;
-	y0 = activeDocument.activeLayer.bounds[1].value;
-	y1 = activeDocument.activeLayer.bounds[3].value;
-
-	activeDocument.selection.select([
-		[x0 + size, y0 + size],
-		[x0 + size, y1 - size],
-		[x1 - size, y1 - size],
-		[x1 - size, y0 + size]
-	]);
-
-	activeDocument.selection.invert();
-
-	if (use_mask)
-		tp_fill_layer_mask(BLACK);
-	else
-		activeDocument.selection.clear();
-
-	activeDocument.selection.deselect();
-}
-
-
-/**
  * Gets a list of the files currently selected in Adobe Bridge and their
  * thumbnails. Modified version of snippet by Paul Riggot.
  */
@@ -302,4 +219,56 @@ function tp_get_bridge_selection()
 		selected = new Array();
 
 	return selected; 
+}
+
+/**
+ * Returns true if the specified layer have a column somewhere to it's right.
+ *
+ * @param index the index of the layer in the collection it resides.
+ */
+
+function tp_column_right(l, index)
+{
+	var s = l.parentDocument().layerSets;
+
+	if (l.parent.name.substring(0, 3) == 'Row')
+		if (index != 0)
+			return false;
+
+	for (var i = 0; i < s.length; i++)
+	{
+		if (s[i].name == l.parent.name)
+			break;
+
+		if (s[i].name.substring(0, 3) == 'Col')
+			return true;
+	}
+	return false;
+}
+
+
+/**
+ * Returns true if the specified layer have a row below it.
+ *
+ * @param index the index of the layer in the collection it resides.
+ */
+
+function tp_row_below(l, index)
+{
+	var s = l.parentDocument().layerSets;
+
+	if (l.parent.name.substring(0, 3) == 'Col')
+		if (index != 0)
+			return false;
+
+	for (var i = 0; i < s.length; i++)
+	{
+		if (s[i].name == l.parent.name)
+			break;
+
+		if (s[i].name.substring(0, 3) == 'Row')
+			return true;
+	}
+
+	return false;
 }

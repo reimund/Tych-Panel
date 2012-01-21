@@ -1,3 +1,5 @@
+// XXX: Fix so that everything works when compositing is turned off.
+
 /*
  * TychTransformations constructor.
  * Prepares the creation of an n-tych by doing some preparatory calculations on
@@ -57,17 +59,17 @@ TychTransformations.prototype.apply = function()
 	for(i = 0; i < this.layers.length; i++) {
 		if (i >= m.length) break;
 
-		l = this.doc.layers[i];
+		l = this.doc.layers[this.layers.length - i - 1];
 		w = l.bounds[2].value - l.bounds[0].value;
 		h = l.bounds[3].value - l.bounds[1].value;
 		this.doc.activeLayer = l;
-		
+
 		// Check if the layer should be resized.
 		if (m[i][0] != null) {
 			// Resize layer 1 px larger than the target size.
 			l.resize((((m[i][0][0]) * w + 2) / w) * 100, (((m[i][0][1]) * h + 2) / h) * 100, m[i][0][2]);
 			// Remove 1px from each side of the layer.
-			tp_contract_layer(1, this.mask_layers);
+			l.contract(1, this.settings.mask_layers);
 		}
 
 		// Check if the layer should be moved.
@@ -75,6 +77,7 @@ TychTransformations.prototype.apply = function()
 			l.translate(m[i][1][0] - 1, m[i][1][1] - 1);
 
 	}
+
 	this.layers[0].parent.resizeCanvas(this.target_size[0], this.target_size[1], AnchorPosition.TOPLEFT);
 }
 
@@ -87,24 +90,24 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 {
 	// Get the width of the smallest layer, width-wise (before applying
 	// transformations).
-	var minw, target_width, size, s1, s2, s3, m, l, h0, h1, r;
+	var minw, target_width, size, s1, s2, s3, m, l, h0, h1, h2, r;
 
 	l = this.layers;
 	minw = tp_min_width(l);
 	m = [];
 	r = 0;
+	h2 = 0;
 
 	// Computes the size of this tych's layers side by side, before applying
 	// transformations.
 	size = [minw, tp_sum_height_at_width(this.layers, this.n, minw)];
-	
+
 	// Computes the resize factor, Ie the factor used to to scale the image to
 	// fit the resize_width set in the user options.
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
 		// changed so that the result will be aligned with the target document.
-		s1 = this.tych.comp_target_doc.height.value / size[1];
-		//s1 = (this.tych.comp_target_doc.height.value - this.settings.spacing * (this.n - 1)) / size[1];
+		s1 = (this.tych.comp_target_doc.height.value - this.settings.spacing * (this.n - 1)) / size[1];
 	} else {
 		if (this.settings.fit_width)
 			s1 = (this.settings.resize_width + 1) / size[0];
@@ -119,32 +122,37 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 	// into position.
 	this.target_size = [
 		Math.round(s1 * size[0]) - 1, // Crop away pixels that don't match the pixel grid.
-		Math.round(s1 * size[1])// + this.settings.spacing * (this.n - 1) - 4)
+		Math.round(s1 * size[1] + this.settings.spacing * (this.n - 1))
 	];
 	
 
 	// Finally compute the matrix...
-	for (var i = 0; i < this.n; i++) {
+	for (var i = this.n - 1; i >= 0; i--) {
 		// Multiply the resize factor with this second resize factor since
 		// each image also need to be resized individually in order to
-		// align with other images.
+		// align with other images. If all images would have the same
+		// dimensions this step wouldn't be needed, but now that's not the
+		// case...
 		s2 = minw / (l[i].bounds[2].value - l[i].bounds[0].value);
 
-		h0 = l[i].bounds[3].value - l[1].bounds[1].value;
+		h0 = l[i].bounds[3].value - l[i].bounds[1].value;
 		h1 = Math.round(s1 * s2 * h0 - r);
 
 		// Use a third resize factor to adjust the resizing so it scales to even pixels.
 		s3 = h1 / (s1 * s2 * h0);
 
 		// Store the remainder so we can add or subtract it to the next layer.
-		r = h1 - s1 * s2 * h0;
+		r = h1 - s1 * s2 * h0 + r;
 
 		m.push(
 			[
 				[s1 * s2 * s3, s1 * s2 * s3, AnchorPosition.TOPLEFT],
-				[0, Math.round(tp_sum_height_at_width(l, i, minw) * s1) + this.settings.spacing * i]
+				[0, h2]
 			]
 		);
+
+ 		// Keep track on how high we have gone.
+		h2 += s1 * s2 * s3 * h0 + this.settings.spacing;
 	}
 
 	this.matrix = m;
@@ -159,12 +167,13 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 {
 	// Get the height of the smallest layer, height-wise (before applying
 	// transformations).
-	var minh, size, s1, s2, s3, m, l, w0, w1, r;
+	var minh, size, s1, s2, s3, m, l, w0, w1, w2, r;
 	
 	l = this.layers;
 	minh = tp_min_height(this.layers);
 	m = [];
 	r = 0;
+	w2 = 0;
 
 	// Computes the size of this tych's layers side by side, before applying
 	// transformations.
@@ -195,7 +204,7 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 	];
 
 	// Finally compute the matrix...
-	for (var i = 0; i < this.n; i++) {
+	for (var i = this.n - 1; i >= 0; i--) {
 		// Multiply the resize factor with this second resize factor since
 		// each image also need to be resized individually in order to
 		// align with other images.
@@ -208,14 +217,17 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 		s3 = w1 / (s1 * s2 * w0);
 
 		// Store the remainder so we can add or subtract it to the next layer.
-		r = w1 - s1 * s2 * w0;
+		r = w1 - s1 * s2 * w0 + r;
 
 		m.push(
 			[
 				[s1 * s2 * s3, s1 * s2 * s3, AnchorPosition.TOPLEFT],
-				[Math.round(tp_sum_width_at_height(l, i, minh) * s1) + this.settings.spacing * i, 0]
+				[w2, 0]
 			]
 		);
+
+ 		// Keep track on how wide we have gone.
+		w2 += s1 * s2 * s3 * w0 + this.settings.spacing;
 	}
 
 	this.matrix = m;
@@ -301,3 +313,4 @@ TychTransformations.prototype.compute_quaptych_matrix = function()
 		[[r * 100, r * 100, AnchorPosition.TOPLEFT], [Math.round(r * col1_width) + x - 3, Math.round(r * row1_height) + x - 3]]
 	];
 }
+
