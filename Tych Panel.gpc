@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <gpc defaultLocale="sv_SE" version="2" keySequence="66" currentLocale="sv_SE">
   <target id="PHSP-12"/>
-  <ConfiguratorPanel name="Tych Panel" width="250" height="150" init="doInit" close="doClose" persistent="False">
+  <ConfiguratorPanel name="Tych Panel" width="250" height="48" init="doInit" close="doClose" persistent="False">
     <onInit><![CDATA[]]></onInit>
     <onClose><![CDATA[]]></onClose>
     <eventListeners>
