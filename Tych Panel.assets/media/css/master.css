@@ -8,9 +8,7 @@ div.templates { text-align: center; }
 
 div.templates { margin-top: 10px; }
 div.actions { margin: 2px 2px 3px 2px; }
-div.actions div { margin: 0 0 0 0; }
 div.actions span.button { margin: 0 0 6px 0; }
-div.actions div span.button a { text-align: center; }
 div.actions { margin-bottom: 0; }
 span.button.options { clear: both; }
 span.button.options .inner { padding: 6px 0px 4px 7px; }
@@ -19,16 +17,26 @@ div.actions span.button.options a.icon { padding-left: 10px; }
 div.actions span.button.add-row a.icon,
 div.actions span.button.add-column a.icon { padding-left: 25px; }
 
-
-span.button.add-row a.icon {
-	background-position: -3px -6px;
-	background-image: url(../img/add-row.png);
+div.actions div {
+	text-align: left;
+	float: left;
 }
 
-span.button.add-column a.icon {
-	background-position: -5px -6px;
-	background-image: url(../img/add-column.png);
+div.actions span.button { width: 85px; }
+div.actions span.button.options { width: auto; }
+span.button.add-row a.icon { background-position: -3px -6px; }
+span.button.add-column a.icon { background-position: -5px -6px; }
+span.button.add-row.bottom a.icon { background-image: url(../img/add-row-bottom.png); }
+span.button.add-row.top a.icon { background-image: url(../img/add-row-top.png); }
+span.button.add-column.left a.icon { background-image: url(../img/add-column-left.png); }
+span.button.add-column.right a.icon { background-image: url(../img/add-column-right.png); }
+
+p {
+	color: #555;
+	margin: 0 0 5px 5px;
+	font-size: 10px;
 }
+
 
 span.button.options a.icon {
 	background-position: -1px -1px;
@@ -41,7 +49,6 @@ span.button {
 	margin: 2px;
 	display: inline-block;
 	font-size: 10px;
-	color: #000;
 }
 
 span.button .inner {
