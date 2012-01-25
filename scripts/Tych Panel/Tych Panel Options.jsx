@@ -140,7 +140,7 @@ var TychOptions = function(tp_settings)
 				}, \
 				directory: Group { \
 					input: EditText { \
-						text: '" + new Folder(tp_settings.save_directory).fsName + "', \
+						text: '" + escape(new Folder(tp_settings.save_directory).fsName) + "', \
 						preferredSize: [300, 20] \
 					}, \
 					button: Button { text: 'Browse...' }, \
@@ -325,6 +325,12 @@ function num_or_default(str, name)
 {
 	var value = Number(str);
 	return isNaN(value) ? defaults[name] : value;
+}
+
+
+function escape(str)
+{
+	return str.replace(/\\/g, '\\\\');
 }
 
 
