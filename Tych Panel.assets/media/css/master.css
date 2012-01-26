@@ -1,18 +1,16 @@
 body {
-	margin: 10px 0 0 0;
+	margin: 18px 12px 12px 12px;
 	background: #d6d6d6;
+	overflow: hidden;
 }
 
-div.actions,
-div.templates { text-align: center; }
+div.actions {
+	width: 176px;
+	text-align: center;
+	margin: 0 auto 0 auto;
+}
 
-div.templates { margin-top: 10px; }
-div.actions { margin: 2px 2px 3px 2px; }
-div.actions span.button { margin: 0 0 6px 0; }
-div.actions { margin-bottom: 0; }
-span.button.options { clear: both; }
-span.button.options .inner { padding: 6px 0px 4px 7px; }
-div.actions span.button.options a.icon { padding-left: 10px; }
+div.actions span.button { margin: 0 0 0 0; }
 
 div.actions span.button.add-row a.icon,
 div.actions span.button.add-column a.icon { padding-left: 25px; }
@@ -22,6 +20,7 @@ div.actions div {
 	float: left;
 }
 
+div.actions div.options { margin-top: 15px; }
 div.actions span.button { width: 85px; }
 div.actions span.button.options { width: auto; }
 span.button.add-row a.icon { background-position: -3px -6px; }
@@ -54,7 +53,7 @@ span.button {
 span.button .inner {
 	display: inline-block;
 	background: url(../img/button.png) left top no-repeat;
-	height: 19px;
+	height: 16px;
 	padding: 6px 2px 4px 10px;
 }
 
@@ -82,7 +81,7 @@ small {
 	clear: right;
 	text-align: center;
 	display: block;
-	margin: 20px 0 0 0;
+	margin: 30px 0 0 0;
 	font-size: 9px;
 	color: #555;
 }
