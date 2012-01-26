@@ -1,3 +1,6 @@
+//@include layerMaskLib.9.jsx
+
+
 /**
  * Make a background layer and fill it with the specified color.
  */
@@ -271,4 +274,94 @@ function tp_row_below(l, index)
 	}
 
 	return false;
+}
+
+
+/**
+ * Recursive function that searches through layers and layersets for the
+ * layer with the specified name.
+ */
+function tp_get_layer_by_name(set, name) {
+	var layers, res, i;
+
+	if (name == null)
+		return null;
+	
+	try {
+		return set.layers.getByName(name);
+	} catch (e) { }
+
+	for (i = 0; i < set.layerSets.length; i++) {
+		res = tp_get_layer_by_name(set.layerSets[i], name);
+		if (res != undefined) break;
+	}
+
+	return res;
+}
+
+
+/**
+ * Gets the maximum x bound below layer set sets[j] in the specified collection
+ * of sets.
+ */
+function tp_maxx_below(sets, j)
+{
+	return tp_max_bound_below(sets, j, 2);
+}
+
+
+/**
+ * Gets the maximum y bound below layer set sets[j] in the specified collection
+ * of sets.
+ */
+function tp_maxy_below(sets, j)
+{
+	return tp_max_bound_below(sets, j, 3);
+}
+
+
+function tp_max_bound_below(sets, j, dir)
+{
+	var i, max;
+	max = 0;
+
+	for (i = sets.length - 1; i > j; i--)
+		max = Math.max(max, sets[i].bounds[dir].value);
+
+	return max;
+}
+
+
+/**
+ * Tweakes the mask of specified layer to be d pixels wider or higher,
+ * depending on the which side it's on.
+ */
+function tp_tweak_mask(l, d, side)
+{
+	//layerMask.makeSelection();
+	var x0, x1, y0, y1;
+
+	x0 = l.bounds[0].value;
+	y0 = l.bounds[1].value;
+	x1 = l.bounds[2].value;
+	y1 = l.bounds[3].value;
+
+	layerMask.remove(false);
+	switch (side) {
+		case TOP:
+			activeDocument.selection.select([[x0, y0 - d], [x0, y1], [x1, y1], [x1, y0 - d]]);
+			break;
+
+		case BOTTOM:
+			activeDocument.selection.select([[x0, y0], [x0, y1 - d], [x1, y1 - d], [x1, y0]]);
+			break;
+
+		case LEFT:
+			activeDocument.selection.select([[x0, y0], [x0, y1], [x1 - d, y1], [x1 - d, y0]]);
+			break;
+
+		case RIGHT:
+			activeDocument.selection.select([[x0, y0], [x0, y1], [x1 - d, y1], [x1 - d, y0]]);
+	}
+	layerMask.makeFromSelection(true);
 }

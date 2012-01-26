@@ -2,9 +2,10 @@
 //@include settings.jsx
 //@include reorder.jsx
 //@include artlayers.jsx
+//@include layersets.jsx
+//@include layerMaskLib.9.jsx
 //@include helpers.jsx
 //@include TychTransformations.jsx
-//@include layerMaskLib.9.jsx
 
 
 /*
@@ -141,10 +142,6 @@ Tych.prototype.stack = function()
 }
 
 
-// XXX: I should remove this method and instead use the same method for both
-// templates and ntychs. If the active document already has layers laid out,
-// the templates should add them just like New row and New column (if enabled
-// in the gui).
 Tych.prototype.create = function(tych_variant)
 {
 	this.tych_variant = tych_variant;
@@ -265,7 +262,7 @@ Tych.prototype.link = function(link)
 }
 
 
-Tych.prototype.layout_and_composite = function(tych_variant)
+Tych.prototype.layout_and_composite = function(tych_variant, side)
 {
 	var thiss, g;
 
@@ -292,17 +289,18 @@ Tych.prototype.layout_and_composite = function(tych_variant)
 		thiss.layout();
 		// If this is the first Tych do the bookkeeping now.
 		if (thiss.comp_target_doc == null && thiss.table.total == 0)
-			thiss.bookkeep();
+			thiss.bookkeep(side);
 
+		//thiss.print_table();
 
 		thiss.link(true);
 
 		// Composite the result.
 		if (thiss.settings.composite && thiss.comp_target_doc != null)
 			if (tych_variant == NTYCH_VERTICAL)
-				thiss.composite(thiss.doc, thiss.comp_target_doc, { side: RIGHT });
+				thiss.composite(thiss.doc, thiss.comp_target_doc, side);
 			else
-				thiss.composite(thiss.doc, thiss.comp_target_doc, { side: BOTTOM });
+				thiss.composite(thiss.doc, thiss.comp_target_doc, side);
 
 		//// Save, close etc.
 		thiss.finish();
@@ -315,27 +313,21 @@ Tych.prototype.layout_and_composite = function(tych_variant)
 /**
  * Places the contents of one document at the bottom of another.
  */
-Tych.prototype.composite = function(src, target, options)
+Tych.prototype.composite = function(src, target, side)
 {
-	var i,
-		placement,
-		src_width,
-		src_height,
-		target_width,
-		target_height,
-		layer_set,
-		layers_to_move,
-		inserted_set;
+	var i, placement, src_width, src_height, old_width, old_height, new_width,
+		new_height, layer_set, layers_to_move, inserted_set, anchor_position;
 
 	// Store away the width & height of the source document before we close it.
 	src_width = src.width;
 	src_height = src.height;
 
 	// Store away the width & height of the target document before we resize the canvas.
-	target_width = target.width.value;
-	target_height = target.height.value;
+	old_width = target.width.value;
+	old_height = target.height.value;
 
 	activeDocument = target;
+	anchor_position = AnchorPosition.TOPLEFT
 
 	var thiss = this;
 	var f = function()
@@ -362,7 +354,7 @@ Tych.prototype.composite = function(src, target, options)
 		inserted_set = target.layerSets.add();
 
 		if (thiss.tych_variant == NTYCH_HORIZONTAL)
-			inserted_set.name = 'Row ' + target.layerSets.length;
+			inserted_set.name = 'Row ' + target.layerSets.length
 		else if (thiss.tych_variant == NTYCH_VERTICAL)
 			inserted_set.name = 'Column ' + target.layerSets.length;
 		else
@@ -384,19 +376,34 @@ Tych.prototype.composite = function(src, target, options)
 
 		thiss.move_into_set(layers_to_move, inserted_set);
 
-		thiss.bookkeep();
+		thiss.bookkeep(side);
+		//thiss.print_table();
 
 		src.close(SaveOptions.DONOTSAVECHANGES);
 		activeDocument = target;
 
-		if (options.side == BOTTOM) {
+		if (side == BOTTOM || side == TOP) {
 			offset_x = 0;
 			offset_y = target.height + thiss.settings.spacing;
+
+			if (side == TOP) {
+				offset_y = -src_height - thiss.settings.spacing;
+				//inserted_set.move_to_back(1);
+				anchor_position = AnchorPosition.BOTTOMLEFT;
+			}
+
 			new_width = target.width.value;
 			new_height = target.height.value + src_height + thiss.settings.spacing;
-		} else if (options.side == RIGHT) {
+		} else if (side == RIGHT || side == LEFT) {
 			offset_x = target.width.value - target.activeLayer.bounds[0].value + thiss.settings.spacing;
 			offset_y = 0;
+
+			if (side == LEFT) {
+				offset_x = -src_width - thiss.settings.spacing;
+				//inserted_set.move_to_back(1);
+				anchor_position = AnchorPosition.TOPRIGHT;
+			}
+
 			new_width = target.width.value + src_width + thiss.settings.spacing;
 			new_height = target.height.value;
 		}
@@ -404,191 +411,23 @@ Tych.prototype.composite = function(src, target, options)
 		inserted_set.translate(offset_x, offset_y);
 
 		// Make the document bigger so the inserted layers can be seen.
-		target.resizeCanvas(new_width, new_height, AnchorPosition.TOPLEFT);
+		target.resizeCanvas(new_width, new_height, anchor_position);
 
-		thiss.readjust_for_size(target, target_width, target_height);
+		//thiss.readjust_for_size(target, old_width, old_height);
+		thiss.trans.readjust(thiss, target, old_width, old_height, new_width, new_height);
 	}
 
-	target.suspendHistory('Composite ntych', 'f()');
+	f();
+	//target.suspendHistory('Composite ntych', 'f()');
 }
 
 
-/**
- * Readjusts layer positions and sizes to accomodate for when width or height
- * is maintained.
- */
-Tych.prototype.readjust_for_size = function(doc, target_width, target_height)
+// Do some bookkeeping for the latest added ntych.
+Tych.prototype.bookkeep = function(side)
 {
-	var s1, cx, cy, rx, ry, w0, w1, h0, h1, x, y, ins;
-
-	// The resize factor to scale everything, including
-	// spacings, to fit the width.
-	if (this.settings.maintain_width) 
-		s1 = (target_width / doc.width * target_height) / doc.height;
-	else if (this.settings.maintain_height)
-		s1 = (target_height / doc.height * target_width) / doc.width;
-
-	// Remainder.
-	rx = 0
-	ry = 0
-
-	// Maintain width & height.
-	// Here be dragons.
-	if ((this.settings.maintain_width && this.tych_variant != NTYCH_HORIZONTAL)
-			|| (this.settings.maintain_height && this.tych_variant != NTYCH_VERTICAL)) {
-		for (i = doc.layerSets.length - 1; i >= 0; i--) {
-			s = doc.layerSets[i];
-
-			for (j = s.layers.length - 1; j >= 0; j--) {
-				l = s.layers[j];
-
-				doc.activeLayer = l;
-				w0 = s1 * (l.bounds[2].value - l.bounds[0].value);
-				h0 = s1 * (l.bounds[3].value - l.bounds[1].value);
-
-				if (this.settings.mask_layers)
-					layerMask.remove(false);
-
-				// The absolute width every layer must decrease their width
-				// in order to make the space the desired size.
-				cx = cy = (this.settings.spacing - this.settings.spacing * s1);
-
-				if (l.parent.name.substring(0, 3) == 'Row') {
-
-					// Reset ry when beginning a new row.
-					if (j == (s.layers.length - 1))
-						ry = 0;
-
-					// The first layer in a row only needs to compensate
-					// their width for the space on one side.
-					if (j == (s.layers.length - 1) || (j == 0 && !tp_column_right(s.layers[j], j)))
-						cx = cx / 2;
-
-					// Is it the only layer in the column, with nothing to its side?
-					if (s.layers.length == 1 && !tp_column_right(s.layers[j], j))
-						cx = 0
-
-					w1 = Math.round(w0 - cx - rx);
-
-
-					// Is it the only row?
-					if (i == (doc.layerSets.length - 1) && !tp_row_below(s.layers[j], j))
-						cy = 0;
-					// Is it the top row or the last row?
-					else if (i == (doc.layerSets.length - 1) || !tp_row_below(s.layers[j], j))
-						cy = cy / 2;
-
-					h1 = Math.round(h0 - cy - ry);
-
-					rx = cx + rx - (w0 - w1);
-				} else {
-				// Column layers.
-
-					// Is it the leftmost column?
-					if (i == (doc.layerSets.length - 1)) {
-						cx = cx / 2;
-						w1 = Math.round(w0 - cx - rx);
-					// Is it the rightmost column?
-					} else if (!tp_column_right(s.layers[j], j)) {
-						cx = cx / 2;
-						// Round up the last column to avoid having the
-						// background shine through.
-						w1 = Math.ceil(w0 - cx - rx);
-					} else {
-						w1 = Math.round(w0 - cx - rx);
-					}
-
-					// Is it the only layer in the column?
-					if (s.layers.length == 1)
-						cy = 0
-					// Is it the the first or last layers of the column?
-					else if (j == 0 || j == (s.layers.length - 1))
-						cy = cy / 2;
-
-					h1 = Math.round(h0 - cy - ry);
-
-					ry = cy + ry - (h0 - h1);
-				}
-
-				x = 0;	
-				y = 0;	
-
-				// Compute positions.
-				if (this.table.layers[l.name].type == 'row') {
-					if (j < (s.layers.length - 1))
-						x = s.layers[j + 1].bounds[2].value + this.settings.spacing;
-
-
-					if (i < (doc.layerSets.length - 1)) {
-						ins = doc.layerSets[i + 1].artLayers.getByName(this.table.layers[l.name].inserted_at);
-						y = ins.bounds[3].value + this.settings.spacing;
-					}
-				} else {
-					if (i < (doc.layerSets.length - 1)) {
-						ins = doc.layerSets[i + 1].artLayers.getByName(this.table.layers[l.name].inserted_at);
-						x = ins.bounds[2].value + this.settings.spacing;
-					}
-
-					if (j < (s.layers.length - 1))
-						y = s.layers[j + 1].bounds[3].value + this.settings.spacing;
-				}
-
-				l.translate(-l.bounds[0].value + x, -l.bounds[1].value + y);
-
-				// If the calculated dimensions of the last layer exceeds
-				// the desired size, reduce the amount.
-				if (ins && j == 0) {
-					if (this.table.layers[l.name].type == 'row')
-						w1 -= l.bounds[0].value + w1 - ins.bounds[2].value;
-					else
-						h1 -= l.bounds[1].value + h1 - ins.bounds[3].value;
-				}
-
-				// Enlarge 1px in all directions to rid fuzzy edge.
-				l.resize(
-					(w1 + 2) / (l.bounds[2].value - l.bounds[0].value) * 100,
-					(h1 + 2)/ (l.bounds[3].value - l.bounds[1].value) * 100,
-					AnchorPosition.TOPLEFT
-				);
-
-				// Crop layer to the desired size and take away an extra single
-				// pixel border around the layer to make it perfectly crisp
-				// without any fuzzy edges.
-				l.crop(w1, h1, AnchorPosition.MIDDLECENTER, this.settings.mask_layers);
-				// We need to nudge the layer into the right position after
-				// ridding the fuzzy edge. This translation cannot be baked
-				// into the other since then the cropping wouldn't work for
-				// layers that reside on edges of the canvas.
-				l.translate(-1, -1);
-			}
-		}
-
-		// Use the bounds of the last layer if it's smallar than the
-		// pre-calculated size.
-		tw = this.settings.maintain_width
-			? target_width
-			: Math.min(doc.layerSets[0].layers[0].bounds[2].value, target_height / new_height * target_width);
-		th = this.settings.maintain_width
-			? Math.min(doc.layerSets[0].layers[0].bounds[3].value, target_width / new_width * target_height)
-			: target_height;
-
-		doc.resizeCanvas(tw, th, AnchorPosition.TOPLEFT);
-
-		// Remove any pixels that lie outside the canvas.
-		doc.crop([0, 0, doc.width, doc.height]);
-	}
-
-}
-
-
-// Do some bookkeeping.
-// XXX: I can prolly throw this out entirely.
-Tych.prototype.bookkeep = function()
-{
-	var s, l, layers, insertion_point;
+	var s, l, i, layers, type, ref;
 
 	s = activeDocument.layerSets;
-	insertion_point = null;
 
 	// If layer sets exist, the current layers being bookkept have just been
 	// composited. Otherwise, it's the first ntych inserted.
@@ -597,20 +436,84 @@ Tych.prototype.bookkeep = function()
 	else
 		layers = activeDocument.layers;
 
-	for (var i = 0; i < layers.length; i++) {
+
+	type = this.tych_variant == NTYCH_HORIZONTAL ? ROW : COLUMN;
+
+	for (i = 0; i < layers.length; i++) {
 		l = layers[i];
+
+		ref = null;
 		
-		// An insertion point only exists if the layers are composited.
-		if (s.length > 0)
-			insertion_point = s[1].layers[0].name;
+		if (i == (layers.length - 1)) {
+			switch (side) {
+				case TOP:
+					ref = this.table.references.top_left;
+					break;
+
+				case BOTTOM:
+					ref = this.table.references.bottom_left;
+					break;
+
+				case LEFT:
+					ref = this.table.references.top_left;
+					break;
+
+				case RIGHT:
+					ref = this.table.references.top_right;
+			}
+		}
 
 		this.table.layers[l.name] = {
-			type: this.tych_variant == NTYCH_HORIZONTAL ? 'row' : 'column',
-			inserted_at: insertion_point
+			type: type,
+			side: side,
+			count: layers.length,
+			reference: ref
 		};
 		this.table.total += 1;
 
 	}
+
+	// Store the the names of the layers that are interesting references for
+	// coming ntychs.
+	switch (side) {
+		case TOP:
+			this.table.references.top_left = layers[layers.length - 1].name;
+			this.table.references.top_right = layers[0].name;
+
+			// The first tych will cover all reference points.
+			if (s.length == 0)
+				this.table.references.bottom_left = layers[layers.length - 1].name;
+			break;
+
+		case BOTTOM:
+			this.table.references.bottom_left = layers[layers.length - 1].name;
+
+			// The first tych will cover all reference points.
+			if (s.length == 0) {
+				this.table.references.top_left = layers[layers.length - 1].name;
+				this.table.references.top_right = layers[0].name;
+			}
+			break;
+
+		case LEFT:
+			this.table.references.top_left = layers[layers.length - 1].name;
+			this.table.references.bottom_left = layers[0].name;
+
+			// The first tych will cover all reference points.
+			if (s.length == 0)
+				this.table.references.top_right = layers[layers.length - 1].name;
+			break;
+
+		case RIGHT:
+			this.table.references.top_right = layers[layers.length - 1].name;
+
+			// The first tych will cover all reference points.
+			if (s.length == 0) {
+				this.table.references.top_left = layers[layers.length - 1].name;
+				this.table.references.bottom_left = layers[0].name;
+			}
+	}
+	
 
 	this.save_table();
 }
@@ -660,7 +563,6 @@ Tych.prototype.save = function()
 				new File(this.settings.save_directory + '/' + basename + padding),
 				options[format], true, Extension.LOWERCASE);
 }
-
 
 
 /**
@@ -789,7 +691,13 @@ Tych.prototype.get_table = function()
 
 	table = {
 		layers: {},
+		references: {
+			top_left: null,
+			top_right: null,
+			bottom_left: null
+		},
 		total: 0
+
 	}
 
 	// Only use the saved table if we're going to composite!
@@ -810,11 +718,4 @@ Tych.prototype.save_table = function()
 
 
 var t = new Tych(tp_get_settings());
-//t.create(QUAPTYCH_GRID);
-//t.create(TRIPTYCH_PORTRAIT_LANDSCAPE_GRID);
-//t.create(TRIPTYCH_LANDSCAPE_PORTRAIT_GRID);
-//t.create(QUAPTYCH_GRID);
-//t.layout_and_composite(NTYCH_HORIZONTAL);
-//t.layout_and_composite(NTYCH_VERTICAL);
-//t.test_copy();
 

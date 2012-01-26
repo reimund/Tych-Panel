@@ -20,14 +20,7 @@
 var TychOptions = function(tp_settings)
 {
 	var smallfont;
-				/*resize_width_group: Group { \
-					label: StaticText { text: 'Target width' }, \
-					input: EditText { \
-						text: '" + tp_settings.resize_width + "', \
-						preferredSize: [50, 20] \
-					}, \
-					enabled: " + tp_settings.resize + " \
-				}, \ */
+
 	var window_res = "dialog { \
 		orientation: 'row', \
 		alignChildren: 'top', \
@@ -92,7 +85,7 @@ var TychOptions = function(tp_settings)
 				smart_object_group: Group { \
 					smart_object: Checkbox { \
 						text: 'Convert to smart objects.', \
-						value: " + tp_settings.convert_to_smartobject + " \
+						value: " + tp_settings.convert_to_smart_objects + " \
 					} \
 					margins: [0, 20, 0, 0] \
 				} \
@@ -284,7 +277,7 @@ TychOptions.prototype.setup_events = function()
 		tp_settings.fit_height = general.resize_to_fit.height_button.value
 		tp_settings.resize_width = num_or_default(general.resize_width_group.input.text, 'resize_width');
 		tp_settings.resize_height = num_or_default(general.resize_height_group.input.text, 'resize_height');
-		tp_settings.convert_to_smartobject = general.smart_object_group.smart_object.value;
+		tp_settings.convert_to_smart_objects = general.smart_object_group.smart_object.value;
 		tp_settings.mask_layers = general.layer_mask_group.layer_mask.value;
 		tp_settings.reorder = general.reorder_group.reorder.value;
 		tp_settings.use_bridge_selection = general.bridge_group.use_bridge.value;

@@ -1,5 +1,4 @@
 // XXX: Fix so that everything works when compositing is turned off.
-
 /*
  * TychTransformations constructor.
  * Prepares the creation of an n-tych by doing some preparatory calculations on
@@ -143,7 +142,6 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 
 		// Store the remainder so we can add or subtract it to the next layer.
 		r = h1 - s1 * s2 * h0 + r;
-
 		m.push(
 			[
 				[s1 * s2 * s3, s1 * s2 * s3, AnchorPosition.TOPLEFT],
@@ -233,3 +231,295 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 	this.matrix = m;
 }
 
+
+TychTransformations.prototype.readjust = function(tych, doc, old_width, old_height, new_width, new_height)
+{
+	var s1, rx, ry, new_size, new_coords, prev;
+
+	this.tych = tych;
+
+	// The resize factor to scale everything, including
+	// spacings, to fit the width.
+	if (tych.settings.maintain_width) 
+		s1 = (old_width / doc.width * old_height) / doc.height;
+	else if (tych.settings.maintain_height)
+		s1 = (old_height / doc.height * old_width) / doc.width;
+
+	// Remainder.
+	rx = 0
+	ry = 0
+
+	minx = Number.MAX_VALUE;
+	miny = Number.MAX_VALUE;
+
+	// Maintain width & height.
+	// Here be dragons.
+	if ((tych.settings.maintain_width && tych.tych_variant != NTYCH_HORIZONTAL)
+			|| (tych.settings.maintain_height && tych.tych_variant != NTYCH_VERTICAL)) {
+		for (i = doc.layerSets.length - 1; i >= 0; i--) {
+			s = doc.layerSets[i];
+
+			// Reset previous layer for each layer set.
+			prev = null;
+
+			for (j = s.layers.length - 1; j >= 0; j--) {
+
+				l = s.layers[j];
+				doc.activeLayer = l;
+
+				// Make a reference to the previous layer if it exists.
+				if ((s.layers.length - 1) > j && s.layers[j + 1])
+					prev = s.layers[j + 1];
+
+				if (tych.settings.mask_layers)
+					layerMask.remove(false);
+
+				// Get layer metadata.
+				lm = this.tych.table.layers[l.name];
+
+				if (new_size != undefined) {
+					rx = new_size.rx;
+					ry = new_size.ry;
+				}
+
+				// Test cases
+				// Maintain width: 2b, 2r, 1t, 2l, 3t, 1l
+				// Maintain height: 1b, 2r, 2b
+
+				new_size = this.get_new_size(doc, l, lm, s1, rx, ry, i, j);
+				new_coords = this.get_new_position(doc, l, lm, i, j);
+
+				l.translate(-l.bounds[0].value + new_coords.x, -l.bounds[1].value + new_coords.y);
+
+				// If the calculated dimensions of the last layer exceeds
+				// the desired size, reduce the amount. Do this for the last
+				// layer in each ntych, except the first ntych.
+				if (i < doc.layerSets.length - 1 && j == 0) {
+					if (lm.type == ROW) {
+						new_size.width -= l.bounds[0].value + new_size.width - tp_maxx_below(doc.layerSets, i);
+					} else {
+						new_size.height -= l.bounds[1].value + new_size.height - tp_maxy_below(doc.layerSets, i);
+					}
+				}
+
+				// Enlarge 1px in all directions to rid fuzzy edge.
+				l.resize(
+					(new_size.width + 2) / (l.bounds[2].value - l.bounds[0].value) * 100,
+					(new_size.height + 2) / (l.bounds[3].value - l.bounds[1].value) * 100,
+					new_coords.a
+				);
+
+				// Crop layer to the desired size and take away an extra single
+				// pixel border around the layer to make it perfectly crisp
+				// without any fuzzy edges.
+				l.crop(new_size.width, new_size.height, AnchorPosition.MIDDLECENTER, tych.settings.mask_layers);
+
+				// Smart objects can be different sized even though the
+				// original pictures have identical dimensions. This is because
+				// they are scaled unevenly to match the pixel grid.
+				// Furthermore, they cannot be cropped to matching width/height
+				// since they're smart objects. Naturally, they could be
+				// cropped before converting, but that defies the purpose of
+				// smart objects. Therefore, the best compromise is to realign
+				// any misaligned layer mask after the fact.
+				if (prev) {
+					// Compute the difference in width/height from the previous
+					// layer, and add that to the current mask.
+					if (lm.type == ROW)
+						tp_tweak_mask(l, new_size.height - (prev.bounds[3].value - prev.bounds[1].value), lm.side);
+					else
+						tp_tweak_mask(l, new_size.width - (prev.bounds[2].value - prev.bounds[0].value), lm.side);
+				}
+
+				// We need to nudge the layer into the right position after
+				// ridding the fuzzy edge. This translation cannot be baked
+				// into the other since then the cropping wouldn't work for
+				// layers that reside on edges of the canvas.
+				switch (new_coords.a) {
+
+					case AnchorPosition.TOPLEFT:
+						l.translate(-1, -1);
+						break;
+
+					case AnchorPosition.TOPRIGHT:
+						l.translate(1, -1);
+						break;
+
+					case AnchorPosition.BOTTOMLEFT:
+						l.translate(-1, 1);
+						break;
+				}
+
+				minx = Math.min(minx, l.bounds[0].value);
+				miny = Math.min(miny, l.bounds[1].value);
+			}
+		}
+
+		// Use the bounds of the last layer if it's smallar than the
+		// pre-calculated size.
+		tw = tych.settings.maintain_width
+			? old_width
+			: Math.min(doc.layerSets[0].layers[0].bounds[2].value, old_height / new_height * old_width);
+		th = tych.settings.maintain_width
+			? Math.min(doc.layerSets[0].layers[0].bounds[3].value, old_width / new_width * old_height)
+			: old_height;
+
+		//doc.resizeCanvas(tw, th, AnchorPosition.TOPLEFT);
+		doc.crop([
+			new UnitValue(minx + ' pixels'),
+			new UnitValue(miny + ' pixels'),
+			new UnitValue((minx + tw) + ' pixels'),
+			new UnitValue((miny + th) + ' pixels')
+		]);
+
+		// Remove any pixels that lie outside the canvas.
+		doc.crop([0, 0, doc.width, doc.height]);
+	}
+
+}
+
+
+TychTransformations.prototype.get_new_position = function(doc, l, lm, i, j)
+{
+	var s, ref, x, y, w0, h0, a;
+
+	w0 = l.bounds[2].value - l.bounds[0].value;
+	h0 = l.bounds[3].value - l.bounds[1].value;
+	a = AnchorPosition.TOPLEFT;
+
+	s = doc.layerSets;
+
+	// Init translation variables;
+	x = 0;
+	y = 0;
+
+	// Get reference layer.
+	ref = tp_get_layer_by_name(doc, lm.reference);
+
+	if (lm.type == ROW) {
+
+		if (ref != null) {
+
+			// Is this layer on top of its reference layer?
+			if (lm.side == TOP) {
+				x = ref.parent.layers[ref.parent.layers.length - 1].bounds[0].value;
+				y = ref.bounds[1].value - h0 - this.tych.settings.spacing;
+				a = AnchorPosition.BOTTOMLEFT;
+			} else if (lm.side == BOTTOM) {
+			// Is this layer below its reference layer?
+				x = ref.parent.layers[ref.parent.layers.length - 1].bounds[0].value;
+				y = ref.bounds[3].value + this.tych.settings.spacing;
+			}
+
+		} else {
+
+			// Just shove the remaining layers next to the layer that has a
+			// reference.
+			if (j < (s[i].layers.length - 1)) {
+				x = s[i].layers[j + 1].bounds[2].value + this.tych.settings.spacing;
+				y = s[i].layers[j + 1].bounds[1].value;
+			} else {
+				x = l.bounds[0].value;
+				y = l.bounds[1].value;
+			}
+		}
+	} else {
+
+		if (ref != null) {
+
+			// Is this layer to the left of its reference layer?
+			if (lm.side == LEFT) {
+				x = ref.bounds[0].value - w0 - this.tych.settings.spacing;
+				y = ref.bounds[1].value;
+				a = AnchorPosition.TOPRIGHT;
+			} else if (lm.side == RIGHT) {
+			// The layer is to the right of its reference layer.
+				x = ref.bounds[2].value + this.tych.settings.spacing;
+				y = ref.bounds[1].value;
+				a = AnchorPosition.TOPLEFT;
+			}
+		}
+
+		// Just shove the remaining layers next to the layer that has a
+		// reference.
+		if (j < (s[i].layers.length - 1)) {
+			y = s[i].layers[j + 1].bounds[3].value + this.tych.settings.spacing;
+			x = s[i].layers[j + 1].bounds[0].value;
+		}
+	}
+
+	return { x: x, y: y, a: a };
+}
+
+
+TychTransformations.prototype.get_new_size = function(doc, l, lm, s1, rx, ry, i, j)
+{
+	var ld, cx, cy, w0, w1, h0, h1;
+
+	// The absolute width every layer must decrease their width
+	// in order to make the space the desired size.
+	cx = cy = (this.tych.settings.spacing - this.tych.settings.spacing * s1);
+
+	// The current size of the layer.
+	w0 = s1 * (l.bounds[2].value - l.bounds[0].value);
+	h0 = s1 * (l.bounds[3].value - l.bounds[1].value);
+
+	if (lm.type == ROW) {
+
+		// Reset ry when beginning a new row.
+		if (j == (s.layers.length - 1))
+			ry = 0;
+
+		// The first layer in a row only needs to compensate
+		// their width for the space on one side.
+		if (j == (s.layers.length - 1) || (j == 0 && !tp_column_right(s.layers[j], j)))
+			cx = cx / 2;
+
+		// Is it the only layer in the column, with nothing to its side?
+		if (s.layers.length == 1 && !tp_column_right(s.layers[j], j))
+			cx = 0
+
+		w1 = Math.round(w0 - cx - rx);
+
+
+		// Is it the only row?
+		if (i == (doc.layerSets.length - 1) && !tp_row_below(s.layers[j], j))
+			cy = 0;
+		// Is it the top row or the last row?
+		else if (i == (doc.layerSets.length - 1) || !tp_row_below(s.layers[j], j))
+			cy = cy / 2;
+
+		h1 = Math.round(h0 - cy - ry);
+
+		rx = cx + rx - (w0 - w1);
+	} else {
+	// Column layers.
+
+		// Is it the leftmost column?
+		if (i == (doc.layerSets.length - 1)) {
+			cx = cx / 2;
+			w1 = Math.round(w0 - cx - rx);
+		// Is it the rightmost column?
+		} else if (!tp_column_right(s.layers[j], j)) {
+			cx = cx / 2;
+			// Round up the last column to avoid having the
+			// background shine through.
+			w1 = Math.ceil(w0 - cx - rx);
+		} else {
+			w1 = Math.round(w0 - cx - rx);
+		}
+
+		// Is it the only layer in the column?
+		if (s.layers.length == 1)
+			cy = 0
+		// Is it the the first or last layers of the column?
+		else if (j == 0 || j == (s.layers.length - 1))
+			cy = cy / 2;
+
+		h1 = Math.round(h0 - cy - ry);
+
+		ry = cy + ry - (h0 - h1);
+	}
+
+	return { width: w1, height: h1, rx: rx, ry: ry };
+}
