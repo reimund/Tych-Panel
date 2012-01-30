@@ -95,7 +95,6 @@ TychOptions.prototype.setup_ui = function()
 		{
 			var dummy_doc, picked_color;
 
-			$.writeln('hoho');
 			if (app.documents.length == 0) {
 				dummy_doc = app.documents.add(1, 1, 72, 'Dummy document');
 			}

@@ -322,7 +322,7 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 				// cropped before converting, but that defies the purpose of
 				// smart objects. Therefore, the best compromise is to realign
 				// any misaligned layer mask after the fact.
-				if (prev) {
+				if (prev && this.tych.settings.mask_layers) {
 					// Compute the difference in width/height from the previous
 					// layer, and add that to the current mask.
 					if (lm.type == ROW)
