@@ -7,14 +7,9 @@
 function tp_fill_background(doc, color)
 {
 	var active_layer = doc.activeLayer;
-	var fill_color = new SolidColor();
-
-	fill_color.rgb.red = color[0];
-	fill_color.rgb.green = color[1];
-	fill_color.rgb.blue = color[2];
 	
 	doc.activeLayer = doc.layers[doc.layers.length - 1];
-	doc.selection.fill(fill_color)
+	doc.selection.fill(color)
 	doc.activeLayer = active_layer;
 }
 

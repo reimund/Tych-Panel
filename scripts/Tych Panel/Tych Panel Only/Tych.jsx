@@ -18,10 +18,12 @@ var Tych = function(settings)
 	this.rulerUnits = preferences.rulerUnits;
 	// Change unit preferences.
 	preferences.rulerUnits = Units.PIXELS;
+	this.comp_doc = null;
 
 	// Save a reference to the current open document if there is one.
 	// New layouts may be merged and composited into this document later.
-	this.comp_target_doc = documents.length > 0 ? activeDocument : null;
+	if (settings.composite && documents.length > 0)
+		this.comp_doc = activeDocument;
 
 	this.settings = settings;
 	this.table = this.get_table();
@@ -63,7 +65,9 @@ Tych.prototype.select = function()
 	for (i in images) {
 		try {
 			var docc = documents.getByName(images[i].name);
-			this.comp_target_doc = docc.duplicate();
+			var dup = docc.duplicate();
+			if (this.settings.composite)
+				this.comp_doc = dup;
 			docc.close(SaveOptions.DONOTSAVECHANGES);
 		} catch (err) { }
 	}
@@ -173,7 +177,7 @@ Tych.prototype.create = function(tych_variant)
 		// weird things start to happen for no apparent reason. So we use a
 		// duplicate instead.
 		this.doc = d.duplicate();
-		this.comp_target_doc = null;
+		this.comp_doc = null;
 		d.close(SaveOptions.DONOTSAVECHANGES);
 
 		if (required > this.doc.layers.length) {
@@ -212,16 +216,18 @@ Tych.prototype.validate_input = function(tych_variant, number)
 
 Tych.prototype.finish = function()
 {
+	var bg_color = new SolidColor();
+	bg_color.rgb.hexValue = this.settings.background_color.substr(1);
+
 	// Make a reference to the document that should be saved.
-	this.save_doc = this.comp_target_doc == null ? this.doc : this.comp_target_doc;
+	this.save_doc = this.comp_doc == null ? this.doc : this.comp_doc;
 
 	// Unlink all layer masks.
 	this.link(false);
-	
 	if (this.save_doc.layers[this.save_doc.layers.length - 1].name == 'Background')
-		tp_fill_background(this.save_doc, WHITE);
+		tp_fill_background(this.save_doc, bg_color);
 	else 
-		tp_add_background(this.save_doc, WHITE);
+		tp_add_background(this.save_doc, bg_color);
 
 	if (this.settings.autosave)
 		this.save(this.save_doc);
@@ -238,7 +244,7 @@ Tych.prototype.link = function(link)
 {
 	var doc, f;
 
-	doc = this.comp_target_doc == null ? this.doc : this.comp_target_doc;
+	doc = this.comp_doc == null ? this.doc : this.comp_doc;
 	activeDocument = doc;
 
 	f = function()
@@ -288,7 +294,7 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 		// computed.
 		thiss.layout();
 		// If this is the first Tych do the bookkeeping now.
-		if (thiss.comp_target_doc == null && thiss.table.total == 0)
+		if (thiss.comp_doc == null && thiss.table.total == 0)
 			thiss.bookkeep(side);
 
 		//thiss.print_table();
@@ -296,11 +302,11 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 		thiss.link(true);
 
 		// Composite the result.
-		if (thiss.settings.composite && thiss.comp_target_doc != null)
+		if (thiss.settings.composite && thiss.comp_doc != null)
 			if (tych_variant == NTYCH_VERTICAL)
-				thiss.composite(thiss.doc, thiss.comp_target_doc, side);
+				thiss.composite(thiss.doc, thiss.comp_doc, side);
 			else
-				thiss.composite(thiss.doc, thiss.comp_target_doc, side);
+				thiss.composite(thiss.doc, thiss.comp_doc, side);
 
 		//// Save, close etc.
 		thiss.finish();
@@ -574,7 +580,7 @@ Tych.prototype.layout = function()
 	this.trans.apply();
 
 	// Get rid of outside pixels;
-	//this.save_doc = this.comp_target_doc == null ? this.doc : this.comp_target_doc;
+	//this.save_doc = this.comp_doc == null ? this.doc : this.comp_doc;
 	this.doc.crop([0, 0, this.doc.width, this.doc.height]);
 }
 
@@ -703,7 +709,7 @@ Tych.prototype.get_table = function()
 	// Only use the saved table if we're going to composite!
 	if (store.numEntries() > 0
 			&& this.settings.composite
-			&& this.comp_target_doc != null)
+			&& this.comp_doc != null)
 		table = store.getEntryAt(0);
 
 	return table;

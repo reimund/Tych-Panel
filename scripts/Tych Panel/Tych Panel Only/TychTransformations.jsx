@@ -106,7 +106,7 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
 		// changed so that the result will be aligned with the target document.
-		s1 = (this.tych.comp_target_doc.height.value - this.settings.spacing * (this.n - 1)) / size[1];
+		s1 = (this.tych.comp_doc.height.value - this.settings.spacing * (this.n - 1)) / size[1];
 	} else {
 		if (this.settings.fit_width)
 			s1 = (this.settings.resize_width + 1) / size[0];
@@ -180,7 +180,7 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
 		// changed so that the result will be aligned with the target document.
-		s1 = (this.tych.comp_target_doc.width.value - this.settings.spacing * (this.n - 1)) / size[0]
+		s1 = (this.tych.comp_doc.width.value - this.settings.spacing * (this.n - 1)) / size[0]
 	} else {
 		// Computes the resize factor, Ie the factor used to to scale the image to
 		// fit the resize_width set in the user options.
@@ -360,6 +360,8 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 		tw = tych.settings.maintain_width
 			? old_width
 			: Math.min(doc.layerSets[0].layers[0].bounds[2].value, old_height / new_height * old_width);
+		// XXX: How can this work now that rows can be added on top? Wouldnt
+		// its bounds[3] value be way to small to fit everything?
 		th = tych.settings.maintain_width
 			? Math.min(doc.layerSets[0].layers[0].bounds[3].value, old_width / new_width * old_height)
 			: old_height;
@@ -463,6 +465,9 @@ TychTransformations.prototype.get_new_size = function(doc, l, lm, s1, rx, ry, i,
 	// The current size of the layer.
 	w0 = s1 * (l.bounds[2].value - l.bounds[0].value);
 	h0 = s1 * (l.bounds[3].value - l.bounds[1].value);
+
+	// Test cases that fails.
+	// 2b, 2t, 2r, 1t, 2l
 
 	if (lm.type == ROW) {
 
