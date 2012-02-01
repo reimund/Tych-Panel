@@ -24,6 +24,7 @@ var TychOptions = function(tp_settings)
 
 	this.tp_settings = tp_settings;
 
+
 	window_res = "dialog { \
 		orientation: 'row', \
 		alignChildren: 'top', \
@@ -32,8 +33,22 @@ var TychOptions = function(tp_settings)
 			alignChildren: 'fill', \
 			tab_buttons: Group { \
 				alignChildren: 'row', \
-				general_button: Button { text: 'General' }, \
-				output_button: Button { text: 'Ouput' }, \
+				general_button: IconButton { \
+					title: 'General', \
+					titleLayout: { \
+						alignment: ['left', 'center'], \
+						margins: [2, 2, 2, 2] \
+					}, \
+					bounds: [0, 0, 94, 23] \
+				}, \
+				output_button: IconButton { \
+					title: 'Output', \
+					titleLayout: { \
+						alignment: ['left', 'center'], \
+						margins: [2, 2, 2, 2] \
+					}, \
+					bounds: [0, 0, 94, 23] \
+				}, \
 			}, \
 			tab: Group { \
 				orientation: 'column', \
@@ -49,6 +64,8 @@ var TychOptions = function(tp_settings)
 	}";
 
 	this.w =  new Window(window_res, 'Tych Panel Options');
+	
+	this.w.main_group.tab_buttons.general_button.toggle();
 
 	//smallFont = ScriptUI.newFont(w.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
 	//w.main_group.compositing.composite_text.graphics.font = smallFont;
@@ -73,14 +90,22 @@ TychOptions.prototype.setup_ui = function()
 	fit, maintain;
 	bg_color;
 
-	tab_buttons.general_button.onClick = function() { thiss.toggle_tab('general'); }
-	tab_buttons.output_button.onClick = function() { thiss.toggle_tab('output'); }
+	tab_buttons.general_button.onClick = function() {
+		this.toggle();
+		tab_buttons.output_button.toggle();
+		thiss.toggle_tab('general');
+	}
+
+	tab_buttons.output_button.onClick = function() {
+		this.toggle();
+		tab_buttons.general_button.toggle();
+		thiss.toggle_tab('output');
+	}
 
 	if (this.current_tab == 'general') {
 		main.resize_width_group.input.enabled = this.w.main.resize_to_fit.width_button.value;
 		main.resize_height_group.input.enabled = this.w.main.resize_to_fit.height_button.value;
 
-		main.bg_color_group.hex.notify('onChange');
 		main.bg_color_group.hex.onChange = function()
 		{
 			bg_color = new SolidColor();
@@ -88,8 +113,11 @@ TychOptions.prototype.setup_ui = function()
 				bg_color.rgb.hexValue = this.text.substr(1);
 				change_color(bg_color, main.bg_color_group.bg_color_button);
 			} catch (e) {}
-
 		}
+
+		// Make the color slot show the current color.
+		main.bg_color_group.hex.notify('onChange');
+
 
 		main.bg_color_group.bg_color_button.onClick = function()
 		{
@@ -469,6 +497,29 @@ TychOptions.prototype.toggle_tab = function(tab)
 	this.w.layout.layout(true);
 	this.setup_ui();
 }
+
+
+/**
+ * Make custom toggle button.
+ *
+ * Calling this function redraws the button in the opposite state, ie a pressed
+ * button gets unpressed and an unpressed button gets pressed.
+ */
+IconButton.prototype.toggle = function()
+{
+	if (this.pressed)
+		this.image = toggle;
+	else
+		this.image = toggle_down;
+
+	this.margins = [0, 0, 0, 0];
+	this.bounds = [0, 0, 94, 23];
+	this.titleLayout = { alignment: ['center', 'center'], margins: [2, 2, 2, 2] }
+
+	this.pressed = this.pressed == undefined ? true : !this.pressed;
+}
+var toggle =  ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button.png'));
+var toggle_down = ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-down.png'));
 
 
 var tp_settings = tp_get_settings();
