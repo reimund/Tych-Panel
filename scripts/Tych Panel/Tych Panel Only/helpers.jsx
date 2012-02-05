@@ -227,7 +227,7 @@ function tp_get_bridge_selection()
 
 function tp_column_right(l, index)
 {
-	var s = l.parentDocument().layerSets;
+	var s = parent_document(l).layerSets;
 
 	if (l.parent.name.substring(0, 3) == 'Row')
 		if (index != 0)
@@ -253,7 +253,7 @@ function tp_column_right(l, index)
 
 function tp_row_below(l, index)
 {
-	var s = l.parentDocument().layerSets;
+	var s = parent_document(l).layerSets;
 
 	if (l.parent.name.substring(0, 3) == 'Col')
 		if (index != 0)

@@ -394,7 +394,6 @@ Tych.prototype.composite = function(src, target, side)
 
 			if (side == TOP) {
 				offset_y = -src_height - thiss.settings.spacing;
-				//inserted_set.move_to_back(1);
 				anchor_position = AnchorPosition.BOTTOMLEFT;
 			}
 
@@ -406,7 +405,6 @@ Tych.prototype.composite = function(src, target, side)
 
 			if (side == LEFT) {
 				offset_x = -src_width - thiss.settings.spacing;
-				//inserted_set.move_to_back(1);
 				anchor_position = AnchorPosition.TOPRIGHT;
 			}
 

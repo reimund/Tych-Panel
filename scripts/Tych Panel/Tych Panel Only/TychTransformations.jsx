@@ -1,4 +1,4 @@
-// XXX: Fix so that everything works when compositing is turned off.
+// XXX: Fix so that things work when compositing is disabled.
 /*
  * TychTransformations constructor.
  * Prepares the creation of an n-tych by doing some preparatory calculations on
@@ -67,8 +67,9 @@ TychTransformations.prototype.apply = function()
 		if (m[i][0] != null) {
 			// Resize layer 1 px larger than the target size.
 			l.resize((((m[i][0][0]) * w + 2) / w) * 100, (((m[i][0][1]) * h + 2) / h) * 100, m[i][0][2]);
+			$.writeln(contract);
 			// Remove 1px from each side of the layer.
-			l.contract(1, this.settings.mask_layers);
+			contract(l, 1, this.settings.mask_layers);
 		}
 
 		// Check if the layer should be moved.
@@ -312,7 +313,7 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 				// Crop layer to the desired size and take away an extra single
 				// pixel border around the layer to make it perfectly crisp
 				// without any fuzzy edges.
-				l.crop(new_size.width, new_size.height, AnchorPosition.MIDDLECENTER, tych.settings.mask_layers);
+				crop_layer(l, new_size.width, new_size.height, AnchorPosition.MIDDLECENTER, tych.settings.mask_layers);
 
 				// Smart objects can be different sized even though the
 				// original pictures have identical dimensions. This is because

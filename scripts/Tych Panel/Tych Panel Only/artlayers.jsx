@@ -1,20 +1,18 @@
-var ArtLayer = function () {} 
-
 
 /**
  * Contracts the layer with the specified number pixels. If use_mask is true,
  * the contraction is made with a layer mask instead.
  */
-ArtLayer.prototype.contract = function(size, use_mask)
+function contract(layer, size, use_mask)
 {
 	var x0, y0, w, h, p;
 
-	x0 = this.bounds[0].value;
-	x1 = this.bounds[2].value;
-	y0 = this.bounds[1].value;
-	y1 = this.bounds[3].value;
+	x0 = layer.bounds[0].value;
+	x1 = layer.bounds[2].value;
+	y0 = layer.bounds[1].value;
+	y1 = layer.bounds[3].value;
 
-	p = this.parentDocument();
+	p = parent_document(layer);
 
 	p.selection.select([
 		[x0 + size, y0 + size],
@@ -26,7 +24,7 @@ ArtLayer.prototype.contract = function(size, use_mask)
 	p.selection.invert();
 
 	if (use_mask)
-		this.fillMask(BLACK);
+		fill_mask(layer, BLACK);
 	else
 		p.selection.clear();
 
@@ -36,9 +34,9 @@ ArtLayer.prototype.contract = function(size, use_mask)
 /**
  * Gets the parent document.
  */
-ArtLayer.prototype.parentDocument = function()
+function parent_document(layer)
 {
-	var el = this;
+	var el = layer;
 	while (el.info == undefined)
 		el = el.parent;
 	return el;
@@ -47,19 +45,19 @@ ArtLayer.prototype.parentDocument = function()
 /**
  * Fills the layer's layer mask with the specified color.
  */
-ArtLayer.prototype.fillMask = function(color)
+function fill_mask(layer, color)
 {
 	var fill_color = new SolidColor();
 	var active = activeDocument.activeLayer;
 
-	activeDocument.activeLayer = this;
+	activeDocument.activeLayer = layer;
 
 	fill_color.rgb.red = color[0];
 	fill_color.rgb.green = color[1];
 	fill_color.rgb.blue = color[2];
 	
 	layerMask.editMode(true);
-	this.parentDocument().selection.fill(fill_color);
+	parent_document(layer).selection.fill(fill_color);
 	layerMask.editMode(false);
 	activeDocument.activeLayer = active;
 }
@@ -67,14 +65,14 @@ ArtLayer.prototype.fillMask = function(color)
 /**
  * Link the layer and layer mask.
  */
-ArtLayer.prototype.link_mask = function()
+function link_mask(layer)
 {
-	var p = this.parentDocument();
+	var p = parent_document(layer);
 	var doc = activeDocument;
 	var active = activeDocument.activeLayer;
 
 	activeDocument = p;
-	p.activeLayer = l;
+	p.activeLayer = layer;
 	layerMask.link(true);
 
 	doc.activeLayer = active;
@@ -84,14 +82,14 @@ ArtLayer.prototype.link_mask = function()
 /**
  * Unlink the layer and layer mask.
  */
-ArtLayer.prototype.unlink_mask = function()
+function unlink_mask(layer)
 {
-	var p = this.parentDocument();
+	var p = parent_document(layer);
 	var doc = activeDocument;
 	var active = activeDocument.activeLayer;
 
 	activeDocument = p;
-	p.activeLayer = l;
+	p.activeLayer = layer;
 	layerMask.link(false);
 	doc.activeLayer = active;
 }
@@ -100,15 +98,15 @@ ArtLayer.prototype.unlink_mask = function()
 /**
  * Crops the layer to the specified dimensions.
  */
-ArtLayer.prototype.crop = function(width, height, anchor_position, use_mask)
+function crop_layer(layer, width, height, anchor_position, use_mask)
 {
 	var x0, y0, x_start, y_start, p;
 
-	x0 = this.bounds[0].value;
-	x1 = this.bounds[2].value;
-	y0 = this.bounds[1].value;
-	y1 = this.bounds[3].value;
-	p = this.parentDocument();
+	x0 = layer.bounds[0].value;
+	x1 = layer.bounds[2].value;
+	y0 = layer.bounds[1].value;
+	y1 = layer.bounds[3].value;
+	p = parent_document(layer);
 
 	switch (anchor_position) {
 		case AnchorPosition.BOTTOMCENTER:
@@ -166,16 +164,17 @@ ArtLayer.prototype.crop = function(width, height, anchor_position, use_mask)
 	p.selection.deselect();
 }
 
+
 /**
  * Gets the bounds of the layer, taking the layer's mask into account if there
  * is one.
  */
-ArtLayer.prototype.mbounds = function()
+function mbounds(layer)
 {
 	var d, s0, s1;
 
 	// Save a reference to the parent document.
-	d = this.parentDocument();
+	d = parent_document(layer);
 
 	// Store away a possible selection.
 	s0 = d.selection;
@@ -187,5 +186,5 @@ ArtLayer.prototype.mbounds = function()
 		return s1.bounds;
 	}
 
-	return this.bounds;
+	return layer.bounds;
 }
