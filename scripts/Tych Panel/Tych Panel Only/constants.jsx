@@ -18,7 +18,8 @@ var defaults = {
 	'output_formats': { 'jpg': true, 'psd': false },
 	'save_directory': '~',
 	'filename': 'image',
-	'jpeg_quality': 12
+	'jpeg_quality': 12,
+	'background_color': '#ffffff'
 };
 
 var NTYCH_HORIZONTAL = 0;
