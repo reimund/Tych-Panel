@@ -316,6 +316,9 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 				]);
 			}
 
+			// Remove possible left over masks.
+			thiss.clear_rounded_corner_masks();
+
 			if (tych_variant == NTYCH_VERTICAL)
 				thiss.composite(thiss.doc, thiss.comp_doc, side);
 			else
@@ -708,15 +711,6 @@ Tych.prototype.add_rounded_corners = function()
 
 	f = function()
 	{
-		for (var i = 0; i < doc.layerSets.length; i++)
-			for (var j = 0; j < doc.layerSets[i].layers.length; j++) {
-				doc.activeLayer = doc.layerSets[i].layers[j];
-				if (thiss.settings.mask_layers)
-					mask_from_mask_bounds(doc.activeLayer);
-				else if (layerMask.selectLayerMask())
-					layerMask.remove(false);
-			}
-
 		if (thiss.settings.round_all_layers) {
 			if (doc.layerSets.length > 0)
 				for (var i = 0; i < doc.layerSets.length; i++)
@@ -850,6 +844,34 @@ Tych.prototype.add_border = function()
 	// Bookkeep so we can undo border when compositing.
 	this.table.border = border;
 	this.save_table();
+}
+
+
+/**
+ * Removes any masks left over from a previous round of adding rounded corners.
+ */
+Tych.prototype.clear_rounded_corner_masks = function()
+{
+	var doc, remove_mask;
+
+	doc = this.comp_doc;
+	remove_mask = function(layer)
+	{
+		doc.activeLayer = layer;
+
+		if (this.settings.mask_layers)
+			mask_from_mask_bounds(doc.activeLayer);
+		else if (layerMask.selectLayerMask())
+			layerMask.remove(false);
+	};
+
+	if (doc.layerSets.length > 0)
+		for (var i = 0; i < doc.layerSets.length; i++)
+			for (var j = 0; j < doc.layerSets[i].layers.length; j++)
+				remove_mask(doc.layerSets[i].layers[j]);
+	else
+		for (var i = 0; i < doc.layers.length - 1; i++)
+			remove_mask(doc.layers[i]);
 }
 
 
