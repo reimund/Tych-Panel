@@ -13,11 +13,14 @@
  */
 var Tych = function(settings)
 {
-	//this.tych_variant = NTYCH_HORIZONTAL;
-	// Save current unit preferences.
-	this.rulerUnits = preferences.rulerUnits;
-	// Change unit preferences.
+	// Save the user's ruler unit and export clipboard preference.
+	this.ruler_units = preferences.rulerUnits;
+	this.export_clipboard = preferences.exportClipboard;
+
+	// Temporary set preferences while Tych Panel works its magic.
 	preferences.rulerUnits = Units.PIXELS;
+	preferences.exportClipboard = false;
+
 	this.comp_doc = null;
 
 	// Save a reference to the current open document if there is one.
@@ -77,9 +80,13 @@ Tych.prototype.select = function()
 }
 
 
+/**
+ * Reverts to the preferences the user had before execution.
+ */
 Tych.prototype.revert = function()
 {
 	preferences.rulerUnits = this.rulerUnits;
+	preferences.exportClipboard = this.export_clipboard;
 }
 
 
