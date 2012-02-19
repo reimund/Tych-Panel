@@ -47,7 +47,7 @@ lMID.property = 1349677170;//"Prpr"
 ///////////////////////////////////////////////////////////////////////////////
 layerMask.make = function(bool){
 
-if(selectLayerMask() == false){
+if(layerMask.selectLayerMask() == false){
 	if(bool == false){
 		var type = lMID.maskHides;
 	}else{
@@ -89,7 +89,7 @@ if(hasSelection() == false){
 	lMID.error = "no selection";
 	return false;
 	}
-if(selectLayerMask() == false){
+if(layerMask.selectLayerMask() == false){
 	try {
 		var desc = new ActionDescriptor();
 		desc.putClass( lMID.newObject, lMID.channel );
@@ -126,7 +126,7 @@ if(bool !== true){
 	}
 
   try {
-    if(selectLayerMask() == false){
+    if(layerMask.selectLayerMask() == false){
     		lMID.error = "no mask";
     		return false;
     	}else{   	
@@ -160,7 +160,7 @@ if(bool !== true){
 ///////////////////////////////////////////////////////////////////////////////
 layerMask.enabled = function(bool){
   try {
-    if(selectLayerMask() == false){
+    if(layerMask.selectLayerMask() == false){
     	lMID.error = "no mask"
 		return false;
     	}else{   
@@ -192,7 +192,7 @@ layerMask.enabled = function(bool){
 // Return: Boolean. True to enabled, false if error. Read lMID.error for error
 ///////////////////////////////////////////////////////////////////////////////
 layerMask.isLinked = function(){
-    if(selectLayerMask() == false){
+    if(layerMask.selectLayerMask() == false){
     	lMID.error = "no mask";  
 		return false;
 	}else{
@@ -212,7 +212,7 @@ layerMask.isLinked = function(){
 ///////////////////////////////////////////////////////////////////////////////
 layerMask.editMode = function(bool){
   try {
-    if(selectLayerMask() == false){
+    if(layerMask.selectLayerMask() == false){
     	lMID.error = "no mask";  		
 		return false;
     	}else{   
@@ -245,7 +245,7 @@ layerMask.editMode = function(bool){
 ///////////////////////////////////////////////////////////////////////////////
 layerMask.link = function(bool){
   try {
-    if(selectLayerMask() == false){
+    if(layerMask.selectLayerMask() == false){
     	lMID.error = "no mask";  
 		return false;
 	}else{
@@ -277,7 +277,7 @@ layerMask.link = function(bool){
 // Return: Boolean. True if linked False if error. Read lMID.error for error
 ///////////////////////////////////////////////////////////////////////////////
 layerMask.isLinked = function(){
-    if(selectLayerMask() == false){
+    if(layerMask.selectLayerMask() == false){
     	lMID.error = "no mask";  
 		return false;
 	}else{
@@ -297,7 +297,7 @@ layerMask.isLinked = function(){
 ///////////////////////////////////////////////////////////////////////////////
 layerMask.makeSelection = function(){
 try {
-    if(selectLayerMask() == false){
+    if(layerMask.selectLayerMask() == false){
     	lMID.error = "no mask";  
 		return false;
 	}else{	
@@ -324,12 +324,13 @@ try {
   return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
+// XXX: Modified for non-internal use.
 // Function: selectLayerMask
-// Usage: Internal
+// Usage: layerMask.selectLayerMask
 // Input:
 // Return:
 ///////////////////////////////////////////////////////////////////////////////
-selectLayerMask = function(){
+layerMask.selectLayerMask = function(){
 if (lMID.isBackground == true){
 	lMID.error = "Background";
 	return false;

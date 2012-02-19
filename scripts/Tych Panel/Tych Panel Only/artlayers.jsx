@@ -1,3 +1,4 @@
+//@include helpers.jsx
 
 /**
  * Contracts the layer with the specified number pixels. If use_mask is true,
@@ -31,6 +32,7 @@ function contract(layer, size, use_mask)
 	p.selection.deselect();
 }
 
+
 /**
  * Gets the parent document.
  */
@@ -41,6 +43,7 @@ function parent_document(layer)
 		el = el.parent;
 	return el;
 }
+
 
 /**
  * Fills the layer's layer mask with the specified color.
@@ -169,22 +172,180 @@ function crop_layer(layer, width, height, anchor_position, use_mask)
  * Gets the bounds of the layer, taking the layer's mask into account if there
  * is one.
  */
+// XXX: Don't think I use this function anymore. Maybe it should be removed.
 function mbounds(layer)
 {
-	var d, s0, s1;
+	var d, s, b, ad, al;
 
 	// Save a reference to the parent document.
 	d = parent_document(layer);
+	ad = activeDocument;
+	al = ad.activeLayer;
 
-	// Store away a possible selection.
-	s0 = d.selection;
+	// Store away any present selection.
+	s = d.selection;
+
+	activeDocument = d;
+	d.activeLayer = layer;
+
 	
+	// A mask exists.
 	if (layerMask.makeSelection()) {
-		s1 = d.selection;
-		d.selection = s0;
-		d.selection.deslect();
-		return s1.bounds;
+		b = d.selection.bounds;
+		d.selection = s;
+		return b;
+	} else {
+	// No mask exists.
+		b = layer.bounds;
 	}
 
-	return layer.bounds;
+	activeDocument = ad;
+	ad.activeLayer = al;
+	
+	return b;
 }
+
+
+/**
+ * Rounds the corners of the specified layer with the given radi. The corners
+ * are rounded via a layer mask so an already present mask will be lost.
+ */
+function round_corners(layer, radius)
+{
+	var d, ad, al, b, x0, x1, y0, y1, c, mins, maxr, r, extend;
+	
+	d = parent_document(layer);
+	ad = activeDocument;
+	al = ad.activeLayer;
+
+	b = layer.bounds;
+	x0 = b[0].value;
+	x1 = b[2].value;
+	y0 = b[1].value;
+	y1 = b[3].value;
+
+	mins = Math.min(x1 - x0, y1 - y0);
+	maxr = mins;
+	r = [0, 0, 0, 0];
+
+	extend = false;
+
+	// Create a temporary alpha channel.
+	c = d.channels.add();
+
+	// Select top left corner.
+	if (radius[0] > 0) {
+		r[0] = Math.min(radius[0], maxr);
+		if (r[0] > 0) {
+			select_rounded_corner(d, x0, y0, x0 + r[0], y0 + r[0], TOP_LEFT);
+			d.selection.store(c);
+			d.selection.deselect();
+			maxr = Math.min(mins, mins - r[0]);
+		}
+	}
+
+	// Select top right corner.
+	if (radius[1] > 0) {
+		r[1] = Math.min(radius[1], maxr);
+		if (r[1] > 0) {
+			select_rounded_corner(d, x1 - r[1], y0, x1, y0 + r[1], TOP_RIGHT);
+			d.selection.store(c, SelectionType.EXTEND);
+			d.selection.deselect();
+			maxr = Math.min(mins, mins - r[1]);
+		}
+	}
+
+	// Select bottom right corner.
+	if (radius[2] > 0) {
+		r[2] = Math.min(radius[2], maxr);
+		if (r[2] > 0) {
+			select_rounded_corner(d, x1 - r[2], y1 - r[2], x1, y1, BOTTOM_RIGHT);
+			d.selection.store(c, SelectionType.EXTEND);
+			d.selection.deselect();
+			maxr = Math.min(mins, mins - r[2]);
+		}
+	}
+	
+	// Select bottom left corner.
+	if (radius[3] > 0) {
+		r[3] = Math.min(radius[3], maxr);
+		if (r[3] > 0) {
+			select_rounded_corner(d, x0, y1 - r[3], x0 + r[3], y1, BOTTOM_LEFT);
+			d.selection.store(c, SelectionType.EXTEND);
+			d.selection.deselect();
+		}
+	}
+
+	// Select all but corners.
+	d.selection.select([
+		[x0 + r[0], y0],
+		[x0 + r[0], y0 + r[0]],
+		[x0, y0 + r[0]],
+		[x0, y1 - r[3]],
+		[x0 + r[3], y1 - r[3]],
+		[x0 + r[3], y1],
+		[x1 - r[2], y1],
+		[x1 - r[2], y1 - r[2]],
+		[x1, y1 - r[2]],
+		[x1, y0 + r[1]],
+		[x1 - r[1], y0 + r[1]],
+		[x1 - r[1], y0]
+	]);
+
+	d.selection.load(c, SelectionType.EXTEND);
+
+	// Remove any current mask if it exists. Otherwise makeFromSelection won't
+	// work.
+	activeDocument = d;
+	d.activeLayer = layer;
+	layerMask.remove(false);
+	layerMask.makeFromSelection(true);
+	layerMask.link(false);
+
+	// Deselect, remove alpha channel and revert active document and layer.
+	d.selection.deselect();
+	d.channels.removeAll();
+	activeDocument = ad;
+	ad.activeLayer = al;
+}
+
+
+/**
+ * Creates a new rectangular mask using the bounds of the specified layer's
+ * mask.
+ */
+function mask_from_mask_bounds(layer) 
+{
+	var d, ad, al, b;
+
+	d = parent_document(layer);
+
+	// Save the current active layer.
+	ad = activeDocument;
+	al = ad.activeLayer;
+	b = mbounds(layer);
+
+	// Temporary set active layer.
+	activeDocument = d;
+	d.activeLayer = layer;
+	
+	// Create the mask if a mask exists.
+	if (layerMask.selectLayerMask()) {
+		d.selection.select([
+			[b[0].value, b[1].value],
+			[b[0].value, b[3].value],
+			[b[2].value, b[3].value],
+			[b[2].value, b[1].value]
+		]);
+
+		layerMask.remove(false);
+		layerMask.makeFromSelection(true);
+		layerMask.link(false);
+		d.selection.deselect();
+	}
+
+	// Restore active document and layer.
+	activeDocument = ad;
+	ad.activeLayer = al;
+}
+

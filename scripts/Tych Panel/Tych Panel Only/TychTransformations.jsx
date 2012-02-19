@@ -31,15 +31,6 @@ TychTransformations.prototype.compute = function(tych_variant)
 			this.compute_ntych_horizontal_matrix();
 			break;
 
-		case TRIPTYCH_PORTRAIT_LANDSCAPE_GRID:
-		case TRIPTYCH_LANDSCAPE_PORTRAIT_GRID:
-			this.compute_triptych_matrices();
-			break;
-
-		case QUAPTYCH_GRID:
-			this.compute_quaptych_matrix();
-			break;
-
 		default:
 			return false;
 	}
@@ -67,7 +58,7 @@ TychTransformations.prototype.apply = function()
 		if (m[i][0] != null) {
 			// Resize layer 1 px larger than the target size.
 			l.resize((((m[i][0][0]) * w + 2) / w) * 100, (((m[i][0][1]) * h + 2) / h) * 100, m[i][0][2]);
-			$.writeln(contract);
+
 			// Remove 1px from each side of the layer.
 			contract(l, 1, this.settings.mask_layers);
 		}
@@ -107,7 +98,10 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
 		// changed so that the result will be aligned with the target document.
-		s1 = (this.tych.comp_doc.height.value - this.settings.spacing * (this.n - 1)) / size[1];
+		s1 = (this.tych.comp_doc.height.value
+			- this.tych.table.border[0]
+			- this.tych.table.border[2]
+			- this.settings.spacing * (this.n - 1)) / size[1];
 	} else {
 		if (this.settings.fit_width)
 			s1 = (this.settings.resize_width + 1) / size[0];
@@ -181,7 +175,10 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
 		// changed so that the result will be aligned with the target document.
-		s1 = (this.tych.comp_doc.width.value - this.settings.spacing * (this.n - 1)) / size[0]
+		s1 = (this.tych.comp_doc.width.value
+			- this.tych.table.border[1]
+			- this.tych.table.border[3]
+			- this.settings.spacing * (this.n - 1)) / size[0]
 	} else {
 		// Computes the resize factor, Ie the factor used to to scale the image to
 		// fit the resize_width set in the user options.
@@ -426,6 +423,7 @@ TychTransformations.prototype.get_new_position = function(doc, l, lm, i, j)
 				y = l.bounds[1].value;
 			}
 		}
+
 	} else {
 
 		if (ref != null) {
@@ -441,7 +439,9 @@ TychTransformations.prototype.get_new_position = function(doc, l, lm, i, j)
 				y = ref.bounds[1].value;
 				a = AnchorPosition.TOPLEFT;
 			}
-		}
+		} else if (lm.side == LEFT)
+		// Starting left columns should not be moved to origin.
+			x = w0;
 
 		// Just shove the remaining layers next to the layer that has a
 		// reference.

@@ -20,7 +20,7 @@
 
 var TychOptions = function(tp_settings)
 {
-	var window_res, w, smallfont;
+	var window_res, w;
 
 	this.tp_settings = tp_settings;
 
@@ -33,16 +33,24 @@ var TychOptions = function(tp_settings)
 			alignChildren: 'fill', \
 			tab_buttons: Group { \
 				alignChildren: 'row', \
-				general_button: IconButton { \
-					title: 'General', \
+				appearance_button: IconButton { \
+					title: 'Appearance', \
+					titleLayout: { \
+						alignment: ['left', 'center'], \
+						margins: [2, 2, 2, 2] \
+					}, \
+					bounds: [0, 0, 124, 23] \
+				}, \
+				output_button: IconButton { \
+					title: 'Output', \
 					titleLayout: { \
 						alignment: ['left', 'center'], \
 						margins: [2, 2, 2, 2] \
 					}, \
 					bounds: [0, 0, 94, 23] \
 				}, \
-				output_button: IconButton { \
-					title: 'Output', \
+				misc_button: IconButton { \
+					title: 'Misc', \
 					titleLayout: { \
 						alignment: ['left', 'center'], \
 						margins: [2, 2, 2, 2] \
@@ -65,12 +73,7 @@ var TychOptions = function(tp_settings)
 
 	this.w =  new Window(window_res, 'Tych Panel Options');
 	
-	this.w.main_group.tab_buttons.general_button.toggle();
-
-	//smallFont = ScriptUI.newFont(w.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
-	//w.main_group.compositing.composite_text.graphics.font = smallFont;
-
-	this.toggle_tab('general');
+	this.toggle_tab('appearance');
 	this.w.show();
 
 }
@@ -78,131 +81,95 @@ var TychOptions = function(tp_settings)
 
 TychOptions.prototype.setup_ui = function()
 {
-	var w, output, main, compositing, tab_buttons, fit, maintain, bg_color, thiss;
+	var thiss, w, tab_buttons;
 
 	thiss = this;
 	w = this.w;
-	output = w.main_group.output;
-	main = w.main;
-	output = w.output;
-	compositing = w.compositing;
 	tab_buttons = w.main_group.tab_buttons;
-	fit, maintain;
-	bg_color;
 
-	tab_buttons.general_button.onClick = function() {
-		this.toggle();
-		tab_buttons.output_button.toggle();
-		thiss.toggle_tab('general');
-	}
+	tab_buttons.appearance_button.onClick = function() { thiss.toggle_tab('appearance'); }
+	tab_buttons.output_button.onClick = function() { thiss.toggle_tab('output'); }
+	tab_buttons.misc_button.onClick = function() { thiss.toggle_tab('misc'); }
 
-	tab_buttons.output_button.onClick = function() {
-		this.toggle();
-		tab_buttons.general_button.toggle();
-		thiss.toggle_tab('output');
-	}
+	if (this.current_tab == 'appearance') {
+		w.main.resize_width_group.input.enabled = w.main.resize_to_fit.width_button.value;
+		w.main.resize_height_group.input.enabled = w.main.resize_to_fit.height_button.value;
 
-	if (this.current_tab == 'general') {
-		main.resize_width_group.input.enabled = this.w.main.resize_to_fit.width_button.value;
-		main.resize_height_group.input.enabled = this.w.main.resize_to_fit.height_button.value;
+		w.main.bg_color_group.hex.onChange = function() { hex_change(this); }
+		w.main.border_color_group.hex.onChange = function() { hex_change(this); }
+		w.main.bg_color_group.color_button.onClick = function() { color_click(this); }
+		w.main.border_color_group.color_button.onClick = function() { color_click(this); }
+		w.main.bg_color_group.hex.notify('onChange');
+		w.main.border_color_group.hex.notify('onChange');
 
-		main.bg_color_group.hex.onChange = function()
+		w.main.resize_to_fit.width_button.onClick = function() 
 		{
-			bg_color = new SolidColor();
-			try {
-				bg_color.rgb.hexValue = this.text.substr(1);
-				change_color(bg_color, main.bg_color_group.bg_color_button);
-			} catch (e) {}
+			w.main.resize_width_group.input.enabled = w.main.resize_to_fit.width_button.value;
+			w.main.resize_height_group.input.enabled = false;
+		};
+
+		w.main.resize_to_fit.height_button.onClick = function() 
+		{
+			w.main.resize_height_group.input.enabled = w.main.resize_to_fit.height_button.value;
+			w.main.resize_width_group.input.enabled = false;
+		};
+
+		w.main.resize_to_fit.none_button.onClick = function() 
+		{
+			w.main.resize_width_group.input.enabled = false;
+			w.main.resize_height_group.input.enabled = false;
+		};
+
+		w.compositing.composite_group.composite.onClick = function()
+		{
+			w.compositing.maintain_group.enabled = this.value;
+		};
+
+	} else if (this.current_tab == 'output') {
+
+		w.output.directory.button.onClick = function()
+		{
+			w.output.directory.input.text = Folder.selectDialog('Please select a directory.').fsName;
 		}
 
-		// Make the color slot show the current color.
-		main.bg_color_group.hex.notify('onChange');
-
-
-		main.bg_color_group.bg_color_button.onClick = function()
+		w.output.autosave.onClick = function()
 		{
-			var dummy_doc, picked_color;
-
-			if (app.documents.length == 0) {
-				dummy_doc = app.documents.add(1, 1, 72, 'Dummy document');
-			}
-
-			bg_color = colorPicker();
-			main.bg_color_group.hex.text = '#' + bg_color.rgb.hexValue;
-
-			change_color(bg_color, this);
-
-			if (dummy_doc)
-				dummy_doc.close(SaveOptions.DONOTSAVECHANGES);
-		}
-
-
-		main.resize_to_fit.width_button.onClick = function() 
-		{
-			main.resize_width_group.input.enabled = main.resize_to_fit.width_button.value;
-			main.resize_height_group.input.enabled = false;
+			w.output.autoclose.enabled = this.value;
+			w.output.directory.enabled = this.value;
+			w.output.filename.enabled = this.value;
+			w.output.save_types.jpeg.enabled = this.value;
+			w.output.save_types.psd.enabled = this.value;
+			w.output.quality.enabled = this.value && w.output.save_types.jpeg.value;
 		};
 
-		main.resize_to_fit.height_button.onClick = function() 
+		w.output.save_types.jpeg.onClick = function() { w.output.quality.enabled = this.value; };
+		w.output.quality.slider.onChange = function() { w.output.quality.input.text = Math.round(this.value); };
+		w.output.quality.slider.onChanging = function() { w.output.quality.input.text = Math.round(this.value); };
+
+		w.output.quality.input.onChange = function()
 		{
-			main.resize_height_group.input.enabled = main.resize_to_fit.height_button.value;
-			main.resize_width_group.input.enabled = false;
+			w.output.quality.slider.value = num_or_default(Math.round(Number(this.text)), 'jpeg_quality');
+			this.text = w.output.quality.slider.value;
 		};
 
-		main.resize_to_fit.none_button.onClick = function() 
-		{
-			main.resize_width_group.input.enabled = false;
-			main.resize_height_group.input.enabled = false;
-		};
+	} else if (this.current_tab == 'misc') {
 
 		// Masks must be enabled with smart objects since it's the most
 		// convenient way to add seams. It doesn't really make sense to have
 		// smart objects without masks either.
-		main.smart_object_group.smart_object.onClick = function()
+		w.misc.smart_object_group.smart_object.onClick = function()
 		{
-			if (main.smart_object_group.smart_object.value)
-				main.layer_mask_group.layer_mask.value = main.smart_object_group.smart_object.value;
+			if (w.misc.smart_object_group.smart_object.value)
+				w.misc.layer_mask_group.layer_mask.value = w.misc.smart_object_group.smart_object.value;
 			
 		};
 
 		// If smart objects is enabled when turning masks off, smart objects
 		// will be disabled as well.
-		main.layer_mask_group.layer_mask.onClick = function()
+		w.misc.layer_mask_group.layer_mask.onClick = function()
 		{
-			if (!main.layer_mask_group.layer_mask.value)
-				main.smart_object_group.smart_object.value = main.layer_mask_group.layer_mask.value;
-		};
-
-		compositing.composite_group.composite.onClick = function()
-		{
-			compositing.maintain_group.enabled = this.value;
-		};
-
-	} else if (this.current_tab == 'output') {
-
-		output.directory.button.onClick = function()
-		{
-			output.directory.input.text = Folder.selectDialog('Please select a directory.').fsName;
-		}
-
-		output.autosave.onClick = function()
-		{
-			output.autoclose.enabled = this.value;
-			output.directory.enabled = this.value;
-			output.filename.enabled = this.value;
-			output.save_types.jpeg.enabled = this.value;
-			output.save_types.psd.enabled = this.value;
-			output.quality.enabled = this.value && output.save_types.jpeg.value;
-		};
-
-		output.save_types.jpeg.onClick = function() { output.quality.enabled = this.value; };
-		output.quality.slider.onChange = function() { output.quality.input.text = Math.round(this.value); };
-		output.quality.slider.onChanging = function() { output.quality.input.text = Math.round(this.value); };
-
-		output.quality.input.onChange = function()
-		{
-			output.quality.slider.value = num_or_default(Math.round(Number(this.text)), 'jpeg_quality');
-			this.text = output.quality.slider.value;
+			if (!w.misc.layer_mask_group.layer_mask.value)
+				w.misc.smart_object_group.smart_object.value = w.misc.layer_mask_group.layer_mask.value;
 		};
 	}
 
@@ -258,26 +225,34 @@ TychOptions.prototype.get_main_res = function()
 {
 	return "panel { \
 		visible: true, \
-		text: 'Main options', \
+		text: 'General', \
 		alignChildren: 'right', \
 		spacing_group: Group { \
-			label: StaticText { text: 'Image spacing' } \
+			label: StaticText { \
+				text: 'Image spacing', \
+				helpTip: 'The distance between pictures (in pixels).' \
+			}, \
 			input: EditText { \
 				text: '" + tp_settings.spacing + "', \
-				preferredSize: [40, 20] \
+				preferredSize: [40, 20], \
+				helpTip: 'The distance between pictures (in pixels).' \
 			} \
 		}, \
 		bg_color_group: Group { \
-			label: StaticText { text: 'Background color' } \
-			bg_color_button: EditText { \
+			label: StaticText { \
+				text: 'Background color', \
+				helpTip: 'The background layer will be filled with this color.' \
+ 			}, \
+			color_button: EditText { \
 				text: '', \
 				preferredSize: [25, 23], \
+				helpTip: 'The background layer will be filled with this color.' \
 			}, \
 			hex: EditText { \
 				text: '" + tp_settings.background_color + "', \
 				preferredSize: [70, 23], \
+				helpTip: 'The background layer will be filled with this color.' \
 			}, \
-			helpTip: 'The color that will show in the space between pictures.' \
 		}, \
 		resize_label: Group { \
 			text: StaticText { text: 'Resize to fit' }, \
@@ -298,47 +273,180 @@ TychOptions.prototype.get_main_res = function()
 			}, \
 		}, \
 		resize_width_group: Group { \
-			label: StaticText { text: 'Target width' } \
+			label: StaticText { \
+				text: 'Target width', \
+				helpTip: 'The target width, not counting the width of the outer border.' \
+			} \
 			input: EditText { \
 				text: '" + tp_settings.resize_width + "', \
-				preferredSize: [50, 20] \
+				preferredSize: [50, 20], \
+				helpTip: 'The target width, not counting the width of the outer border.' \
 			}, \
 		}, \
 		resize_height_group: Group { \
-			label: StaticText { text: 'Target height' } \
+			label: StaticText { \
+				text: 'Target height', \
+				helpTip: 'The target height, not counting the width of the outer border.' \
+			} \
 			input: EditText { \
 				text: '" + tp_settings.resize_height + "', \
-				preferredSize: [50, 20] \
+				preferredSize: [50, 20], \
+				helpTip: 'The target height, not counting the width of the outer border.' \
 			}, \
 		}, \
-		reorder_group: Group { \
+		border_group: Group { \
 			margins: [0, 20, 0, 0] \
-			reorder: Checkbox { \
-				text: 'Enable reorder dialog', \
-				value: " + tp_settings.reorder + " \
-			} \
+			label: StaticText { \
+				text: 'Border size', \
+				preferredSize: [70, 0], \
+				helpTip: 'The width of the outer border (in pixels).', \
+			}, \
+			top: Group { \
+				orientation: 'column', \
+				alignChildren: 'left', \
+				label: StaticText { \
+					text: 'Top', \
+					preferredSize: [30, 4], \
+					helpTip: 'Top border width (in pixels).' \
+				} \
+				input: EditText { \
+					text: " + tp_settings.border[0] + ", \
+					preferredSize: [60, 20], \
+					helpTip: 'Top border width (in pixels).' \
+				}, \
+			}, \
+			right: Group { \
+				orientation: 'column', \
+				alignChildren: 'left', \
+				label: StaticText { \
+					text: 'Right', \
+					preferredSize: [30, 4], \
+					helpTip: 'Right border width (in pixels).' \
+				}, \
+				input: EditText { \
+					text: " + tp_settings.border[1] + ", \
+					preferredSize: [60, 20], \
+					helpTip: 'Right border width (in pixels).' \
+				}, \
+			}, \
+			bottom: Group { \
+				orientation: 'column', \
+				alignChildren: 'left', \
+				label: StaticText { \
+					text: 'Bottom', \
+					preferredSize: [40, 4], \
+					helpTip: 'Bottom border width (in pixels).' \
+				}, \
+				input: EditText { \
+					text: " + tp_settings.border[2] + ", \
+					preferredSize: [60, 20], \
+					helpTip: 'Bottom border width (in pixels).' \
+				}, \
+			}, \
+			left: Group { \
+				orientation: 'column', \
+				alignChildren: 'left', \
+				label: StaticText { \
+					text: 'Left', \
+					preferredSize: [30, 4], \
+					helpTip: 'Left border width (in pixels).' \
+				}, \
+				input: EditText { \
+					text: " + tp_settings.border[3] + ", \
+					preferredSize: [60, 20], \
+					helpTip: 'Left border width (in pixels).' \
+				}, \
+			}, \
 		}, \
-		bridge_group: Group { \
-			use_bridge: Checkbox { \
-				text: 'Use selected images in Adobe Bridge', \
-				value: " + tp_settings.use_bridge_selection + " \
-			} \
-		} \
-		smart_object_group: Group { \
-			smart_object: Checkbox { \
-				text: 'Convert to smart objects.', \
-				value: " + tp_settings.convert_to_smart_objects + " \
-			} \
+		border_color_group: Group { \
+			label: StaticText { \
+				text: 'Border color', \
+				helpTip: 'The color of the outer border.', \
+			}, \
+			color_button: EditText { \
+				text: '', \
+				preferredSize: [25, 23], \
+				helpTip: 'The color of the outer border.', \
+			}, \
+			hex: EditText { \
+				text: '" + tp_settings.border_color + "', \
+				preferredSize: [70, 23], \
+				helpTip: 'The color of the outer border.', \
+			}, \
+		}, \
+		corner_radius_group: Group { \
 			margins: [0, 20, 0, 0] \
-		} \
-		layer_mask_group: Group { \
-			layer_mask: Checkbox { \
-				text: 'Mask layers', \
-				value: " + tp_settings.mask_layers + " \
+			label: StaticText { \
+				text: 'Corner radius', \
+				preferredSize: [90, 0], \
+				helpTip: 'Adds rounded corners with the specified radius (in pixels).', \
+			}, \
+			top_left: Group { \
+				orientation: 'column', \
+				alignChildren: 'left', \
+				label: StaticText { \
+					text: 'Top left', \
+					preferredSize: [60, 4], \
+					helpTip: 'Top left corner radius (in pixels).' \
+				} \
+				input: EditText { \
+					text: " + tp_settings.corner_radius[0] + ", \
+					preferredSize: [60, 20], \
+					helpTip: 'Top left corner radius (in pixels).' \
+				}, \
+			}, \
+			top_right: Group { \
+				orientation: 'column', \
+				alignChildren: 'left', \
+				label: StaticText { \
+					text: 'Top right', \
+					preferredSize: [60, 4], \
+					helpTip: 'Top right corner radius (in pixels).' \
+				}, \
+				input: EditText { \
+					text: " + tp_settings.corner_radius[1] + ", \
+					preferredSize: [60, 20], \
+					helpTip: 'Top right corner radius (in pixels).' \
+				}, \
+			}, \
+			bottom_right: Group { \
+				orientation: 'column', \
+				alignChildren: 'left', \
+				label: StaticText { \
+					text: 'Bottom right', \
+					preferredSize: [60, 4], \
+					helpTip: 'Bottom right corner radius (in pixels).' \
+				}, \
+				input: EditText { \
+					text: " + tp_settings.corner_radius[2] + ", \
+					preferredSize: [60, 20], \
+					helpTip: 'Bottom right corner radius (in pixels).' \
+				}, \
+			}, \
+			bottom_left: Group { \
+				orientation: 'column', \
+				alignChildren: 'left', \
+				label: StaticText { \
+					text: 'Bottom left', \
+					preferredSize: [60, 4], \
+					helpTip: 'Bottom left corner radius (in pixels).' \
+				}, \
+				input: EditText { \
+					text: " + tp_settings.corner_radius[3] + ", \
+					preferredSize: [60, 20], \
+					helpTip: 'Bottom left corner radius (in pixels).' \
+				}, \
+			}, \
+		}, \
+		outer_radius_group: Group { \
+			input: Checkbox { \
+				text: 'Only apply to outer frame', \
+				value: " + !tp_settings.round_all_layers + ", \
 			}, \
 		}, \
 	}";
 }
+
 
 TychOptions.prototype.get_compositing_res = function()
 {
@@ -369,6 +477,41 @@ TychOptions.prototype.get_compositing_res = function()
 				value: " + (!tp_settings.maintain_width && !tp_settings.maintain_height) + ", \
 			}, \
 			enabled: " + tp_settings.composite + " \
+		}, \
+	}";
+}
+
+
+TychOptions.prototype.get_misc_res = function()
+{
+	return "panel { \
+		text: 'Miscelleneous', \
+		alignChildren: 'right', \
+		reorder_group: Group { \
+			margins: [0, 20, 0, 0] \
+			reorder: Checkbox { \
+				text: 'Enable reorder dialog', \
+				value: " + tp_settings.reorder + " \
+			} \
+		}, \
+		bridge_group: Group { \
+			use_bridge: Checkbox { \
+				text: 'Use selected images in Adobe Bridge', \
+				value: " + tp_settings.use_bridge_selection + " \
+			} \
+		} \
+		smart_object_group: Group { \
+			smart_object: Checkbox { \
+				text: 'Convert to smart objects.', \
+				value: " + tp_settings.convert_to_smart_objects + " \
+			} \
+			margins: [0, 20, 0, 0] \
+		} \
+		layer_mask_group: Group { \
+			layer_mask: Checkbox { \
+				text: 'Mask layers', \
+				value: " + tp_settings.mask_layers + " \
+			}, \
 		}, \
 	}";
 }
@@ -440,20 +583,30 @@ TychOptions.prototype.set_settings = function(tab)
 	// Get values from controls and store them in the settings object.
 	switch (tab) {
 
-		case 'general':
+		case 'appearance':
 			tp_settings.spacing = num_or_default(this.w.main.spacing_group.input.text, 'spacing');
 			tp_settings.fit_width = this.w.main.resize_to_fit.width_button.value
 			tp_settings.fit_height = this.w.main.resize_to_fit.height_button.value
 			tp_settings.resize_width = num_or_default(this.w.main.resize_width_group.input.text, 'resize_width');
 			tp_settings.resize_height = num_or_default(this.w.main.resize_height_group.input.text, 'resize_height');
-			tp_settings.convert_to_smart_objects = this.w.main.smart_object_group.smart_object.value;
-			tp_settings.mask_layers = this.w.main.layer_mask_group.layer_mask.value;
-			tp_settings.reorder = this.w.main.reorder_group.reorder.value;
-			tp_settings.use_bridge_selection = this.w.main.bridge_group.use_bridge.value;
 			tp_settings.composite = this.w.compositing.composite_group.composite.value;
 			tp_settings.maintain_width = this.w.compositing.maintain_group.maintain_width.value;
 			tp_settings.maintain_height = this.w.compositing.maintain_group.maintain_height.value;
 			tp_settings.background_color = this.w.main.bg_color_group.hex.text;
+			tp_settings.border_color = this.w.main.border_color_group.hex.text;
+			tp_settings.border = [
+				Number(this.w.main.border_group.top.input.text),
+				Number(this.w.main.border_group.right.input.text),
+				Number(this.w.main.border_group.bottom.input.text),
+				Number(this.w.main.border_group.left.input.text)
+			];
+			tp_settings.corner_radius = [
+				Number(this.w.main.corner_radius_group.top_left.input.text),
+				Number(this.w.main.corner_radius_group.top_right.input.text),
+				Number(this.w.main.corner_radius_group.bottom_right.input.text),
+				Number(this.w.main.corner_radius_group.bottom_left.input.text)
+			];
+			tp_settings.round_all_layers = !this.w.main.outer_radius_group.input.value;
 			break;
 
 		case 'output':
@@ -465,18 +618,32 @@ TychOptions.prototype.set_settings = function(tab)
 			tp_settings.save_directory = this.w.output.directory.input.text;
 			tp_settings.filename = this.w.output.filename.input.text;
 			break;
+
+		case 'misc':
+			tp_settings.convert_to_smart_objects = this.w.misc.smart_object_group.smart_object.value;
+			tp_settings.mask_layers = this.w.misc.layer_mask_group.layer_mask.value;
+			tp_settings.reorder = this.w.misc.reorder_group.reorder.value;
+			tp_settings.use_bridge_selection = this.w.misc.bridge_group.use_bridge.value;
+			break;
 	}
 }
 
 
 TychOptions.prototype.toggle_tab = function(tab)
 {
-	var panels = [];
-
+	var panels, small_font;
+	
 	this.set_settings(this.current_tab);
 	this.current_tab = tab;
 
-	for (var i = 0; i < this.w.main_group.tab.children.length; i++)
+	panels = [];
+	small_font = ScriptUI.newFont(this.w.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
+
+	for (var i = 0; i < this.w.main_group.tab_buttons.children.length; i++)
+		if (this.w.main_group.tab_buttons.children[i].pressed)
+			this.w.main_group.tab_buttons.children[i].toggle();
+
+	for (i = 0; i < this.w.main_group.tab.children.length; i++)
 		panels.push(this.w.main_group.tab.children[i]);
 
 	for (j in panels)
@@ -484,18 +651,66 @@ TychOptions.prototype.toggle_tab = function(tab)
 
 	switch (tab) {
 
-		case 'general':
+		case 'appearance':
 			this.w.main = this.w.main_group.tab.add(this.get_main_res());
 			this.w.compositing = this.w.main_group.tab.add(this.get_compositing_res());
+			this.w.main_group.tab_buttons.appearance_button.toggle();
+
+			// Set small font for top labels.
+			this.w.main.border_group.top.label.graphics.font = 
+				this.w.main.border_group.right.label.graphics.font = 
+				this.w.main.border_group.bottom.label.graphics.font = 
+				this.w.main.border_group.left.label.graphics.font = 
+				this.w.main.corner_radius_group.top_left.label.graphics.font =
+				this.w.main.corner_radius_group.bottom_right.label.graphics.font =
+				this.w.main.corner_radius_group.bottom_left.label.graphics.font =
+				this.w.main.corner_radius_group.top_right.label.graphics.font = 
+				this.w.main.corner_radius_group.top_left.label.graphics.font =
+				this.w.main.corner_radius_group.bottom_right.label.graphics.font =
+				this.w.main.corner_radius_group.bottom_left.label.graphics.font = small_font;
 			break;
 
 		case 'output':
 			this.w.output = this.w.main_group.tab.add(this.get_output_res());
+			this.w.main_group.tab_buttons.output_button.toggle();
+			break;
+
+		case 'misc':
+			this.w.misc = this.w.main_group.tab.add(this.get_misc_res());
+			this.w.main_group.tab_buttons.misc_button.toggle();
 			break;
 	}
 
 	this.w.layout.layout(true);
 	this.setup_ui();
+}
+
+
+function hex_change(el)
+{
+	var bg_color = new SolidColor();
+
+	try {
+		bg_color.rgb.hexValue = el.text.substr(1);
+		change_color(bg_color, el.parent.color_button);
+	} catch (e) {}
+}
+
+
+function color_click(el)
+{
+	var dummy_doc, picked_color, bg_color;
+
+	if (app.documents.length == 0)
+		dummy_doc = app.documents.add(1, 1, 72, 'Dummy document');
+
+	bg_color = colorPicker();
+	el.parent.hex.text = '#' + bg_color.rgb.hexValue.toLowerCase();
+
+	change_color(bg_color, el);
+
+	if (dummy_doc)
+		dummy_doc.close(SaveOptions.DONOTSAVECHANGES);
 }
 
 

@@ -1,4 +1,5 @@
 //@include layerMaskLib.9.jsx
+//@include constants.jsx
 
 
 /**
@@ -360,3 +361,64 @@ function tp_tweak_mask(l, d, side)
 	}
 	layerMask.makeFromSelection(true);
 }
+
+
+/**
+ * Selects an area of the specified bounds that are rounded in the given
+ * corner.
+ */
+function select_rounded_corner(doc, x0, y0, x1, y1, corner)
+{
+	var w, h;
+
+	w = x1 - x0;
+	h = y1 - y0;
+
+	doc.selection.select([
+		[x0, y0],
+		[x0, y1],
+		[x1, y1],
+		[x1, y0]
+	]);
+
+	switch (corner) {
+		case TOP_LEFT:
+			intersect_circle(x0, y0, x1 + w, y1 + h);
+			break;
+
+		case TOP_RIGHT:
+			intersect_circle(x0 - w, y0, x1, y1 + h);
+			break;
+
+		case BOTTOM_RIGHT:
+			intersect_circle(x0 - w, y0 - h, x1, y1);
+			break;
+
+		case BOTTOM_LEFT:
+			intersect_circle(x0, y0 - h, x1 + w, y1);
+			break;
+	}
+}
+
+
+/**
+ * Intersects the current selection with a circle selection.
+ */
+function intersect_circle(left, top, right, bottom) { 
+	var desc1, ref1, desc2;
+
+	desc1 = new ActionDescriptor(); 
+	ref1 = new ActionReference(); 
+	ref1.putProperty(charIDToTypeID('Chnl'), charIDToTypeID('fsel')); 
+	desc1.putReference(charIDToTypeID('null'), ref1); 
+
+	desc2 = new ActionDescriptor(); 
+	desc2.putUnitDouble(charIDToTypeID('Top '), charIDToTypeID('#Pxl'), top); 
+	desc2.putUnitDouble(charIDToTypeID('Left'), charIDToTypeID('#Pxl'), left); 
+	desc2.putUnitDouble(charIDToTypeID('Btom'), charIDToTypeID('#Pxl'), bottom); 
+	desc2.putUnitDouble(charIDToTypeID('Rght'), charIDToTypeID('#Pxl'), right); 
+	desc1.putObject(charIDToTypeID('T   '), charIDToTypeID('Elps'), desc2); 
+	desc1.putBoolean(charIDToTypeID('AntA'), true); 
+	executeAction(charIDToTypeID('IntW'), desc1, DialogModes.NO);
+}; 
+
