@@ -392,182 +392,228 @@ Tych.prototype.composite = function(src, target, side)
 
 		target.activeLayer = inserted_set;
 
-			// Unlock the background (if locked) so we can put a background fill below.
-			target.layers[target.layers.length - 1].isBackgroundLayer = false;
+		// Unlock the background (if locked) so we can put a background fill below.
+		target.layers[target.layers.length - 1].isBackgroundLayer = false;
 
-			for (i = src.layers.length - 1; i >= 0; i--)
-				thiss.copy_layer_to_document(src.layers[i], target);
+		for (i = src.layers.length - 1; i >= 0; i--)
+			thiss.copy_layer_to_document(src.layers[i], target);
 
-			layers_to_move = [];
-			for (i = src.layers.length - 1; i >= 0; i--)
-				layers_to_move.push(target.layers[i]);
+		layers_to_move = [];
+		for (i = src.layers.length - 1; i >= 0; i--)
+			layers_to_move.push(target.layers[i]);
 
-			thiss.move_into_set(layers_to_move, inserted_set);
+		thiss.move_into_set(layers_to_move, inserted_set);
 
-			thiss.bookkeep(side);
+		thiss.bookkeep(side);
 
-			src.close(SaveOptions.DONOTSAVECHANGES);
-			activeDocument = target;
+		src.close(SaveOptions.DONOTSAVECHANGES);
+		activeDocument = target;
 
-			if (side == BOTTOM || side == TOP) {
-				offset_x = 0;
-				offset_y = target.height + thiss.settings.spacing;
+		if (side == BOTTOM || side == TOP) {
+			offset_x = 0;
+			offset_y = target.height + thiss.settings.spacing;
 
-				if (side == TOP) {
-					offset_y = -src_height - thiss.settings.spacing;
-					anchor_position = AnchorPosition.BOTTOMLEFT;
-				}
-
-				new_width = target.width.value;
-				new_height = target.height.value + src_height + thiss.settings.spacing;
-			} else if (side == RIGHT || side == LEFT) {
-				offset_x = target.width.value - target.activeLayer.bounds[0].value + thiss.settings.spacing;
-				offset_y = 0;
-
-				if (side == LEFT) {
-					offset_x = -src_width - thiss.settings.spacing;
-					anchor_position = AnchorPosition.TOPRIGHT;
-				}
-
-				new_width = target.width.value + src_width + thiss.settings.spacing;
-				new_height = target.height.value;
+			if (side == TOP) {
+				offset_y = -src_height - thiss.settings.spacing;
+				anchor_position = AnchorPosition.BOTTOMLEFT;
 			}
 
-			inserted_set.translate(offset_x, offset_y);
+			new_width = target.width.value;
+			new_height = target.height.value + src_height + thiss.settings.spacing;
+		} else if (side == RIGHT || side == LEFT) {
+			offset_x = target.width.value - target.activeLayer.bounds[0].value + thiss.settings.spacing;
+			offset_y = 0;
 
-			// Make the document bigger so the inserted layers can be seen.
-			target.resizeCanvas(new_width, new_height, anchor_position);
+			if (side == LEFT) {
+				offset_x = -src_width - thiss.settings.spacing;
+				anchor_position = AnchorPosition.TOPRIGHT;
+			}
 
-			if (thiss.settings.maintain_width || thiss.settings.maintain_height)
-				thiss.trans.readjust(thiss, target, old_width, old_height, new_width, new_height);
+			new_width = target.width.value + src_width + thiss.settings.spacing;
+			new_height = target.height.value;
 		}
 
-		f();
-		//target.suspendHistory('Composite ntych', 'f()');
+		inserted_set.translate(offset_x, offset_y);
+
+		// Make the document bigger so the inserted layers can be seen.
+		target.resizeCanvas(new_width, new_height, anchor_position);
+
+		if (thiss.settings.maintain_width || thiss.settings.maintain_height)
+			thiss.trans.readjust(thiss, target, old_width, old_height, new_width, new_height);
 	}
 
-
-	/**
-	 * Do some bookkeeping for the latest added ntych.
-	 */
-	Tych.prototype.bookkeep = function(side)
-	{
-		var s, l, i, layers, type, ref, images;
-
-		s = activeDocument.layerSets;
-		images = [];
-
-		// If layer sets exist, the current layers being bookkept have just been
-		// composited. Otherwise, it's the first ntych inserted.
-		if (s.length > 0)
-			layers = s[0].layers;
-		else
-			layers = activeDocument.layers;
+	f();
+	//target.suspendHistory('Composite ntych', 'f()');
+}
 
 
-		type = this.tych_variant == NTYCH_HORIZONTAL ? ROW : COLUMN;
+/**
+ * Do some bookkeeping for the latest added ntych.
+ */
+Tych.prototype.bookkeep = function(side)
+{
+	var s, l, i, layers, type, ref, images;
 
-		for (i = 0; i < layers.length; i++) {
-			l = layers[i];
+	s = activeDocument.layerSets;
+	images = [];
 
-			ref = null;
-			
-			if (i == (layers.length - 1)) {
-				switch (side) {
-					case TOP:
-						ref = this.table.references.top_left;
-						break;
+	// If layer sets exist, the current layers being bookkept have just been
+	// composited. Otherwise, it's the first ntych inserted.
+	if (s.length > 0)
+		layers = s[0].layers;
+	else
+		layers = activeDocument.layers;
 
-					case BOTTOM:
-						ref = this.table.references.bottom_left;
-						break;
 
-					case LEFT:
-						ref = this.table.references.top_left;
-						break;
+	type = this.tych_variant == NTYCH_HORIZONTAL ? ROW : COLUMN;
 
-					case RIGHT:
-						ref = this.table.references.top_right;
-				}
+	for (i = 0; i < layers.length; i++) {
+		l = layers[i];
+
+		ref = null;
+		
+		if (i == (layers.length - 1)) {
+			switch (side) {
+				case TOP:
+					ref = this.table.references.top_left;
+					break;
+
+				case BOTTOM:
+					ref = this.table.references.bottom_left;
+					break;
+
+				case LEFT:
+					ref = this.table.references.top_left;
+					break;
+
+				case RIGHT:
+					ref = this.table.references.top_right;
 			}
-
-			this.table.layers[l.name] = {
-				type: type,
-				side: side,
-				count: layers.length,
-				reference: ref
-			};
-			this.table.total += 1;
 		}
 
-		for (i in this.images)
-			images.push(this.images[i].displayName);
-		this.table.images.push(images); 
+		this.table.layers[l.name] = {
+			type: type,
+			side: side,
+			count: layers.length,
+			reference: ref
+		};
+		this.table.total += 1;
+	}
 
-		// Store the the names of the layers that are interesting references for
-		// coming ntychs.
-		switch (side) {
-			case TOP:
-				this.table.references.top_left = layers[layers.length - 1].name;
-				this.table.references.top_right = layers[0].name;
+	for (i in this.images)
+		images.push(this.images[i].displayName);
+	this.table.images.push(images); 
 
-				// The first tych will cover all reference points.
-				if (s.length == 0) {
-					this.table.references.bottom_left = layers[layers.length - 1].name;
-					this.table.references.bottom_right = layers[0].name;
-				}
-				break;
+	// Store the the names of the layers that are interesting references for
+	// coming ntychs.
+	switch (side) {
+		case TOP:
+			this.table.references.top_left = layers[layers.length - 1].name;
+			this.table.references.top_right = layers[0].name;
 
-			case BOTTOM:
+			// The first tych will cover all reference points.
+			if (s.length == 0) {
 				this.table.references.bottom_left = layers[layers.length - 1].name;
 				this.table.references.bottom_right = layers[0].name;
+			}
+			break;
 
-				// The first tych will cover all reference points.
-				if (s.length == 0) {
-					this.table.references.top_left = layers[layers.length - 1].name;
-					this.table.references.top_right = layers[0].name;
-				}
-				break;
+		case BOTTOM:
+			this.table.references.bottom_left = layers[layers.length - 1].name;
+			this.table.references.bottom_right = layers[0].name;
 
-			case LEFT:
+			// The first tych will cover all reference points.
+			if (s.length == 0) {
 				this.table.references.top_left = layers[layers.length - 1].name;
-				this.table.references.bottom_left = layers[0].name;
+				this.table.references.top_right = layers[0].name;
+			}
+			break;
 
-				// The first tych will cover all reference points.
-				if (s.length == 0) {
-					this.table.references.top_right = layers[layers.length - 1].name;
-					this.table.references.bottom_right = layers[0].name;
-				}
-				break;
+		case LEFT:
+			this.table.references.top_left = layers[layers.length - 1].name;
+			this.table.references.bottom_left = layers[0].name;
 
-			case RIGHT:
+			// The first tych will cover all reference points.
+			if (s.length == 0) {
 				this.table.references.top_right = layers[layers.length - 1].name;
 				this.table.references.bottom_right = layers[0].name;
+			}
+			break;
 
-				// The first tych will cover all reference points.
-				if (s.length == 0) {
-					this.table.references.top_left = layers[layers.length - 1].name;
-					this.table.references.bottom_left = layers[0].name;
-				}
-		}
+		case RIGHT:
+			this.table.references.top_right = layers[layers.length - 1].name;
+			this.table.references.bottom_right = layers[0].name;
 
-		this.save_table();
+			// The first tych will cover all reference points.
+			if (s.length == 0) {
+				this.table.references.top_left = layers[layers.length - 1].name;
+				this.table.references.bottom_left = layers[0].name;
+			}
 	}
 
+	this.save_table();
+}
 
-	/**
-	 * Saves the specified document according to the output options set in the
-	 * options dialog. If any of the files already exist the sequence number will
-	 * be incremented.
-	 *
-	 * For example: Assume that the options are set to output both jpg and psd
-	 * files with the file name set to "image". If the file image_001.jpg already
-	 * exists, then the files will be saved to image_002.jpg and image_002.psd so
-	 * that nothing is overwritten.
-	 */
-	Tych.prototype.save = function()
-	{
-		var options, filename;
+
+/**
+ * Saves the specified document according to the output options set in the
+ * options dialog. If any of the files already exist the sequence number will
+ * be incremented.
+ *
+ * For example: Assume that the options are set to output both jpg and psd
+ * files with the file name set to "image". If the file image_001.jpg already
+ * exists, then the files will be saved to image_002.jpg and image_002.psd so
+ * that nothing is overwritten.
+ */
+Tych.prototype.save = function()
+{
+	var options, filename, layers;
+
+	options = {
+		'jpg': this.get_jpeg_save_options(),
+		'psd': this.get_psd_save_options()
+	};
+
+	if (this.settings.save_each_layer) {
+
+		if (this.save_doc.layerSets.length < 1) {
+			layers = this.save_doc.layers;
+			for (var i = layers.length - 2; i >= 0; i--)
+
+				if (layers[i].name != 'Border') {
+
+					filename = tp_next_filename(
+						this.settings.save_directory,
+						this.settings.filename + '_',
+						this.settings.output_formats
+					);
+
+					for (format in this.settings.output_formats)
+						if (this.settings.output_formats[format])
+							save_layer(layers[i], filename, options[format]);
+				}
+		} else {
+			for (var i = 0; i < this.save_doc.layerSets.length; i++) {
+				layers = this.save_doc.layerSets[i].layers;
+
+				for (var j = layers.length - 1; j >= 0; j--) {
+
+					filename = tp_next_filename(
+						this.settings.save_directory,
+						this.settings.filename + '_',
+						this.settings.output_formats
+					);
+
+					for (format in this.settings.output_formats)
+						if (this.settings.output_formats[format])
+							save_layer(layers[j], filename, options[format]);
+				}
+
+			}
+		}
+
+
+	} else {
 
 		filename = tp_next_filename(
 			this.settings.save_directory,
@@ -575,123 +621,95 @@ Tych.prototype.composite = function(src, target, side)
 			this.settings.output_formats
 		);
 
-		options = {
-			'jpg': this.get_jpeg_save_options(),
-			'psd': this.get_psd_save_options()
-		};
-
 		for (format in this.settings.output_formats)
 			if (this.settings.output_formats[format])
 				this.save_doc.saveAs(new File(filename), options[format], true, Extension.LOWERCASE);
 	}
+}
 
 
-	/**
-	 * Makes an horizontal n-tych by spacing out the layers in the specified
-	 * document.
-	 */
-	Tych.prototype.layout = function()
-	{
-		this.trans.apply();
+/**
+ * Makes an horizontal n-tych by spacing out the layers in the specified
+ * document.
+ */
+Tych.prototype.layout = function()
+{
+	this.trans.apply();
 
-		// Get rid of outside pixels;
-		//this.save_doc = this.comp_doc == null ? this.doc : this.comp_doc;
-		this.doc.crop([0, 0, this.doc.width, this.doc.height]);
+	// Get rid of outside pixels;
+	//this.save_doc = this.comp_doc == null ? this.doc : this.comp_doc;
+	this.doc.crop([0, 0, this.doc.width, this.doc.height]);
+}
+
+
+Tych.prototype.get_jpeg_save_options = function()
+{
+	options = new JPEGSaveOptions();
+	options.embedColorProfile = true;
+	options.formatOptions = FormatOptions.STANDARDBASELINE;
+	options.matte = MatteType.NONE;
+	options.quality = this.settings.jpeg_quality;
+	return options;
+}
+
+
+Tych.prototype.get_psd_save_options = function()
+{
+	options = new PhotoshopSaveOptions();
+	options.layers = true;
+	options.embedColorProfile = true;
+	options.annotations = true;
+	options.alphaChannels = true;
+	options.spotColors = true;
+	return options;
+}
+
+
+Tych.prototype.move_into_set = function(layers, set)
+{
+	activeDocument = layers[0].parent;
+	for (i = 0; i < layers.length; i++)
+		layers[i].move(set, ElementPlacement.INSIDE);
+}
+
+
+/**
+ * Copies the specified layer to the bottom of the layer stack of the given
+ * document.
+ */
+Tych.prototype.copy_layer_to_document = function(layer, target)
+{
+	activeDocument = layer.parent;
+	var temp = layer.parent.activeLayer;
+	layer.parent.activeLayer = layer;
+
+	for (i = 0; i < documents.length; i++) {
+		if (documents[i] == target)
+			target_index = i;
+
+		if (documents[i] == activeDocument)
+			active_index = i;
 	}
 
+	// We must iterate through the document stack in order to copy the layer to
+	// a specific document. It works by copying it one document at a time until
+	// it's in the right document.
+	for (i = active_index; i >= target_index; i--) {
 
-	Tych.prototype.get_jpeg_save_options = function()
-	{
-		options = new JPEGSaveOptions();
-		options.embedColorProfile = true;
-		options.formatOptions = FormatOptions.STANDARDBASELINE;
-		options.matte = MatteType.NONE;
-		options.quality = this.settings.jpeg_quality;
-		return options;
+		tp_copy_layer_to_previous_document();
+
+		if (i != active_index)
+			// Remove when not the in target
+			documents[i].activeLayer.remove();
+
+		if (i - 1 == target_index) break;
+
+		activeDocument = documents[i - 1];
+
 	}
-
-
-	Tych.prototype.get_psd_save_options = function()
-	{
-		options = new PhotoshopSaveOptions();
-		options.layers = true;
-		options.embedColorProfile = true;
-		options.annotations = true;
-		options.alphaChannels = true;
-		options.spotColors = true;
-		return options;
-	}
-
-
-	Tych.prototype.move_into_set = function(layers, set)
-	{
-		activeDocument = layers[0].parent;
-		for (i = 0; i < layers.length; i++)
-			layers[i].move(set, ElementPlacement.INSIDE);
-	}
-
-
-	/**
-	 * Copies the specified layer to the bottom of the layer stack of the given
-	 * document.
-	 */
-	Tych.prototype.copy_layer_to_document = function(layer, target)
-	{
-		activeDocument = layer.parent;
-		var temp = layer.parent.activeLayer;
-		layer.parent.activeLayer = layer;
-
-		for (i = 0; i < documents.length; i++) {
-			if (documents[i] == target)
-				target_index = i;
-
-			if (documents[i] == activeDocument)
-				active_index = i;
-		}
-
-		// We must iterate through the document stack in order to copy the layer to
-		// a specific document. It works by copying it one document at a time until
-		// it's in the right document.
-		for (i = active_index; i >= target_index; i--) {
-
-			this.copy_layer_to_previous_document();
-
-			if (i != active_index)
-				// Remove when not the in target
-				documents[i].activeLayer.remove();
-
-			if (i - 1 == target_index) break;
-
-			activeDocument = documents[i - 1];
-
-		}
-		activeDocument = layer.parent;
-		layer.parent.activeLayer = temp;
-	}
-
-
-	/**
-	 * Copies the active layer of the active document to the document beneath it
-	 * in the document stack.
-	 */
-	Tych.prototype.copy_layer_to_previous_document = function()
-	{
-		var desc = new ActionDescriptor();
-		var ref = new ActionReference();
-
-		ref.putEnumerated(
-			charIDToTypeID('Lyr '),
-			charIDToTypeID('Ordn'),
-			charIDToTypeID('Trgt')
-		);
-
-		desc.putReference(charIDToTypeID('null'), ref);
-		var docRef = new ActionReference();
-		docRef.putOffset(charIDToTypeID('Dcmn'), -1);
-		desc.putReference(charIDToTypeID('T   '), docRef);
-		desc.putInteger(charIDToTypeID('Vrsn'), 5);
-		executeAction(charIDToTypeID('Dplc'), desc, DialogModes.NO);
-	}
+	activeDocument = layer.parent;
+	layer.parent.activeLayer = temp;
+}
 
 
 Tych.prototype.add_rounded_corners = function()
@@ -773,7 +791,6 @@ Tych.prototype.add_rounded_corners = function()
 		}
 	}
 
-	//f();
 	doc.suspendHistory('Round corners', 'f()');
 }
 

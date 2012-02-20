@@ -131,6 +131,7 @@ TychOptions.prototype.setup_ui = function()
 			w.output.autoclose.enabled = this.value;
 			w.output.directory.enabled = this.value;
 			w.output.filename.enabled = this.value;
+			w.output.save_each_layer_group.enabled = this.value;;
 			w.output.save_types.jpeg.enabled = this.value;
 			w.output.save_types.psd.enabled = this.value;
 			w.output.quality.enabled = this.value && w.output.save_types.jpeg.value;
@@ -530,7 +531,14 @@ TychOptions.prototype.get_output_res = function()
 				text: '" + tp_settings.filename + "', \
 				preferredSize: [200, 20] \
 			}, \
-			enabled: " + tp_settings.autosave + " \
+			enabled: " + tp_settings.autosave + ", \
+		}, \
+		save_each_layer_group: Group { \
+			save_each_layer: Checkbox { \
+				text: 'Save each individual layer', \
+				value: " + tp_settings.save_each_layer + ", \
+			}, \
+			enabled: " + tp_settings.autosave + ", \
 		}, \
 		save_types: Group { \
 			jpeg: Checkbox { \
@@ -598,6 +606,7 @@ TychOptions.prototype.set_settings = function(tab)
 
 		case 'output':
 			tp_settings.autosave = this.w.output.autosave_group.autosave.value;
+			tp_settings.save_each_layer = this.w.output.save_each_layer_group.save_each_layer.value;
 			tp_settings.autoclose = this.w.output.autoclose.value;
 			tp_settings.output_formats.jpg = this.w.output.save_types.jpeg.value;
 			tp_settings.output_formats.psd = this.w.output.save_types.psd.value;

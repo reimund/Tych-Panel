@@ -20,6 +20,7 @@ defaults = {
 	'autoclose': false,
 	'output_formats': { 'jpg': true, 'psd': false },
 	'save_directory': '~',
+	'save_each_layer': false,
 	'filename': 'image',
 	'jpeg_quality': 12,
 	'background_color': '#ffffff',

@@ -354,7 +354,7 @@ function tp_tweak_mask(l, d, side)
  * Selects an area of the specified bounds that are rounded in the given
  * corner.
  */
-function select_rounded_corner(doc, x0, y0, x1, y1, corner)
+function tp_select_rounded_corner(doc, x0, y0, x1, y1, corner)
 {
 	var w, h;
 
@@ -370,19 +370,19 @@ function select_rounded_corner(doc, x0, y0, x1, y1, corner)
 
 	switch (corner) {
 		case TOP_LEFT:
-			intersect_circle(x0, y0, x1 + w, y1 + h);
+			tp_intersect_circle(x0, y0, x1 + w, y1 + h);
 			break;
 
 		case TOP_RIGHT:
-			intersect_circle(x0 - w, y0, x1, y1 + h);
+			tp_intersect_circle(x0 - w, y0, x1, y1 + h);
 			break;
 
 		case BOTTOM_RIGHT:
-			intersect_circle(x0 - w, y0 - h, x1, y1);
+			tp_intersect_circle(x0 - w, y0 - h, x1, y1);
 			break;
 
 		case BOTTOM_LEFT:
-			intersect_circle(x0, y0 - h, x1 + w, y1);
+			tp_intersect_circle(x0, y0 - h, x1 + w, y1);
 			break;
 	}
 }
@@ -391,7 +391,7 @@ function select_rounded_corner(doc, x0, y0, x1, y1, corner)
 /**
  * Intersects the current selection with a circle selection.
  */
-function intersect_circle(left, top, right, bottom) { 
+function tp_intersect_circle(left, top, right, bottom) { 
 	var desc1, ref1, desc2;
 
 	desc1 = new ActionDescriptor(); 
@@ -454,3 +454,48 @@ function tp_zero_pad(n, l)
 	while (n.length < l) {n = pad + n;}
 	return n;
 }
+
+
+/**
+ * Selects a rectangular area from the given bounds.
+ */
+function tp_select_bounds(doc, bounds)
+{
+	doc.selection.select([
+		[bounds[0].value, bounds[1].value],
+		[bounds[0].value, bounds[3].value],
+		[bounds[2].value, bounds[3].value],
+		[bounds[2].value, bounds[1].value]
+	]);
+}
+
+function tp_copy_merged()
+{
+	executeAction(charIDToTypeID("CpyM"), undefined, DialogModes.NO);
+}
+
+
+/**
+ * Copies the active layer of the active document to the document beneath it
+ * in the document stack.
+ */
+function tp_copy_layer_to_previous_document()
+{
+	var desc = new ActionDescriptor();
+	var ref = new ActionReference();
+
+	ref.putEnumerated(
+		charIDToTypeID('Lyr '),
+		charIDToTypeID('Ordn'),
+		charIDToTypeID('Trgt')
+	);
+
+	desc.putReference(charIDToTypeID('null'), ref);
+	var docRef = new ActionReference();
+	docRef.putOffset(charIDToTypeID('Dcmn'), -1);
+	desc.putReference(charIDToTypeID('T   '), docRef);
+	desc.putInteger(charIDToTypeID('Vrsn'), 5);
+	executeAction(charIDToTypeID('Dplc'), desc, DialogModes.NO);
+}
+
+

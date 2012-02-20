@@ -237,7 +237,7 @@ function round_corners(layer, radius)
 	if (radius[0] > 0) {
 		r[0] = Math.min(radius[0], maxr);
 		if (r[0] > 0) {
-			select_rounded_corner(d, x0, y0, x0 + r[0], y0 + r[0], TOP_LEFT);
+			tp_select_rounded_corner(d, x0, y0, x0 + r[0], y0 + r[0], TOP_LEFT);
 			d.selection.store(c);
 			d.selection.deselect();
 			maxr = Math.min(mins, mins - r[0]);
@@ -248,7 +248,7 @@ function round_corners(layer, radius)
 	if (radius[1] > 0) {
 		r[1] = Math.min(radius[1], maxr);
 		if (r[1] > 0) {
-			select_rounded_corner(d, x1 - r[1], y0, x1, y0 + r[1], TOP_RIGHT);
+			tp_select_rounded_corner(d, x1 - r[1], y0, x1, y0 + r[1], TOP_RIGHT);
 			d.selection.store(c, SelectionType.EXTEND);
 			d.selection.deselect();
 			maxr = Math.min(mins, mins - r[1]);
@@ -259,7 +259,7 @@ function round_corners(layer, radius)
 	if (radius[2] > 0) {
 		r[2] = Math.min(radius[2], maxr);
 		if (r[2] > 0) {
-			select_rounded_corner(d, x1 - r[2], y1 - r[2], x1, y1, BOTTOM_RIGHT);
+			tp_select_rounded_corner(d, x1 - r[2], y1 - r[2], x1, y1, BOTTOM_RIGHT);
 			d.selection.store(c, SelectionType.EXTEND);
 			d.selection.deselect();
 			maxr = Math.min(mins, mins - r[2]);
@@ -270,7 +270,7 @@ function round_corners(layer, radius)
 	if (radius[3] > 0) {
 		r[3] = Math.min(radius[3], maxr);
 		if (r[3] > 0) {
-			select_rounded_corner(d, x0, y1 - r[3], x0 + r[3], y1, BOTTOM_LEFT);
+			tp_select_rounded_corner(d, x0, y1 - r[3], x0 + r[3], y1, BOTTOM_LEFT);
 			d.selection.store(c, SelectionType.EXTEND);
 			d.selection.deselect();
 		}
@@ -316,14 +316,13 @@ function round_corners(layer, radius)
  */
 function mask_from_mask_bounds(layer) 
 {
-	var d, ad, al, b;
+	var d, ad, al;
 
 	d = parent_document(layer);
 
 	// Save the current active layer.
 	ad = activeDocument;
 	al = ad.activeLayer;
-	b = mbounds(layer);
 
 	// Temporary set active layer.
 	activeDocument = d;
@@ -331,12 +330,7 @@ function mask_from_mask_bounds(layer)
 	
 	// Create the mask if a mask exists.
 	if (layerMask.selectLayerMask()) {
-		d.selection.select([
-			[b[0].value, b[1].value],
-			[b[0].value, b[3].value],
-			[b[2].value, b[3].value],
-			[b[2].value, b[1].value]
-		]);
+		tp_select_bounds(d, mbounds(layer));
 
 		layerMask.remove(false);
 		layerMask.makeFromSelection(true);
@@ -344,8 +338,34 @@ function mask_from_mask_bounds(layer)
 		d.selection.deselect();
 	}
 
-	// Restore active document and layer.
+	// Restore active document & active layer.
 	activeDocument = ad;
 	ad.activeLayer = al;
 }
 
+
+/**
+ * Saves the layer to the specified location, using the given options.
+ */
+function save_layer(layer, path, options)
+{
+	var d, b, f, d;
+
+	d = parent_document(layer);
+	b = mbounds(layer)
+	f = new File(path);
+
+	// Select & copy the layer.
+	tp_select_bounds(d, b);
+	tp_copy_merged();
+	d.selection.deselect();
+
+	// Create a temporary document & paste the layer into it.
+	t = documents.add(b[2].value - b[0].value, b[3].value - b[1].value, 72, f.displayName, NewDocumentMode.RGB);
+	t.paste();
+	activeDocument = t;
+
+	// Save & close the document.
+	t.saveAs(new File(path), options, true, Extension.LOWERCASE);
+	t.close(SaveOptions.DONOTSAVECHANGES);
+}
