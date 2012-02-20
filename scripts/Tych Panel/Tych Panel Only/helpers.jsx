@@ -25,19 +25,6 @@ function tp_make_smart_object()
 
 
 /**
- * Pads the given number n with l zeroes.
- */
-function tp_zero_pad(n, l)
-{
-	n = n.toString();
-	l = Number(l);
-	var pad = '0';
-	while (n.length < l) {n = pad + n;}
-	return n;
-}
-
-
-/**
  * Make a mask on the specified layer, making only the layer's bounding box
  * visible.
  */
@@ -422,3 +409,48 @@ function intersect_circle(left, top, right, bottom) {
 	executeAction(charIDToTypeID('IntW'), desc1, DialogModes.NO);
 }; 
 
+
+/**
+ * Gets the next available file name by increasing a trailing sequential
+ * number.
+ */
+function tp_next_filename(directory, basename, formats)
+{
+	var padding, collision, file;
+
+	padding = '001';
+
+	while(true) {
+		collision = false;
+
+		for (extension in formats) {
+			file = new File(directory + '/' + basename + padding + '.' + extension);
+			if (file.exists) {
+				collision = true;
+				break;
+			}
+		}
+
+		// Increase the sequential number by 1 if there is a filename
+		// collision.
+		if (collision)
+			padding = tp_zero_pad(Number(padding) + 1, 3);
+		else
+			break;
+	}
+
+	return directory + '/' + basename + padding;
+}
+
+
+/**
+ * Pads the given number n with l zeroes.
+ */
+function tp_zero_pad(n, l)
+{
+	n = n.toString();
+	l = Number(l);
+	var pad = '0';
+	while (n.length < l) {n = pad + n;}
+	return n;
+}

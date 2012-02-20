@@ -332,7 +332,7 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 				thiss.composite(thiss.doc, thiss.comp_doc, side);
 		}
 
-		//// Save, close etc.
+		// Save, close etc.
 		thiss.finish();
 	}
 
@@ -447,12 +447,15 @@ Tych.prototype.composite = function(src, target, side)
 	}
 
 
-	// Do some bookkeeping for the latest added ntych.
+	/**
+	 * Do some bookkeeping for the latest added ntych.
+	 */
 	Tych.prototype.bookkeep = function(side)
 	{
-		var s, l, i, layers, type, ref;
+		var s, l, i, layers, type, ref, images;
 
 		s = activeDocument.layerSets;
+		images = [];
 
 		// If layer sets exist, the current layers being bookkept have just been
 		// composited. Otherwise, it's the first ntych inserted.
@@ -495,8 +498,11 @@ Tych.prototype.composite = function(src, target, side)
 				reference: ref
 			};
 			this.table.total += 1;
-
 		}
+
+		for (i in this.images)
+			images.push(this.images[i].displayName);
+		this.table.images.push(images); 
 
 		// Store the the names of the layers that are interesting references for
 		// coming ntychs.
@@ -561,37 +567,22 @@ Tych.prototype.composite = function(src, target, side)
 	 */
 	Tych.prototype.save = function()
 	{
-		var basename = this.settings.filename + '_';
-		var padding = '001';
-		var collision;
-		var file;
+		var options, filename;
 
-		while(true) {
-			collision = false;
-			for (format in this.settings.output_formats) {
-				file = new File(this.settings.save_directory + '/' + basename + padding + '.' + format);
-				if (file.exists) {
-					collision = true;
-					break;
-				}
-			}
-			// Increase the sequential number by 1 if there is a file name collision.
-			if (collision)
-				padding = tp_zero_pad(Number(padding) + 1, 3);
-			else
-				break;
-		}
+		filename = tp_next_filename(
+			this.settings.save_directory,
+			this.settings.filename + '_',
+			this.settings.output_formats
+		);
 
-		var options = {
+		options = {
 			'jpg': this.get_jpeg_save_options(),
 			'psd': this.get_psd_save_options()
 		};
 
 		for (format in this.settings.output_formats)
 			if (this.settings.output_formats[format])
-				this.save_doc.saveAs(
-					new File(this.settings.save_directory + '/' + basename + padding),
-					options[format], true, Extension.LOWERCASE);
+				this.save_doc.saveAs(new File(filename), options[format], true, Extension.LOWERCASE);
 	}
 
 
@@ -906,6 +897,7 @@ Tych.prototype.get_table = function()
 			bottom_left: null,
 			bottom_right: null
 		},
+		images: [],
 		total: 0,
 		border: [0, 0, 0, 0]
 	};
