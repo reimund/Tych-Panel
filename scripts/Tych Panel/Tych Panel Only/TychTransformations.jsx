@@ -439,15 +439,17 @@ TychTransformations.prototype.get_new_position = function(doc, l, lm, i, j)
 				y = ref.bounds[1].value;
 				a = AnchorPosition.TOPLEFT;
 			}
-		} else if (lm.side == LEFT)
-		// Starting left columns should not be moved to origin.
-			x = w0;
+		} else {
 
-		// Just shove the remaining layers next to the layer that has a
-		// reference.
-		if (j < (s[i].layers.length - 1)) {
-			y = s[i].layers[j + 1].bounds[3].value + this.tych.settings.spacing;
-			x = s[i].layers[j + 1].bounds[0].value;
+			// Just shove the remaining layers next to the layer that has a
+			// reference.
+			if (j < (s[i].layers.length - 1)) {
+				y = s[i].layers[j + 1].bounds[3].value + this.tych.settings.spacing;
+				x = s[i].layers[j + 1].bounds[0].value;
+			} else {
+				x = l.bounds[0].value;
+				y = l.bounds[1].value;
+			}
 		}
 	}
 

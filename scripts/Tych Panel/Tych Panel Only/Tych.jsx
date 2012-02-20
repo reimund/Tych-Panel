@@ -530,7 +530,7 @@ Tych.prototype.composite = function(src, target, side)
 				// The first tych will cover all reference points.
 				if (s.length == 0) {
 					this.table.references.top_right = layers[layers.length - 1].name;
-					this.table.references.bottom_right = layers[layers.length - 1].name;
+					this.table.references.bottom_right = layers[0].name;
 				}
 				break;
 
