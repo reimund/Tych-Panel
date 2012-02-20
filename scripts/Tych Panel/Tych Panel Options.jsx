@@ -1,6 +1,6 @@
 ﻿/*
  * Name: Tych Panel Options
- * Author: Reimund Trost (c) 2011
+ * Author: Reimund Trost (c) 2011-2012
  * Email: reimund@lumens.se
  * Website: http://lumens.se/tychpanel/
  *
@@ -92,8 +92,7 @@ TychOptions.prototype.setup_ui = function()
 	tab_buttons.misc_button.onClick = function() { thiss.toggle_tab('misc'); }
 
 	if (this.current_tab == 'appearance') {
-		w.main.resize_width_group.input.enabled = w.main.resize_to_fit.width_button.value;
-		w.main.resize_height_group.input.enabled = w.main.resize_to_fit.height_button.value;
+		w.main.fit_size_group.input.enabled = w.main.resize_to_fit.width_button.value || w.main.resize_to_fit.height_button.value;
 
 		w.main.bg_color_group.hex.onChange = function() { hex_change(this); }
 		w.main.border_color_group.hex.onChange = function() { hex_change(this); }
@@ -102,22 +101,17 @@ TychOptions.prototype.setup_ui = function()
 		w.main.bg_color_group.hex.notify('onChange');
 		w.main.border_color_group.hex.notify('onChange');
 
-		w.main.resize_to_fit.width_button.onClick = function() 
+		w.main.resize_to_fit.width_button.onClick
+			= w.main.resize_to_fit.height_button.onClick
+			= function() 
 		{
-			w.main.resize_width_group.input.enabled = w.main.resize_to_fit.width_button.value;
-			w.main.resize_height_group.input.enabled = false;
-		};
-
-		w.main.resize_to_fit.height_button.onClick = function() 
-		{
-			w.main.resize_height_group.input.enabled = w.main.resize_to_fit.height_button.value;
-			w.main.resize_width_group.input.enabled = false;
+			w.main.fit_size_group.input.enabled = true;
+			w.main.fit_size_group.label.text = 'Target ' + (w.main.resize_to_fit.width_button.value ? 'width' : 'height');
 		};
 
 		w.main.resize_to_fit.none_button.onClick = function() 
 		{
-			w.main.resize_width_group.input.enabled = false;
-			w.main.resize_height_group.input.enabled = false;
+			w.main.fit_size_group.input.enabled = false;
 		};
 
 		w.compositing.composite_group.composite.onClick = function()
@@ -132,7 +126,7 @@ TychOptions.prototype.setup_ui = function()
 			w.output.directory.input.text = Folder.selectDialog('Please select a directory.').fsName;
 		}
 
-		w.output.autosave.onClick = function()
+		w.output.autosave_group.autosave.onClick = function()
 		{
 			w.output.autoclose.enabled = this.value;
 			w.output.directory.enabled = this.value;
@@ -183,7 +177,6 @@ TychOptions.prototype.setup_ui = function()
 	};
 
 	w.button_group.cancel_button.onClick = function() { w.close(2); };
-	//main.resize_group.resize.onClick = function() { main.resize_width_group.input.enabled = this.value; };
 
 }
 
@@ -226,7 +219,7 @@ TychOptions.prototype.get_main_res = function()
 	return "panel { \
 		visible: true, \
 		text: 'General', \
-		alignChildren: 'right', \
+		alignChildren: 'left', \
 		spacing_group: Group { \
 			label: StaticText { \
 				text: 'Image spacing', \
@@ -272,33 +265,23 @@ TychOptions.prototype.get_main_res = function()
 				value: " + (!tp_settings.fit_width && !tp_settings.fit_height) + " \
 			}, \
 		}, \
-		resize_width_group: Group { \
+		fit_size_group: Group { \
 			label: StaticText { \
-				text: 'Target width', \
-				helpTip: 'The target width, not counting the width of the outer border.' \
+				text: 'Target " + (tp_settings.fit_width ? 'width' : 'height') + "', \
+				helpTip: 'The target size, not counting the width of the outer border.', \
+				preferredSize: [85, 20], \
 			} \
 			input: EditText { \
-				text: '" + tp_settings.resize_width + "', \
+				text: '" + tp_settings.fit_size + "', \
 				preferredSize: [50, 20], \
-				helpTip: 'The target width, not counting the width of the outer border.' \
-			}, \
-		}, \
-		resize_height_group: Group { \
-			label: StaticText { \
-				text: 'Target height', \
-				helpTip: 'The target height, not counting the width of the outer border.' \
-			} \
-			input: EditText { \
-				text: '" + tp_settings.resize_height + "', \
-				preferredSize: [50, 20], \
-				helpTip: 'The target height, not counting the width of the outer border.' \
+				helpTip: 'The target size, not counting the width of the outer border.' \
 			}, \
 		}, \
 		border_group: Group { \
 			margins: [0, 20, 0, 0] \
 			label: StaticText { \
 				text: 'Border size', \
-				preferredSize: [70, 0], \
+				preferredSize: [80, 0], \
 				helpTip: 'The width of the outer border (in pixels).', \
 			}, \
 			top: Group { \
@@ -361,6 +344,7 @@ TychOptions.prototype.get_main_res = function()
 		border_color_group: Group { \
 			label: StaticText { \
 				text: 'Border color', \
+				preferredSize: [80, 15], \
 				helpTip: 'The color of the outer border.', \
 			}, \
 			color_button: EditText { \
@@ -442,6 +426,7 @@ TychOptions.prototype.get_main_res = function()
 			input: Checkbox { \
 				text: 'Only apply to outer frame', \
 				value: " + !tp_settings.round_all_layers + ", \
+				helpTip: 'Only rounds corners on top left, top right, bottom left and bottom right pictures.' \
 			}, \
 		}, \
 	}";
@@ -452,11 +437,12 @@ TychOptions.prototype.get_compositing_res = function()
 {
 	return "panel { \
 		text: 'Compositing', \
-		alignChildren: 'right', \
+		alignChildren: 'left', \
 		composite_group: Group { \
+			margins: [0, 10, 0, 0], \
 			composite: Checkbox { \
 				text: 'Composite with active document', \
-				value: " + tp_settings.composite + " \
+				value: " + tp_settings.composite + ", \
 			}, \
 		}, \
 		maintain_label: Group { \
@@ -486,7 +472,7 @@ TychOptions.prototype.get_misc_res = function()
 {
 	return "panel { \
 		text: 'Miscelleneous', \
-		alignChildren: 'right', \
+		alignChildren: 'left', \
 		reorder_group: Group { \
 			margins: [0, 20, 0, 0] \
 			reorder: Checkbox { \
@@ -521,11 +507,16 @@ TychOptions.prototype.get_output_res = function()
 {
 	return "panel { \
 		text: 'Output', \
-		autosave: Checkbox { \
-			text: 'Save generated images', \
-			value: " + tp_settings.autosave + " \
+		alignChildren: 'left', \
+		autosave_group: Group { \
+			margins: [0, 20, 0, 0] \
+			autosave: Checkbox { \
+				text: 'Save generated images', \
+				value: " + tp_settings.autosave + " \
+			}, \
 		}, \
 		directory: Group { \
+			label: StaticText { text: 'Directory' }, \
 			input: EditText { \
 				text: '" + escape(new Folder(tp_settings.save_directory).fsName) + "', \
 				preferredSize: [300, 20] \
@@ -534,9 +525,7 @@ TychOptions.prototype.get_output_res = function()
 			enabled: " + tp_settings.autosave + " \
 		}, \
 		filename: Group { \
-			label: StaticText { \
-				text: 'File name' \
-			}, \
+			label: StaticText { text: 'File name' }, \
 			input: EditText { \
 				text: '" + tp_settings.filename + "', \
 				preferredSize: [200, 20] \
@@ -573,7 +562,6 @@ TychOptions.prototype.get_output_res = function()
 			value: " + tp_settings.autoclose + ", \
 			enabled: " + tp_settings.autosave + " \
 		} \
-		alignChildren: 'right' \
 	}";
 }
 
@@ -587,8 +575,7 @@ TychOptions.prototype.set_settings = function(tab)
 			tp_settings.spacing = num_or_default(this.w.main.spacing_group.input.text, 'spacing');
 			tp_settings.fit_width = this.w.main.resize_to_fit.width_button.value
 			tp_settings.fit_height = this.w.main.resize_to_fit.height_button.value
-			tp_settings.resize_width = num_or_default(this.w.main.resize_width_group.input.text, 'resize_width');
-			tp_settings.resize_height = num_or_default(this.w.main.resize_height_group.input.text, 'resize_height');
+			tp_settings.fit_size = num_or_default(this.w.main.fit_size_group.input.text, 'fit_size');
 			tp_settings.composite = this.w.compositing.composite_group.composite.value;
 			tp_settings.maintain_width = this.w.compositing.maintain_group.maintain_width.value;
 			tp_settings.maintain_height = this.w.compositing.maintain_group.maintain_height.value;
@@ -610,7 +597,7 @@ TychOptions.prototype.set_settings = function(tab)
 			break;
 
 		case 'output':
-			tp_settings.autosave = this.w.output.autosave.value;
+			tp_settings.autosave = this.w.output.autosave_group.autosave.value;
 			tp_settings.autoclose = this.w.output.autoclose.value;
 			tp_settings.output_formats.jpg = this.w.output.save_types.jpeg.value;
 			tp_settings.output_formats.psd = this.w.output.save_types.psd.value;
@@ -657,17 +644,18 @@ TychOptions.prototype.toggle_tab = function(tab)
 			this.w.main_group.tab_buttons.appearance_button.toggle();
 
 			// Set small font for top labels.
-			this.w.main.border_group.top.label.graphics.font = 
-				this.w.main.border_group.right.label.graphics.font = 
-				this.w.main.border_group.bottom.label.graphics.font = 
-				this.w.main.border_group.left.label.graphics.font = 
-				this.w.main.corner_radius_group.top_left.label.graphics.font =
-				this.w.main.corner_radius_group.bottom_right.label.graphics.font =
-				this.w.main.corner_radius_group.bottom_left.label.graphics.font =
-				this.w.main.corner_radius_group.top_right.label.graphics.font = 
-				this.w.main.corner_radius_group.top_left.label.graphics.font =
-				this.w.main.corner_radius_group.bottom_right.label.graphics.font =
-				this.w.main.corner_radius_group.bottom_left.label.graphics.font = small_font;
+			this.w.main.border_group.top.label.graphics.font
+				= this.w.main.border_group.right.label.graphics.font
+				= this.w.main.border_group.bottom.label.graphics.font
+				= this.w.main.border_group.left.label.graphics.font
+				= this.w.main.corner_radius_group.top_left.label.graphics.font
+				= this.w.main.corner_radius_group.bottom_right.label.graphics.font
+				= this.w.main.corner_radius_group.bottom_left.label.graphics.font
+				= this.w.main.corner_radius_group.top_right.label.graphics.font
+				= this.w.main.corner_radius_group.top_left.label.graphics.font
+				= this.w.main.corner_radius_group.bottom_right.label.graphics.font
+				= this.w.main.corner_radius_group.bottom_left.label.graphics.font
+				= small_font;
 			break;
 
 		case 'output':

@@ -94,7 +94,7 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 	size = [minw, tp_sum_height_at_width(this.layers, this.n, minw)];
 
 	// Computes the resize factor, Ie the factor used to to scale the image to
-	// fit the resize_width set in the user options.
+	// fit the fit_size set in the user options.
 	if (this.settings.composite && documents.length > 1) {
 		// If the result is going to be composited, the target_width must be
 		// changed so that the result will be aligned with the target document.
@@ -104,9 +104,9 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 			- this.settings.spacing * (this.n - 1)) / size[1];
 	} else {
 		if (this.settings.fit_width)
-			s1 = (this.settings.resize_width + 1) / size[0];
+			s1 = (this.settings.fit_size + 1) / size[0];
 		else if (this.settings.fit_height)
-			s1 = (this.settings.resize_height) / size[1];
+			s1 = (this.settings.fit_size) / size[1];
 		else
 			s1 = (size[0] + 2 * 0) / size[0];
 	}
@@ -181,11 +181,11 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 			- this.settings.spacing * (this.n - 1)) / size[0]
 	} else {
 		// Computes the resize factor, Ie the factor used to to scale the image to
-		// fit the resize_width set in the user options.
+		// fit the fit_size set in the user options.
 		if (this.settings.fit_width)
-			s1 = (this.settings.resize_width - this.settings.spacing * (this.n - 1)) / size[0];
+			s1 = (this.settings.fit_size - this.settings.spacing * (this.n - 1)) / size[0];
 		else if (this.settings.fit_height)
-			s1 = (this.settings.resize_height + 1) / size[1];
+			s1 = (this.settings.fit_size + 1) / size[1];
 		else
 			s1 = 1;
 	}
