@@ -1,7 +1,4 @@
-﻿var NTYCH_HORIZONTAL = 0;
-var NTYCH_VERTICAL = 1;
-
-var WHITE = Array(255, 255, 255);
+﻿var WHITE = Array(255, 255, 255);
 var BLACK = Array(0, 0, 0);
 
 var TOP = 0;

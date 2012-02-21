@@ -23,11 +23,11 @@ TychTransformations.prototype.compute = function(tych_variant)
 
 	switch (this.tych_variant) {
 
-		case NTYCH_VERTICAL:
+		case COLUMN:
 			this.compute_ntych_vertical_matrix();
 			break;
 
-		case NTYCH_HORIZONTAL:
+		case ROW:
 			this.compute_ntych_horizontal_matrix();
 			break;
 
@@ -75,7 +75,7 @@ TychTransformations.prototype.apply = function()
 
 /**
  * Computes the transformation matrix for:
- * - NTYCH_HORIZONTAL
+ * - ROW
  */
 TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 {
@@ -154,7 +154,7 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 
 /**
  * Computes the transformation matrix for:
- * - NTYCH_HORIZONTAL
+ * - ROW
  */
 TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 {
@@ -252,8 +252,8 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 
 	// Maintain width & height.
 	// Here be dragons.
-	if ((tych.settings.maintain_width && tych.tych_variant != NTYCH_HORIZONTAL)
-			|| (tych.settings.maintain_height && tych.tych_variant != NTYCH_VERTICAL)) {
+	if ((tych.settings.maintain_width && tych.tych_variant != ROW)
+			|| (tych.settings.maintain_height && tych.tych_variant != COLUMN)) {
 		for (i = doc.layerSets.length - 1; i >= 0; i--) {
 			s = doc.layerSets[i];
 

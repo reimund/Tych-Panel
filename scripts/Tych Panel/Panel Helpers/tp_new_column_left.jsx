@@ -1,2 +1,2 @@
 $.evalFile(app.path + '/Presets/Scripts/Tych%20Panel/Tych%20Panel.jsx');
-t.layout_and_composite(NTYCH_VERTICAL, LEFT);
+t.layout_and_composite(COLUMN, LEFT);

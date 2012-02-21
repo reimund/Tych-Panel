@@ -266,7 +266,7 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 			// Remove possible left over masks.
 			thiss.clear_rounded_corner_masks();
 
-			if (tych_variant == NTYCH_VERTICAL)
+			if (tych_variant == COLUMN)
 				thiss.composite(thiss.doc, thiss.comp_doc, side);
 			else
 				thiss.composite(thiss.doc, thiss.comp_doc, side);
@@ -316,7 +316,7 @@ Tych.prototype.composite = function(src, target, side)
 
 	// Rename the inserted set so the sequence number makes sense in the
 	// composited document.
-	target.layers[0].name = this.tych_variant == NTYCH_HORIZONTAL
+	target.layers[0].name = this.tych_variant == ROW
 		? 'Row ' + target.layerSets.length
 		: 'Column ' + target.layerSets.length;
 
@@ -367,7 +367,7 @@ Tych.prototype.bookkeep = function(side)
 	layers = s[0].layers;
 	images = [];
 
-	type = this.tych_variant == NTYCH_HORIZONTAL ? ROW : COLUMN;
+	type = this.tych_variant;
 
 	for (i = 0; i < layers.length; i++) {
 		l = layers[i];
@@ -532,7 +532,7 @@ Tych.prototype.layout = function()
 		this.doc.layers[i].move(set, ElementPlacement.INSIDE);
 		//layers.push(this.doc.layers[i]);
 
-	if (this.tych_variant == NTYCH_HORIZONTAL || layers.length == 1)
+	if (this.tych_variant == ROW || layers.length == 1)
 		set.name = 'Row 1';
 	else 
 		set.name = 'Column 1';
