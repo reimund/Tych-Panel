@@ -276,7 +276,10 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 		thiss.finish();
 	}
 
-	this.doc.suspendHistory('Make ntych', 'f()');
+	if (this.settings.composite && this.comp_doc != null)
+		this.comp_doc.suspendHistory('Composite ntych', 'f()');
+	else
+		this.doc.suspendHistory('Make ntych', 'f()');
 }
 
 
@@ -299,64 +302,57 @@ Tych.prototype.composite = function(src, target, side)
 	activeDocument = target;
 	anchor_position = AnchorPosition.TOPLEFT
 
-	var thiss = this;
-	var f = function()
-	{
+	// Unlock the background (if locked) so we can put a background fill below.
+	target.layers[target.layers.length - 1].isBackgroundLayer = false;
 
-		// Unlock the background (if locked) so we can put a background fill below.
-		target.layers[target.layers.length - 1].isBackgroundLayer = false;
+	// Set the top layer as active so that the set gets inserted at the top.
+	target.activeLayer = target.layers[0];
 
-		// Set the top layer as active so that the set gets inserted at the top.
-		target.activeLayer = target.layers[0];
+	// Copy the set into the target document.
+	this.copy_layer_to_document(src.layers[0], target);
 
-		// Copy the set into the target document.
-		thiss.copy_layer_to_document(src.layers[0], target);
+	src.close(SaveOptions.DONOTSAVECHANGES);
+	activeDocument = target;
 
-		src.close(SaveOptions.DONOTSAVECHANGES);
-		activeDocument = target;
+	// Rename the inserted set so the sequence number makes sense in the
+	// composited document.
+	target.layers[0].name = this.tych_variant == NTYCH_HORIZONTAL
+		? 'Row ' + target.layerSets.length
+		: 'Column ' + target.layerSets.length;
 
-		// Rename the inserted set so the sequence number makes sense in the
-		// composited document.
-		target.layers[0].name = thiss.tych_variant == NTYCH_HORIZONTAL
-			? 'Row ' + target.layerSets.length
-			: 'Column ' + target.layerSets.length;
+	this.bookkeep(side);
 
-		thiss.bookkeep(side);
+	if (side == BOTTOM || side == TOP) {
+		offset_x = 0;
+		offset_y = target.height + this.settings.spacing;
 
-		if (side == BOTTOM || side == TOP) {
-			offset_x = 0;
-			offset_y = target.height + thiss.settings.spacing;
-
-			if (side == TOP) {
-				offset_y = -src_height - thiss.settings.spacing;
-				anchor_position = AnchorPosition.BOTTOMLEFT;
-			}
-
-			new_width = target.width.value;
-			new_height = target.height.value + src_height + thiss.settings.spacing;
-		} else if (side == RIGHT || side == LEFT) {
-			offset_x = target.width.value - target.activeLayer.bounds[0].value + thiss.settings.spacing;
-			offset_y = 0;
-
-			if (side == LEFT) {
-				offset_x = -src_width - thiss.settings.spacing;
-				anchor_position = AnchorPosition.TOPRIGHT;
-			}
-
-			new_width = target.width.value + src_width + thiss.settings.spacing;
-			new_height = target.height.value;
+		if (side == TOP) {
+			offset_y = -src_height - this.settings.spacing;
+			anchor_position = AnchorPosition.BOTTOMLEFT;
 		}
 
-		target.layers[0].translate(offset_x, offset_y);
+		new_width = target.width.value;
+		new_height = target.height.value + src_height + this.settings.spacing;
+	} else if (side == RIGHT || side == LEFT) {
+		offset_x = target.width.value - target.activeLayer.bounds[0].value + this.settings.spacing;
+		offset_y = 0;
 
-		// Make the document bigger so the inserted layers can be seen.
-		target.resizeCanvas(new_width, new_height, anchor_position);
+		if (side == LEFT) {
+			offset_x = -src_width - this.settings.spacing;
+			anchor_position = AnchorPosition.TOPRIGHT;
+		}
 
-		if (thiss.settings.maintain_width || thiss.settings.maintain_height)
-			thiss.trans.readjust(thiss, target, old_width, old_height, new_width, new_height);
+		new_width = target.width.value + src_width + this.settings.spacing;
+		new_height = target.height.value;
 	}
 
-	target.suspendHistory('Composite ntych', 'f()');
+	target.layers[0].translate(offset_x, offset_y);
+
+	// Make the document bigger so the inserted layers can be seen.
+	target.resizeCanvas(new_width, new_height, anchor_position);
+
+	if (this.settings.maintain_width || this.settings.maintain_height)
+		this.trans.readjust(this, target, old_width, old_height, new_width, new_height);
 }
 
 
@@ -370,14 +366,6 @@ Tych.prototype.bookkeep = function(side)
 	s = activeDocument.layerSets;
 	layers = s[0].layers;
 	images = [];
-
-	// If layer sets exist, the current layers being bookkept have just been
-	// composited. Otherwise, it's the first ntych inserted.
-	//if (s.length > 0)
-		//layers = s[0].layers;
-	//else
-		//layers = activeDocument.layers;
-
 
 	type = this.tych_variant == NTYCH_HORIZONTAL ? ROW : COLUMN;
 
@@ -837,6 +825,4 @@ Tych.prototype.save_table = function()
 	this.table_store.saveSettings();
 }
 
-
 var t = new Tych(tp_get_settings());
-
