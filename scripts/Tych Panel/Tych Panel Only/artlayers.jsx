@@ -218,7 +218,7 @@ function round_corners(layer, radius)
 	ad = activeDocument;
 	al = ad.activeLayer;
 
-	b = layer.bounds;
+	b = mbounds(layer);
 	x0 = b[0].value;
 	x1 = b[2].value;
 	y0 = b[1].value;

@@ -760,14 +760,16 @@ Tych.prototype.add_border = function()
  */
 Tych.prototype.clear_rounded_corner_masks = function()
 {
-	var doc, remove_mask;
+	var doc, mask_layers, remove_mask;
 
 	doc = this.comp_doc;
+	mask_layers = this.settings.mask_layers;
+
 	remove_mask = function(layer)
 	{
 		doc.activeLayer = layer;
 
-		if (this.settings.mask_layers)
+		if (mask_layers)
 			mask_from_mask_bounds(doc.activeLayer);
 		else if (layerMask.selectLayerMask())
 			layerMask.remove(false);
