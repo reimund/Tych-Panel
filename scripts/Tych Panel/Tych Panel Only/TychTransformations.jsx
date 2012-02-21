@@ -17,11 +17,11 @@ var TychTransformations = function(tych)
 /**
  * Compute the things we need in order to layout the layers.
  */
-TychTransformations.prototype.compute = function(tych_variant)
+TychTransformations.prototype.compute = function(alignment)
 {
-	this.tych_variant = tych_variant;
+	this.alignment = alignment;
 
-	switch (this.tych_variant) {
+	switch (this.alignment) {
 
 		case COLUMN:
 			this.compute_ntych_vertical_matrix();
@@ -252,8 +252,8 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 
 	// Maintain width & height.
 	// Here be dragons.
-	if ((tych.settings.maintain_width && tych.tych_variant != ROW)
-			|| (tych.settings.maintain_height && tych.tych_variant != COLUMN)) {
+	if ((tych.settings.maintain_width && tych.alignment != ROW)
+			|| (tych.settings.maintain_height && tych.alignment != COLUMN)) {
 		for (i = doc.layerSets.length - 1; i >= 0; i--) {
 			s = doc.layerSets[i];
 

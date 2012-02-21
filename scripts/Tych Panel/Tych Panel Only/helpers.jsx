@@ -499,3 +499,40 @@ function tp_copy_layer_to_previous_document()
 }
 
 
+/**
+ * Gives a string representation of the Tych Panel constants.
+ */
+function tp_const_string(constant)
+{
+	switch (constant) {
+		case ROW:
+			return 'row';
+
+		case COLUMN:
+			return 'column';
+
+		case TOP:
+			return 'top';
+
+		case RIGHT:
+			return 'right';
+
+		case BOTTOM:
+			return 'bottom';
+
+		case LEFT:
+			return 'left';
+
+		case TOP_LEFT:
+			return 'top left';
+
+		case TOP_RIGHT:
+			return 'top right';
+
+		case BOTTOM_RIGHT:
+			return 'bottom right';
+
+		case BOTTOM_LEFT:
+			return 'bottom left';
+	}
+}

@@ -153,13 +153,13 @@ Tych.prototype.stack = function()
 }
 
 
-Tych.prototype.validate_input = function(tych_variant, number)
+Tych.prototype.validate_input = function(alignment, number)
 {
 	var required = -1;
 
-	if (tych_variant < 3)
+	if (alignment < 3)
 		required = 2;
-	else if (tych_variant > 2 && tych_variant < 6)
+	else if (alignment > 2 && alignment < 6)
 		required = 3;
 	else
 		required = 4;
@@ -218,11 +218,11 @@ Tych.prototype.link = function(link)
 }
 
 
-Tych.prototype.layout_and_composite = function(tych_variant, side)
+Tych.prototype.layout_and_composite = function(alignment, side)
 {
-	var thiss, f;
+	var thiss, doc, f;
 
-	this.tych_variant = tych_variant;
+	this.alignment = alignment;
 
 	// Select the images to layout.
 	if (!this.select()) {
@@ -238,7 +238,7 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 	f = function()
 	{
 		// Compute transformations (prepare for layout).
-		thiss.trans.compute(tych_variant);
+		thiss.trans.compute(alignment);
 		
 		// Layout the selected images according to the transformations just
 		// computed.
@@ -266,7 +266,7 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 			// Remove possible left over masks.
 			thiss.clear_rounded_corner_masks();
 
-			if (tych_variant == COLUMN)
+			if (alignment == COLUMN)
 				thiss.composite(thiss.doc, thiss.comp_doc, side);
 			else
 				thiss.composite(thiss.doc, thiss.comp_doc, side);
@@ -277,9 +277,11 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 	}
 
 	if (this.settings.composite && this.comp_doc != null)
-		this.comp_doc.suspendHistory('Composite ntych', 'f()');
+		doc = this.comp_doc;
 	else
-		this.doc.suspendHistory('Make ntych', 'f()');
+		doc = this.doc;
+
+	doc.suspendHistory('New ' + tp_const_string(this.alignment) + ' (' + tp_const_string(side) + ')' , 'f()');
 }
 
 
@@ -316,7 +318,7 @@ Tych.prototype.composite = function(src, target, side)
 
 	// Rename the inserted set so the sequence number makes sense in the
 	// composited document.
-	target.layers[0].name = this.tych_variant == ROW
+	target.layers[0].name = this.alignment == ROW
 		? 'Row ' + target.layerSets.length
 		: 'Column ' + target.layerSets.length;
 
@@ -367,7 +369,7 @@ Tych.prototype.bookkeep = function(side)
 	layers = s[0].layers;
 	images = [];
 
-	type = this.tych_variant;
+	type = this.alignment;
 
 	for (i = 0; i < layers.length; i++) {
 		l = layers[i];
@@ -530,14 +532,11 @@ Tych.prototype.layout = function()
 	// Put the tych into a set.
 	for (var i = this.doc.layers.length - 1; i > 0; i--)
 		this.doc.layers[i].move(set, ElementPlacement.INSIDE);
-		//layers.push(this.doc.layers[i]);
 
-	if (this.tych_variant == ROW || layers.length == 1)
+	if (this.alignment == ROW || layers.length == 1)
 		set.name = 'Row 1';
 	else 
 		set.name = 'Column 1';
-
-	//move_into_set(set, layers);
 }
 
 
