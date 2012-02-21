@@ -369,3 +369,4 @@ function save_layer(layer, path, options)
 	t.saveAs(new File(path), options, true, Extension.LOWERCASE);
 	t.close(SaveOptions.DONOTSAVECHANGES);
 }
+

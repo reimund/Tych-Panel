@@ -15,3 +15,27 @@ function move_to_back(set, offset)
 	move(set.parent.layers[back_index - Math.max(0, offset)], ElementPlacement.PLACEAFTER);
 }
 
+
+/**
+ * Moves the specified layers into the given set.
+ */
+function move_into_set(set, layers)
+{
+	var d, ad;
+
+	d = parent_document(layers[0]);
+
+	// Save the current active layer.
+	ad = activeDocument;
+	// Temporary set active layer.
+	activeDocument = d;
+	
+	for (var i = 0; i < layers.length; i++)
+		layers[i].move(set, ElementPlacement.INSIDE);
+
+	// Restore active document.
+	activeDocument = ad;
+
+}
+
+

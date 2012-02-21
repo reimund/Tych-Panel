@@ -259,16 +259,9 @@ Tych.prototype.link = function(link)
 
 	f = function()
 	{
-		if (doc.layerSets.length > 0) {
-			for (var i = 0; i < doc.layerSets.length; i++) {
-				for (var j = 0; j < doc.layerSets[i].layers.length; j++) {
-					doc.activeLayer = doc.layerSets[i].layers[j];
-					layerMask.link(link);
-				}
-			}
-		} else {
-			for (var i = 0; i < doc.layers.length; i++) {
-				doc.activeLayer = doc.layers[i];
+		for (var i = 0; i < doc.layerSets.length; i++) {
+			for (var j = 0; j < doc.layerSets[i].layers.length; j++) {
+				doc.activeLayer = doc.layerSets[i].layers[j];
 				layerMask.link(link);
 			}
 		}
@@ -280,7 +273,7 @@ Tych.prototype.link = function(link)
 
 Tych.prototype.layout_and_composite = function(tych_variant, side)
 {
-	var thiss, g;
+	var thiss, f;
 
 	this.tych_variant = tych_variant;
 
@@ -295,7 +288,7 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 	this.stack();
 
 	thiss = this;
-	g = function()
+	f = function()
 	{
 		// Compute transformations (prepare for layout).
 		thiss.trans.compute(tych_variant);
@@ -336,7 +329,7 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 		thiss.finish();
 	}
 
-	this.doc.suspendHistory('Make ntych', 'g()');
+	this.doc.suspendHistory('Make ntych', 'f()');
 }
 
 
@@ -346,7 +339,7 @@ Tych.prototype.layout_and_composite = function(tych_variant, side)
 Tych.prototype.composite = function(src, target, side)
 {
 	var i, placement, src_width, src_height, old_width, old_height, new_width,
-		new_height, layer_set, layers_to_move, inserted_set, anchor_position;
+		new_height, anchor_position;
 
 	// Store away the width & height of the source document before we close it.
 	src_width = src.width;
@@ -363,51 +356,25 @@ Tych.prototype.composite = function(src, target, side)
 	var f = function()
 	{
 
-		if (target.layerSets.length == 0) {
-			layers_to_move = [];
-			for (i = target.layers.length - 2; i >= 0; i--)
-				layers_to_move.push(target.layers[i]);
-
-			layer_set = target.layerSets.add();
-			// XXX: What to do if only one layer?
-			if (layers_to_move.length == 1 || layers_to_move[0].bounds[1].value == layers_to_move[1].bounds[1].value)
-				layer_set.name = 'Row 1';
-			else if (thiss.tych_variant == NTYCH_VERTICAL)
-				layer_set.name = 'Column 1';
-			else
-				layer_set.name = 'Comp 1';
-
-			thiss.move_into_set(layers_to_move, layer_set);
-		}
-
-
-		inserted_set = target.layerSets.add();
-
-		if (thiss.tych_variant == NTYCH_HORIZONTAL)
-			inserted_set.name = 'Row ' + target.layerSets.length
-		else if (thiss.tych_variant == NTYCH_VERTICAL)
-			inserted_set.name = 'Column ' + target.layerSets.length;
-		else
-			inserted_set.name = 'Comp ' + target.layerSets.length;
-
-		target.activeLayer = inserted_set;
-
 		// Unlock the background (if locked) so we can put a background fill below.
 		target.layers[target.layers.length - 1].isBackgroundLayer = false;
 
-		for (i = src.layers.length - 1; i >= 0; i--)
-			thiss.copy_layer_to_document(src.layers[i], target);
+		// Set the top layer as active so that the set gets inserted at the top.
+		target.activeLayer = target.layers[0];
 
-		layers_to_move = [];
-		for (i = src.layers.length - 1; i >= 0; i--)
-			layers_to_move.push(target.layers[i]);
-
-		thiss.move_into_set(layers_to_move, inserted_set);
-
-		thiss.bookkeep(side);
+		// Copy the set into the target document.
+		thiss.copy_layer_to_document(src.layers[0], target);
 
 		src.close(SaveOptions.DONOTSAVECHANGES);
 		activeDocument = target;
+
+		// Rename the inserted set so the sequence number makes sense in the
+		// composited document.
+		target.layers[0].name = thiss.tych_variant == NTYCH_HORIZONTAL
+			? 'Row ' + target.layerSets.length
+			: 'Column ' + target.layerSets.length;
+
+		thiss.bookkeep(side);
 
 		if (side == BOTTOM || side == TOP) {
 			offset_x = 0;
@@ -433,7 +400,7 @@ Tych.prototype.composite = function(src, target, side)
 			new_height = target.height.value;
 		}
 
-		inserted_set.translate(offset_x, offset_y);
+		target.layers[0].translate(offset_x, offset_y);
 
 		// Make the document bigger so the inserted layers can be seen.
 		target.resizeCanvas(new_width, new_height, anchor_position);
@@ -442,8 +409,7 @@ Tych.prototype.composite = function(src, target, side)
 			thiss.trans.readjust(thiss, target, old_width, old_height, new_width, new_height);
 	}
 
-	f();
-	//target.suspendHistory('Composite ntych', 'f()');
+	target.suspendHistory('Composite ntych', 'f()');
 }
 
 
@@ -455,14 +421,15 @@ Tych.prototype.bookkeep = function(side)
 	var s, l, i, layers, type, ref, images;
 
 	s = activeDocument.layerSets;
+	layers = s[0].layers;
 	images = [];
 
 	// If layer sets exist, the current layers being bookkept have just been
 	// composited. Otherwise, it's the first ntych inserted.
-	if (s.length > 0)
-		layers = s[0].layers;
-	else
-		layers = activeDocument.layers;
+	//if (s.length > 0)
+		//layers = s[0].layers;
+	//else
+		//layers = activeDocument.layers;
 
 
 	type = this.tych_variant == NTYCH_HORIZONTAL ? ROW : COLUMN;
@@ -512,7 +479,7 @@ Tych.prototype.bookkeep = function(side)
 			this.table.references.top_right = layers[0].name;
 
 			// The first tych will cover all reference points.
-			if (s.length == 0) {
+			if (s.length == 1) {
 				this.table.references.bottom_left = layers[layers.length - 1].name;
 				this.table.references.bottom_right = layers[0].name;
 			}
@@ -523,7 +490,7 @@ Tych.prototype.bookkeep = function(side)
 			this.table.references.bottom_right = layers[0].name;
 
 			// The first tych will cover all reference points.
-			if (s.length == 0) {
+			if (s.length == 1) {
 				this.table.references.top_left = layers[layers.length - 1].name;
 				this.table.references.top_right = layers[0].name;
 			}
@@ -534,7 +501,7 @@ Tych.prototype.bookkeep = function(side)
 			this.table.references.bottom_left = layers[0].name;
 
 			// The first tych will cover all reference points.
-			if (s.length == 0) {
+			if (s.length == 1) {
 				this.table.references.top_right = layers[layers.length - 1].name;
 				this.table.references.bottom_right = layers[0].name;
 			}
@@ -545,7 +512,7 @@ Tych.prototype.bookkeep = function(side)
 			this.table.references.bottom_right = layers[0].name;
 
 			// The first tych will cover all reference points.
-			if (s.length == 0) {
+			if (s.length == 1) {
 				this.table.references.top_left = layers[layers.length - 1].name;
 				this.table.references.bottom_left = layers[0].name;
 			}
@@ -576,42 +543,23 @@ Tych.prototype.save = function()
 
 	if (this.settings.save_each_layer) {
 
-		if (this.save_doc.layerSets.length < 1) {
-			layers = this.save_doc.layers;
-			for (var i = layers.length - 2; i >= 0; i--)
+		for (var i = 0; i < this.save_doc.layerSets.length; i++) {
+			layers = this.save_doc.layerSets[i].layers;
 
-				if (layers[i].name != 'Border') {
+			for (var j = layers.length - 1; j >= 0; j--) {
 
-					filename = tp_next_filename(
-						this.settings.save_directory,
-						this.settings.filename + '_',
-						this.settings.output_formats
-					);
+				filename = tp_next_filename(
+					this.settings.save_directory,
+					this.settings.filename + '_',
+					this.settings.output_formats
+				);
 
-					for (format in this.settings.output_formats)
-						if (this.settings.output_formats[format])
-							save_layer(layers[i], filename, options[format]);
-				}
-		} else {
-			for (var i = 0; i < this.save_doc.layerSets.length; i++) {
-				layers = this.save_doc.layerSets[i].layers;
-
-				for (var j = layers.length - 1; j >= 0; j--) {
-
-					filename = tp_next_filename(
-						this.settings.save_directory,
-						this.settings.filename + '_',
-						this.settings.output_formats
-					);
-
-					for (format in this.settings.output_formats)
-						if (this.settings.output_formats[format])
-							save_layer(layers[j], filename, options[format]);
-				}
-
+				for (format in this.settings.output_formats)
+					if (this.settings.output_formats[format])
+						save_layer(layers[j], filename, options[format]);
 			}
-		}
 
+		}
 
 	} else {
 
@@ -634,11 +582,27 @@ Tych.prototype.save = function()
  */
 Tych.prototype.layout = function()
 {
+	var layers, set;
+
 	this.trans.apply();
 
 	// Get rid of outside pixels;
-	//this.save_doc = this.comp_doc == null ? this.doc : this.comp_doc;
 	this.doc.crop([0, 0, this.doc.width, this.doc.height]);
+	
+	layers = [];
+	set = this.doc.layerSets.add();
+
+	// Put the tych into a set.
+	for (var i = this.doc.layers.length - 1; i > 0; i--)
+		this.doc.layers[i].move(set, ElementPlacement.INSIDE);
+		//layers.push(this.doc.layers[i]);
+
+	if (this.tych_variant == NTYCH_HORIZONTAL || layers.length == 1)
+		set.name = 'Row 1';
+	else 
+		set.name = 'Column 1';
+
+	//move_into_set(set, layers);
 }
 
 
@@ -662,14 +626,6 @@ Tych.prototype.get_psd_save_options = function()
 	options.alphaChannels = true;
 	options.spotColors = true;
 	return options;
-}
-
-
-Tych.prototype.move_into_set = function(layers, set)
-{
-	activeDocument = layers[0].parent;
-	for (i = 0; i < layers.length; i++)
-		layers[i].move(set, ElementPlacement.INSIDE);
 }
 
 
@@ -728,13 +684,9 @@ Tych.prototype.add_rounded_corners = function()
 	f = function()
 	{
 		if (thiss.settings.round_all_layers) {
-			if (doc.layerSets.length > 0)
-				for (var i = 0; i < doc.layerSets.length; i++)
-					for (var j = 0; j < doc.layerSets[i].layers.length; j++)
-						round_corners(doc.layerSets[i].layers[j], thiss.settings.corner_radius);
-			else
-				for (var i = 0; i < doc.layers.length - 1; i++)
-					round_corners(doc.layers[i], thiss.settings.corner_radius);
+			for (var i = 0; i < doc.layerSets.length; i++)
+				for (var j = 0; j < doc.layerSets[i].layers.length; j++)
+					round_corners(doc.layerSets[i].layers[j], thiss.settings.corner_radius);
 		} else {
 			
 			c = {};
@@ -797,68 +749,75 @@ Tych.prototype.add_rounded_corners = function()
 
 Tych.prototype.add_border = function()
 {
-	var doc_size, border, border_layer, color;
+	var doc_size, border, border_layer, color, f, thiss;
+
 	doc_size = [this.save_doc.width.value, this.save_doc.height.value];
 	border = this.settings.border;
+	thiss = this;
 
-	if (border[0] <= 0
-			&& border[1] <= 0
-			&& border[2] <= 0
-			&& border[3] <= 0)
-		return;
-	
-	// Make room for top border.
-	if (border[0] > 0)
-		this.save_doc.resizeCanvas(
-			doc_size[0], doc_size[1] + border[0],
-			AnchorPosition.BOTTOMLEFT
+	f = function()
+	{
+		if (border[0] <= 0
+				&& border[1] <= 0
+				&& border[2] <= 0
+				&& border[3] <= 0)
+			return;
+		
+		// Make room for top border.
+		if (border[0] > 0)
+			thiss.save_doc.resizeCanvas(
+				doc_size[0], doc_size[1] + border[0],
+				AnchorPosition.BOTTOMLEFT
+			);
+
+		// Make room for right border.
+		if (border[1] > 0)
+			thiss.save_doc.resizeCanvas(
+				doc_size[0] + border[1], doc_size[1] + border[0],
+				AnchorPosition.BOTTOMLEFT
+			);
+
+		// Make room for bottom border.
+		if (border[2] > 0)
+			thiss.save_doc.resizeCanvas(
+				doc_size[0] + border[1],
+				doc_size[1] + border[0] + border[2],
+				AnchorPosition.TOPLEFT
+			);
+
+		// Make room for left border.
+		if (border[3] > 0)
+			thiss.save_doc.resizeCanvas(
+				doc_size[0] + border[1] + border[3],
+				doc_size[1] + border[0] + border[2],
+				AnchorPosition.TOPRIGHT
+			);
+
+		// Select outer border.
+		thiss.save_doc.selection.selectAll();
+		thiss.save_doc.selection.select([
+			[border[3], border[0]],
+			[border[3], border[0] + doc_size[1]],
+			[border[3] + doc_size[0], border[0] + doc_size[1]],
+			[border[3] + doc_size[0], border[0]]],
+			SelectionType.DIMINISH
 		);
 
-	// Make room for right border.
-	if (border[1] > 0)
-		this.save_doc.resizeCanvas(
-			doc_size[0] + border[1], doc_size[1] + border[0],
-			AnchorPosition.BOTTOMLEFT
-		);
+		// Fill border.
+		color = new SolidColor();
+		color.rgb.hexValue = thiss.settings.border_color.substr(1);
 
-	// Make room for bottom border.
-	if (border[2] > 0)
-		this.save_doc.resizeCanvas(
-			doc_size[0] + border[1],
-			doc_size[1] + border[0] + border[2],
-			AnchorPosition.TOPLEFT
-		);
+		border_layer = thiss.save_doc.artLayers.add();
+		border_layer.name = 'Border';
+		thiss.save_doc.selection.fill(color)
+		thiss.save_doc.selection.deselect();
 
-	// Make room for left border.
-	if (border[3] > 0)
-		this.save_doc.resizeCanvas(
-			doc_size[0] + border[1] + border[3],
-			doc_size[1] + border[0] + border[2],
-			AnchorPosition.TOPRIGHT
-		);
+		// Bookkeep so we can undo border when compositing.
+		thiss.table.border = border;
+		thiss.save_table();
+	}
 
-	// Select outer border.
-	this.save_doc.selection.selectAll();
-	this.save_doc.selection.select([
-		[border[3], border[0]],
-		[border[3], border[0] + doc_size[1]],
-		[border[3] + doc_size[0], border[0] + doc_size[1]],
-		[border[3] + doc_size[0], border[0]]],
-		SelectionType.DIMINISH
-	);
-
-	// Fill border.
-	color = new SolidColor();
-	color.rgb.hexValue = this.settings.border_color.substr(1);
-
-	border_layer = this.save_doc.artLayers.add();
-	border_layer.name = 'Border';
-	this.save_doc.selection.fill(color)
-	this.save_doc.selection.deselect();
-
-	// Bookkeep so we can undo border when compositing.
-	this.table.border = border;
-	this.save_table();
+	this.save_doc.suspendHistory('Add border', 'f()');
 }
 
 
@@ -880,13 +839,9 @@ Tych.prototype.clear_rounded_corner_masks = function()
 			layerMask.remove(false);
 	};
 
-	if (doc.layerSets.length > 0)
-		for (var i = 0; i < doc.layerSets.length; i++)
-			for (var j = 0; j < doc.layerSets[i].layers.length; j++)
-				remove_mask(doc.layerSets[i].layers[j]);
-	else
-		for (var i = 0; i < doc.layers.length - 1; i++)
-			remove_mask(doc.layers[i]);
+	for (var i = 0; i < doc.layerSets.length; i++)
+		for (var j = 0; j < doc.layerSets[i].layers.length; j++)
+			remove_mask(doc.layerSets[i].layers[j]);
 }
 
 
