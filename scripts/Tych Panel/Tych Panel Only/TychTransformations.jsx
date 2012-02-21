@@ -292,8 +292,8 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 				// If the calculated dimensions of the last layer exceeds
 				// the desired size, reduce the amount. Do this for the last
 				// layer in each ntych, except the first ntych.
-				if (i < doc.layerSets.length - 1 && j == 0) {
-					if (lm.type == ROW) {
+				if (i < doc.layerSets.length - 1 && 0 == j) {
+					if (ROW == lm.type) {
 						new_size.width -= l.bounds[0].value + new_size.width - tp_maxx_below(doc.layerSets, i);
 					} else {
 						new_size.height -= l.bounds[1].value + new_size.height - tp_maxy_below(doc.layerSets, i);
@@ -323,7 +323,7 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 				if (prev && this.tych.settings.mask_layers) {
 					// Compute the difference in width/height from the previous
 					// layer, and add that to the current mask.
-					if (lm.type == ROW)
+					if (ROW == lm.type)
 						tp_tweak_mask(l, new_size.height - (prev.bounds[3].value - prev.bounds[1].value), lm.side);
 					else
 						tp_tweak_mask(l, new_size.width - (prev.bounds[2].value - prev.bounds[0].value), lm.side);
@@ -396,16 +396,16 @@ TychTransformations.prototype.get_new_position = function(doc, l, lm, i, j)
 	// Get reference layer.
 	ref = tp_get_layer_by_name(doc, lm.reference);
 
-	if (lm.type == ROW) {
+	if (ROW == lm.type) {
 
 		if (ref != null) {
 
 			// Is this layer on top of its reference layer?
-			if (lm.side == TOP) {
+			if (TOP == lm.side) {
 				x = ref.parent.layers[ref.parent.layers.length - 1].bounds[0].value;
 				y = ref.bounds[1].value - h0 - this.tych.settings.spacing;
 				a = AnchorPosition.BOTTOMLEFT;
-			} else if (lm.side == BOTTOM) {
+			} else if (BOTTOM == lm.side) {
 			// Is this layer below its reference layer?
 				x = ref.parent.layers[ref.parent.layers.length - 1].bounds[0].value;
 				y = ref.bounds[3].value + this.tych.settings.spacing;
@@ -429,11 +429,11 @@ TychTransformations.prototype.get_new_position = function(doc, l, lm, i, j)
 		if (ref != null) {
 
 			// Is this layer to the left of its reference layer?
-			if (lm.side == LEFT) {
+			if (LEFT == lm.side) {
 				x = ref.bounds[0].value - w0 - this.tych.settings.spacing;
 				y = ref.bounds[1].value;
 				a = AnchorPosition.TOPRIGHT;
-			} else if (lm.side == RIGHT) {
+			} else if (RIGHT == lm.side) {
 			// The layer is to the right of its reference layer.
 				x = ref.bounds[2].value + this.tych.settings.spacing;
 				y = ref.bounds[1].value;
@@ -472,29 +472,29 @@ TychTransformations.prototype.get_new_size = function(doc, l, lm, s1, rx, ry, i,
 	// Test cases that fails.
 	// 2b, 2t, 2r, 1t, 2l
 
-	if (lm.type == ROW) {
+	if (ROW == lm.type) {
 
 		// Reset ry when beginning a new row.
-		if (j == (s.layers.length - 1))
+		if ((s.layers.length - 1) == j)
 			ry = 0;
 
 		// The first layer in a row only needs to compensate
 		// their width for the space on one side.
-		if (j == (s.layers.length - 1) || (j == 0 && !tp_column_right(s.layers[j], j)))
+		if ((s.layers.length - 1) == j || (0 == j && !tp_column_right(s.layers[j], j)))
 			cx = cx / 2;
 
 		// Is it the only layer in the column, with nothing to its side?
-		if (s.layers.length == 1 && !tp_column_right(s.layers[j], j))
+		if (1 == s.layers.length && !tp_column_right(s.layers[j], j))
 			cx = 0
 
 		w1 = Math.round(w0 - cx - rx);
 
 
 		// Is it the only row?
-		if (i == (doc.layerSets.length - 1) && !tp_row_below(s.layers[j], j))
+		if ((doc.layerSets.length - 1) == i && !tp_row_below(s.layers[j], j))
 			cy = 0;
 		// Is it the top row or the last row?
-		else if (i == (doc.layerSets.length - 1) || !tp_row_below(s.layers[j], j))
+		else if ((doc.layerSets.length - 1) == i || !tp_row_below(s.layers[j], j))
 			cy = cy / 2;
 
 		h1 = Math.round(h0 - cy - ry);
@@ -504,7 +504,7 @@ TychTransformations.prototype.get_new_size = function(doc, l, lm, s1, rx, ry, i,
 	// Column layers.
 
 		// Is it the leftmost column?
-		if (i == (doc.layerSets.length - 1)) {
+		if ((doc.layerSets.length - 1) == i) {
 			cx = cx / 2;
 			w1 = Math.round(w0 - cx - rx);
 		// Is it the rightmost column?
@@ -518,10 +518,10 @@ TychTransformations.prototype.get_new_size = function(doc, l, lm, s1, rx, ry, i,
 		}
 
 		// Is it the only layer in the column?
-		if (s.layers.length == 1)
+		if (1 == s.layers.length)
 			cy = 0
 		// Is it the the first or last layers of the column?
-		else if (j == 0 || j == (s.layers.length - 1))
+		else if (0 == j || (s.layers.length - 1) == j)
 			cy = cy / 2;
 
 		h1 = Math.round(h0 - cy - ry);

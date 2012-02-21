@@ -63,7 +63,7 @@ function tp_reorder(files, thumbs)
 
 function move_left()
 {
-	if (image_list.current_item == -1 || image_list.current_item == 0)
+	if (-1 == image_list.current_item || 0 == image_list.current_item)
 		return;
 
 	image_list.swap(image_list.current_item, image_list.current_item - 1);
@@ -73,7 +73,7 @@ function move_left()
 
 function move_right()
 {
-	if (image_list.current_item == -1 || image_list.current_item == image_list.length - 1)
+	if (-1 == image_list.current_item || image_list.length - 1 == image_list.current_item)
 		return;
 
 	image_list.swap(image_list.current_item, (image_list.current_item + 1));

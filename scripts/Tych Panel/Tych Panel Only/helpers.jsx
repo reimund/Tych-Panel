@@ -62,7 +62,7 @@ function tp_sum_width(layers, max)
 {
 	var total_width = 0;
 	for (var i = 0; i < layers.length; i++) {
-		if (max != null && i == max) break;
+		if (null != max && i == max) break;
 		total_width += layers[i].bounds[2].value - layers[i].bounds[0].value;
 	}
 
@@ -77,7 +77,7 @@ function tp_sum_height(layers, max)
 {
 	var total_height = 0;
 	for (var i = 0; i < layers.length; i++) {
-		if (max != null && i == max) break;
+		if (null != max && i == max) break;
 		total_height += layers[i].bounds[3].value - layers[i].bounds[1].value;
 	}
 
@@ -90,12 +90,12 @@ function tp_sum_height(layers, max)
  * (keeping aspect ratio) to fit the specified height.
  */
 function tp_sum_width_at_height(layers, max, height) {
-	if (height == null) return tp_sum_width(layers, max);
+	if (null == height) return tp_sum_width(layers, max);
 
 	var total_width = 0;
 	var s;
 	for (var i = 0; i < layers.length; i++) {
-		if (max != null && i == max) break;
+		if (null != max && i == max) break;
 		s = height / (layers[i].bounds[3].value - layers[i].bounds[1].value);
 		total_width += s * (layers[i].bounds[2].value - layers[i].bounds[0].value);
 	}
@@ -109,12 +109,12 @@ function tp_sum_width_at_height(layers, max, height) {
  * (keeping aspect ratio) to fit the specified width.
  */
 function tp_sum_height_at_width(layers, max, width) {
-	if (width == null) return tp_sum_height(layers, max);
+	if (null == width) return tp_sum_height(layers, max);
 
 	var total_height = 0;
 	var s;
 	for (var i = 0; i < layers.length; i++) {
-		if (max != null && i == max) break;
+		if (null != max && i == max) break;
 		s = width / (layers[i].bounds[2].value - layers[i].bounds[0].value);
 		total_height += s * (layers[i].bounds[3].value - layers[i].bounds[1].value);
 	}
@@ -171,7 +171,7 @@ function tp_get_bridge_selection()
 		var thumbnails = [];
 
 		for (var i in selected) {
-			if (selected[i].type =='file') {
+			if ('file' == selected[i].type) {
 				image_file = new File(encodeURI(selected[i].spec.fsName));
 				thumb_file = File(Folder.temp + '/scriptUI.' + i + '.jpg');
 
@@ -217,7 +217,7 @@ function tp_column_right(l, index)
 {
 	var s = parent_document(l).layerSets;
 
-	if (l.parent.name.substring(0, 3) == 'Row')
+	if ('Row' == l.parent.name.substring(0, 3))
 		if (index != 0)
 			return false;
 
@@ -226,7 +226,7 @@ function tp_column_right(l, index)
 		if (s[i].name == l.parent.name)
 			break;
 
-		if (s[i].name.substring(0, 3) == 'Col')
+		if ('Col' == s[i].name.substring(0, 3))
 			return true;
 	}
 	return false;
@@ -243,7 +243,7 @@ function tp_row_below(l, index)
 {
 	var s = parent_document(l).layerSets;
 
-	if (l.parent.name.substring(0, 3) == 'Col')
+	if ('Col' == l.parent.name.substring(0, 3))
 		if (index != 0)
 			return false;
 
@@ -252,7 +252,7 @@ function tp_row_below(l, index)
 		if (s[i].name == l.parent.name)
 			break;
 
-		if (s[i].name.substring(0, 3) == 'Row')
+		if ('Row' == s[i].name.substring(0, 3))
 			return true;
 	}
 
@@ -267,7 +267,7 @@ function tp_row_below(l, index)
 function tp_get_layer_by_name(set, name) {
 	var layers, res, i;
 
-	if (name == null)
+	if (null == name)
 		return null;
 	
 	try {

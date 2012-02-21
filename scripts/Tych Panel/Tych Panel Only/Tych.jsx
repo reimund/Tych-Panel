@@ -47,13 +47,13 @@ Tych.prototype.select = function()
 		thumbs = bridge_selection[1];
 	}
 
-	if (images == undefined || images.length < 1)
+	if (undefined == images || images.length < 1)
 		images = File.openDialog("Choose file(s) to add to composite", undefined, true);
 
-	if (images != undefined && images.length > 1 && this.settings.reorder)
+	if (undefined != images && images.length > 1 && this.settings.reorder)
 		images = tp_reorder(images, thumbs);
 
-	if (images == undefined || images.length < 1) {
+	if (undefined == images || images.length < 1) {
 		// No images were selected or the reorder window was dismissed. Revert
 		// settings and stop the script.
 		this.revert();
@@ -174,11 +174,11 @@ Tych.prototype.finish = function()
 	bg_color.rgb.hexValue = this.settings.background_color.substr(1);
 
 	// Make a reference to the document that should be saved.
-	this.save_doc = this.comp_doc == null ? this.doc : this.comp_doc;
+	this.save_doc = null == this.comp_doc ? this.doc : this.comp_doc;
 
 	// Unlink all layer masks.
 	this.link(false);
-	if (this.save_doc.layers[this.save_doc.layers.length - 1].name == 'Background')
+	if ('Background' == this.save_doc.layers[this.save_doc.layers.length - 1].name)
 		tp_fill_background(this.save_doc, bg_color);
 	else 
 		tp_add_background(this.save_doc, bg_color);
@@ -201,7 +201,7 @@ Tych.prototype.link = function(link)
 {
 	var doc, f;
 
-	doc = this.comp_doc == null ? this.doc : this.comp_doc;
+	doc = null == this.comp_doc ? this.doc : this.comp_doc;
 	activeDocument = doc;
 
 	f = function()
@@ -244,7 +244,7 @@ Tych.prototype.layout_and_composite = function(alignment, side)
 		// computed.
 		thiss.layout();
 		// If this is the first Tych do the bookkeeping now.
-		if (thiss.comp_doc == null && thiss.table.total == 0)
+		if (null == thiss.comp_doc && 0 == thiss.table.total)
 			thiss.bookkeep(side);
 
 		thiss.link(true);
@@ -252,7 +252,7 @@ Tych.prototype.layout_and_composite = function(alignment, side)
 		// Composite the result.
 		if (thiss.settings.composite && thiss.comp_doc != null) {
 			// Remove border.
-			if (thiss.comp_doc.layers[0].name == 'Border') {
+			if ('Border' == thiss.comp_doc.layers[0].name) {
 				thiss.comp_doc.layers[0].remove();
 
 				thiss.comp_doc.crop([
@@ -266,7 +266,7 @@ Tych.prototype.layout_and_composite = function(alignment, side)
 			// Remove possible left over masks.
 			thiss.clear_rounded_corner_masks();
 
-			if (alignment == COLUMN)
+			if (COLUMN == alignment)
 				thiss.composite(thiss.doc, thiss.comp_doc, side);
 			else
 				thiss.composite(thiss.doc, thiss.comp_doc, side);
@@ -276,7 +276,7 @@ Tych.prototype.layout_and_composite = function(alignment, side)
 		thiss.finish();
 	}
 
-	if (this.settings.composite && this.comp_doc != null)
+	if (null != this.settings.composite && this.comp_doc)
 		doc = this.comp_doc;
 	else
 		doc = this.doc;
@@ -318,28 +318,28 @@ Tych.prototype.composite = function(src, target, side)
 
 	// Rename the inserted set so the sequence number makes sense in the
 	// composited document.
-	target.layers[0].name = this.alignment == ROW
+	target.layers[0].name = ROW == this.alignment
 		? 'Row ' + target.layerSets.length
 		: 'Column ' + target.layerSets.length;
 
 	this.bookkeep(side);
 
-	if (side == BOTTOM || side == TOP) {
+	if (BOTTOM == side || TOP == side) {
 		offset_x = 0;
 		offset_y = target.height + this.settings.spacing;
 
-		if (side == TOP) {
+		if (TOP == side) {
 			offset_y = -src_height - this.settings.spacing;
 			anchor_position = AnchorPosition.BOTTOMLEFT;
 		}
 
 		new_width = target.width.value;
 		new_height = target.height.value + src_height + this.settings.spacing;
-	} else if (side == RIGHT || side == LEFT) {
+	} else if (RIGHT == side || LEFT == side) {
 		offset_x = target.width.value - target.activeLayer.bounds[0].value + this.settings.spacing;
 		offset_y = 0;
 
-		if (side == LEFT) {
+		if (LEFT == side) {
 			offset_x = -src_width - this.settings.spacing;
 			anchor_position = AnchorPosition.TOPRIGHT;
 		}
@@ -376,7 +376,7 @@ Tych.prototype.bookkeep = function(side)
 
 		ref = null;
 		
-		if (i == (layers.length - 1)) {
+		if ((layers.length - 1) == i) {
 			switch (side) {
 				case TOP:
 					ref = this.table.references.top_left;
@@ -416,7 +416,7 @@ Tych.prototype.bookkeep = function(side)
 			this.table.references.top_right = layers[0].name;
 
 			// The first tych will cover all reference points.
-			if (s.length == 1) {
+			if (1 == s.length) {
 				this.table.references.bottom_left = layers[layers.length - 1].name;
 				this.table.references.bottom_right = layers[0].name;
 			}
@@ -427,7 +427,7 @@ Tych.prototype.bookkeep = function(side)
 			this.table.references.bottom_right = layers[0].name;
 
 			// The first tych will cover all reference points.
-			if (s.length == 1) {
+			if (1 == s.length) {
 				this.table.references.top_left = layers[layers.length - 1].name;
 				this.table.references.top_right = layers[0].name;
 			}
@@ -438,7 +438,7 @@ Tych.prototype.bookkeep = function(side)
 			this.table.references.bottom_left = layers[0].name;
 
 			// The first tych will cover all reference points.
-			if (s.length == 1) {
+			if (1 == s.length) {
 				this.table.references.top_right = layers[layers.length - 1].name;
 				this.table.references.bottom_right = layers[0].name;
 			}
@@ -449,7 +449,7 @@ Tych.prototype.bookkeep = function(side)
 			this.table.references.bottom_right = layers[0].name;
 
 			// The first tych will cover all reference points.
-			if (s.length == 1) {
+			if (1 == s.length) {
 				this.table.references.top_left = layers[layers.length - 1].name;
 				this.table.references.bottom_left = layers[0].name;
 			}
@@ -533,7 +533,7 @@ Tych.prototype.layout = function()
 	for (var i = this.doc.layers.length - 1; i > 0; i--)
 		this.doc.layers[i].move(set, ElementPlacement.INSIDE);
 
-	if (this.alignment == ROW || layers.length == 1)
+	if (ROW == this.alignment || 1 == layers.length)
 		set.name = 'Row 1';
 	else 
 		set.name = 'Column 1';
@@ -606,7 +606,7 @@ Tych.prototype.add_rounded_corners = function()
 {
 	var doc, f, thiss;
 
-	doc = this.comp_doc == null ? this.doc : this.comp_doc;
+	doc = null == this.comp_doc ? this.doc : this.comp_doc;
 	thiss = this;
 
 	if (this.settings.corner_radius[0] <= 0
@@ -631,17 +631,17 @@ Tych.prototype.add_rounded_corners = function()
 
 			c[tl] = [thiss.settings.corner_radius[0], 0, 0, 0];
 
-			if (c[tr] == undefined)
+			if (undefined == c[tr])
 				c[tr] = [0, thiss.settings.corner_radius[1], 0, 0];
 			else
 				c[tr][1] = thiss.settings.corner_radius[1];
 
-			if (c[br] == undefined)
+			if (undefined == c[br])
 				c[br] = [0, 0, thiss.settings.corner_radius[2], 0];
 			else
 				c[br][2] = thiss.settings.corner_radius[2];
 				
-			if (c[bl] == undefined)
+			if (undefined == c[bl])
 				c[bl] = [0, 0, 0, thiss.settings.corner_radius[3]];
 			else
 				c[bl][3] = thiss.settings.corner_radius[3];

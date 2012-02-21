@@ -39,7 +39,7 @@ function contract(layer, size, use_mask)
 function parent_document(layer)
 {
 	var el = layer;
-	while (el.info == undefined)
+	while (undefined == el.info)
 		el = el.parent;
 	return el;
 }

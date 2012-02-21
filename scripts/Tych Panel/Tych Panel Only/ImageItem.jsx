@@ -133,8 +133,8 @@ function clickItem()
 {
 	var item = this.item;
 
-	if (item == null) item = this.parent.item
-	if (item == null) item = this.parent.parent.item;
+	if (null == item) item = this.parent.item
+	if (null == item) item = this.parent.parent.item;
 
 	image_list.toggleSelect(item.index);
 }

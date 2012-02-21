@@ -43,11 +43,11 @@ function tp_get_settings()
 {
 	var tp_settings = {};
 
-	if (settings.numEntries() > 0)
+	if (0 < settings.numEntries())
 		tp_settings = settings.getEntryAt(0);
 
 	for (setting in defaults)
-		if (tp_settings[setting] == undefined)
+		if (undefined == tp_settings[setting])
 			tp_settings[setting] = defaults[setting];
 
 	return tp_settings;
