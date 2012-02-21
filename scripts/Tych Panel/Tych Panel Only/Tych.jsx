@@ -153,59 +153,6 @@ Tych.prototype.stack = function()
 }
 
 
-Tych.prototype.create = function(tych_variant)
-{
-	this.tych_variant = tych_variant;
-
-	if (documents.length < 1) {
-		this.select();
-		var required = this.validate_input(tych_variant, this.images.length);
-
-		if (required > this.images.length) {
-			alert('This action requires that you select ' + required + ' images. Please try again.');
-			this.revert();
-			return -1;
-		}
-
-		// Stack it up.
-		this.stack();
-	} else {
-		var d = activeDocument;
-		var required = -1;
-		var required = this.validate_input(tych_variant, d.layers.length);
-
-		// Check if this is a tych that's already been laid out once.
-		if (d.layers.length == required + 1) {
-			this.finish();
-			return;
-		}
-
-		// Ugly workaround for Windows bug. If we use the original document
-		// weird things start to happen for no apparent reason. So we use a
-		// duplicate instead.
-		this.doc = d.duplicate();
-		this.comp_doc = null;
-		d.close(SaveOptions.DONOTSAVECHANGES);
-
-		if (required > this.doc.layers.length) {
-			alert('This action requires ' + required + ' layers. Stack some more layers then try again.');
-			this.revert();
-			return -1;
-		}
-	}
-
-	// Compute transformations (prepare for layout).
-	this.trans.compute(tych_variant);
-
-
-	// Layout the selected images.
-	this.layout();
-
-	// Save, close etc.
-	this.finish();
-}
-
-
 Tych.prototype.validate_input = function(tych_variant, number)
 {
 	var required = -1;
