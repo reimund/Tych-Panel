@@ -374,9 +374,9 @@ hasSelection = function()
 // Return:
 ///////////////////////////////////////////////////////////////////////////////
 returnToLayer = function(){
-var savedLayerRef = app.activeDocument.activeLayer;
-app.activeDocument.activeLayer = app.activeDocument.artLayers[app.activeDocument.artLayers.length - 1];
-app.activeDocument.activeLayer = savedLayerRef;
+	var savedLayerRef = app.activeDocument.activeLayer;
+	app.activeDocument.activeLayer = app.activeDocument.layers[app.activeDocument.layers.length - 1];
+	app.activeDocument.activeLayer = savedLayerRef;
 }
 "layerMaskLib.jsx";
 // End layerMaskLib.jsx
