@@ -130,12 +130,18 @@ TychOptions.prototype.setup_ui = function()
 		{
 			w.output.autoclose.enabled = this.value;
 			w.output.directory.enabled = this.value;
-			w.output.filename.enabled = this.value;
+			w.output.filename.enabled = this.value && !w.output.derive_filename_group.derive_filename.value;
 			w.output.save_each_layer_group.enabled = this.value;;
+			w.output.derive_filename_group.enabled = this.value;;
 			w.output.save_types.jpeg.enabled = this.value;
 			w.output.save_types.psd.enabled = this.value;
 			w.output.quality.enabled = this.value && w.output.save_types.jpeg.value;
 		};
+
+		w.output.derive_filename_group.derive_filename.onClick = function()
+		{
+			w.output.filename.enabled = !this.value;
+		}
 
 		w.output.save_types.jpeg.onClick = function() { w.output.quality.enabled = this.value; };
 		w.output.quality.slider.onChange = function() { w.output.quality.input.text = Math.round(this.value); };
@@ -531,12 +537,19 @@ TychOptions.prototype.get_output_res = function()
 				text: '" + tp_settings.filename + "', \
 				preferredSize: [200, 20] \
 			}, \
-			enabled: " + tp_settings.autosave + ", \
+			enabled: " + (tp_settings.autosave && !tp_settings.derive_filename) + ", \
 		}, \
 		save_each_layer_group: Group { \
 			save_each_layer: Checkbox { \
 				text: 'Save each individual layer', \
 				value: " + tp_settings.save_each_layer + ", \
+			}, \
+			enabled: " + tp_settings.autosave + ", \
+		}, \
+		derive_filename_group: Group { \
+			derive_filename: Checkbox { \
+				text: 'Derive file name from input files', \
+				value: " + tp_settings.derive_filename + ", \
 			}, \
 			enabled: " + tp_settings.autosave + ", \
 		}, \
@@ -613,6 +626,7 @@ TychOptions.prototype.set_settings = function(tab)
 			tp_settings.jpeg_quality = Math.round(this.w.output.quality.slider.value);
 			tp_settings.save_directory = this.w.output.directory.input.text;
 			tp_settings.filename = this.w.output.filename.input.text;
+			tp_settings.derive_filename = this.w.output.derive_filename_group.derive_filename.value;
 			break;
 
 		case 'misc':

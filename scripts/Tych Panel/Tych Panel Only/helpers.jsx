@@ -414,19 +414,28 @@ function tp_intersect_circle(left, top, right, bottom) {
  * Gets the next available file name by increasing a trailing sequential
  * number.
  */
-function tp_next_filename(directory, basename, formats)
+function tp_next_filename(directory, basename, formats, always_pad)
 {
 	var padding, collision, file;
 
-	padding = '001';
+	if (always_pad) {
+		padding = '001';
+		separator = '_'
+	} else
+		padding = separator = ''
 
 	while(true) {
 		collision = false;
 
 		for (extension in formats) {
-			file = new File(directory + '/' + basename + padding + '.' + extension);
+			file = new File(directory + '/' + basename + separator + padding + '.' + extension);
 			if (file.exists) {
 				collision = true;
+				
+				if (!always_pad && '' == padding) {
+					padding = '000';
+					separator = '_';
+				}
 				break;
 			}
 		}
@@ -439,7 +448,7 @@ function tp_next_filename(directory, basename, formats)
 			break;
 	}
 
-	return directory + '/' + basename + padding;
+	return directory + '/' + basename + separator + padding;
 }
 
 
@@ -535,4 +544,59 @@ function tp_const_string(constant)
 		case BOTTOM_LEFT:
 			return 'bottom left';
 	}
+}
+
+
+/**
+ * Strips the extension of filename string.
+ */
+function tp_get_basename(name)
+{
+	return name.replace(/\.[^\..]+$/, '');
+}
+
+
+/**
+ * Gets an object containing a common suffix and sequence numbers for the given
+ * file names. If a common prefix cannot be found, false is returned.
+ *
+ * Examples:
+ *    [20120221_001.jpg, 20120221_002.jpg] -> 20120221_001_002.
+ *    [20120221_001.jpg, 20120510_122.jpg] -> 20120221_001_20120510_122.
+ *    [foo.jpg, bar.jpg] -> foo_bar.jpg.
+ */
+function tp_combine_filenames(names)
+{
+	var sequence_numbers, combined, name, prefix, tmp, regex, i, j;
+
+	sequence_numbers = [];
+	combined = [];
+	regex = /_\d+$/;
+
+	outer:
+	for (i in names)
+		for (j in names[i]) {
+
+			name = tp_get_basename(names[i][j]);
+			tmp = name.replace(regex, '');
+
+			sequence_numbers.push(name.match(regex));
+
+			if (0 == i && 0 == j)
+				prefix = tmp;
+
+			if (tmp != prefix)
+				break outer;
+		}
+
+	// Succeeded in finding a prefix that all pics have in common.
+	if (tmp == prefix)
+		return prefix + sequence_numbers.join('');
+	
+	// No common prefix found, concatenate names instead.
+	for (i in names)
+		for (j in names[i])
+			combined.push(tp_get_basename(names[i][j]));
+	
+	return combined.join('_');
 }

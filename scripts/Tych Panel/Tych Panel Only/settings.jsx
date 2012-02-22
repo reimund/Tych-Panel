@@ -22,6 +22,7 @@ defaults = {
 	'save_directory': '~',
 	'save_each_layer': false,
 	'filename': 'image',
+	'derive_filename': false,
 	'jpeg_quality': 12,
 	'background_color': '#ffffff',
 	'border': [0, 0, 0, 0],

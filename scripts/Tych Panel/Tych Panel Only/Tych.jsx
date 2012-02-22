@@ -471,7 +471,7 @@ Tych.prototype.bookkeep = function(side)
  */
 Tych.prototype.save = function()
 {
-	var options, filename, layers;
+	var options, basename, filename, layers, tmp;
 
 	options = {
 		'jpg': this.get_jpeg_save_options(),
@@ -485,10 +485,17 @@ Tych.prototype.save = function()
 
 			for (var j = layers.length - 1; j >= 0; j--) {
 
+				if (this.settings.derive_filename)
+					// Get the basename of the file that corresponds to the current layer.
+					basename = tp_get_basename(this.table.images[this.save_doc.layerSets.length - i - 1][layers.length - j - 1]);
+				else
+					basename = this.settings.filename;
+
 				filename = tp_next_filename(
 					this.settings.save_directory,
-					this.settings.filename + '_',
-					this.settings.output_formats
+					basename,
+					this.settings.output_formats,
+					!this.settings.derive_filename
 				);
 
 				for (format in this.settings.output_formats)
@@ -499,11 +506,17 @@ Tych.prototype.save = function()
 		}
 
 	} else {
+		
+		if (this.settings.derive_filename)
+			basename = tp_combine_filenames(this.table.images);
+		else
+			basename = this.settings.filename;
 
 		filename = tp_next_filename(
 			this.settings.save_directory,
-			this.settings.filename + '_',
-			this.settings.output_formats
+			basename,
+			this.settings.output_formats,
+			!this.settings.derive_filename
 		);
 
 		for (format in this.settings.output_formats)
