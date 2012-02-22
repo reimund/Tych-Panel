@@ -85,7 +85,7 @@ Tych.prototype.select = function()
  */
 Tych.prototype.revert = function()
 {
-	preferences.rulerUnits = this.rulerUnits;
+	preferences.ruler_units = this.rulerUnits;
 	preferences.exportClipboard = this.export_clipboard;
 }
 
