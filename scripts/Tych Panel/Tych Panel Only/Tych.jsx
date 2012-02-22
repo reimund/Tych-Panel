@@ -475,7 +475,8 @@ Tych.prototype.save = function()
 
 	options = {
 		'jpg': this.get_jpeg_save_options(),
-		'psd': this.get_psd_save_options()
+		'psd': this.get_psd_save_options(),
+		'png': this.get_png_save_options()
 	};
 
 	if (this.settings.save_each_layer) {
@@ -560,6 +561,14 @@ Tych.prototype.get_jpeg_save_options = function()
 	options.formatOptions = FormatOptions.STANDARDBASELINE;
 	options.matte = MatteType.NONE;
 	options.quality = this.settings.jpeg_quality;
+	return options;
+}
+
+
+Tych.prototype.get_png_save_options = function()
+{
+	options = new PNGSaveOptions();
+	options.interlaced = false;
 	return options;
 }
 

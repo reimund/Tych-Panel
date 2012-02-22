@@ -18,7 +18,7 @@ defaults = {
 	'resample_method': 'bicubic',
 	'autosave': false,
 	'autoclose': false,
-	'output_formats': { 'jpg': true, 'psd': false },
+	'output_formats': { 'jpg': true, 'psd': false, 'png': false },
 	'save_directory': '~',
 	'save_each_layer': false,
 	'filename': 'image',

@@ -39,7 +39,7 @@ var TychOptions = function(tp_settings)
 						alignment: ['left', 'center'], \
 						margins: [2, 2, 2, 2] \
 					}, \
-					bounds: [0, 0, 124, 23] \
+					bounds: [0, 0, 94, 23] \
 				}, \
 				output_button: IconButton { \
 					title: 'Output', \
@@ -559,6 +559,11 @@ TychOptions.prototype.get_output_res = function()
 				value: " + tp_settings.output_formats.jpg + ", \
 				enabled: " + tp_settings.autosave + ", \
 			}, \
+			png: Checkbox { \
+				text: 'Png', \
+				value: " + tp_settings.output_formats.png + ", \
+				enabled: " + tp_settings.autosave + ", \
+			}, \
 			psd: Checkbox { \
 				text: 'Psd', \
 				value: " + tp_settings.output_formats.psd + ", \
@@ -622,6 +627,7 @@ TychOptions.prototype.set_settings = function(tab)
 			tp_settings.save_each_layer = this.w.output.save_each_layer_group.save_each_layer.value;
 			tp_settings.autoclose = this.w.output.autoclose.value;
 			tp_settings.output_formats.jpg = this.w.output.save_types.jpeg.value;
+			tp_settings.output_formats.png = this.w.output.save_types.png.value;
 			tp_settings.output_formats.psd = this.w.output.save_types.psd.value;
 			tp_settings.jpeg_quality = Math.round(this.w.output.quality.slider.value);
 			tp_settings.save_directory = this.w.output.directory.input.text;
