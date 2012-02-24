@@ -95,9 +95,9 @@ Tych.prototype.revert = function()
  */
 Tych.prototype.stack = function()
 {
-	var tych, last, doc;
+	var thiss, last, doc;
 
-	tych = this;
+	thiss = this;
 	last = this.images.length - 1;
 	doc = app.open(this.images[0]);
 
@@ -108,16 +108,18 @@ Tych.prototype.stack = function()
 		var maxy = doc.height;
 
 		d.flatten();
+		thiss.apply_actions(d, 'Before layout');
 		d.layers[0].isBackgroundLayer = false;
 
-		if (tych.settings.convert_to_smart_objects)
+		if (thiss.settings.convert_to_smart_objects)
 			tp_make_smart_object();
 
 		for (i = 0; i <= last; i++) {
 
 			if (i > 0) {
-				d = app.open(tych.images[i]);
+				d = app.open(thiss.images[i]);
 				d.flatten();
+				thiss.apply_actions(d, 'Before layout');
 				d.selection.selectAll();
 
 				if (d.layers.length > 1)
@@ -132,7 +134,7 @@ Tych.prototype.stack = function()
 				doc.paste();
 				doc.layers[0].translate(-doc.layers[0].bounds[0].value, -doc.layers[0].bounds[1].value);
 
-				if (tych.settings.convert_to_smart_objects)
+				if (thiss.settings.convert_to_smart_objects)
 					tp_make_smart_object();
 			}
 
@@ -140,7 +142,7 @@ Tych.prototype.stack = function()
 		doc.resizeCanvas(maxx, maxy, AnchorPosition.TOPLEFT);
 
 		// If mask option is enabled, add a layer mask to each layer.
-		if (tych.settings.mask_layers)
+		if (thiss.settings.mask_layers)
 			for (i = 0; i < doc.layers.length; i++)
 				tp_mask(doc.layers[i]);
 	}
@@ -155,7 +157,9 @@ Tych.prototype.stack = function()
 
 Tych.prototype.finish = function()
 {
-	var bg_color = new SolidColor();
+	var bg_color;
+
+	bg_color = new SolidColor();
 	bg_color.rgb.hexValue = this.settings.background_color.substr(1);
 
 	// Make a reference to the document that should be saved.
@@ -163,10 +167,14 @@ Tych.prototype.finish = function()
 
 	// Unlink all layer masks.
 	this.link(false);
+
 	if ('Background' == this.save_doc.layers[this.save_doc.layers.length - 1].name)
 		tp_fill_background(this.save_doc, bg_color);
 	else 
 		tp_add_background(this.save_doc, bg_color);
+
+	// Apply actions.
+	this.apply_actions(this.save_doc, 'After layout');
 
 	this.add_rounded_corners();
 	this.add_border();
@@ -296,7 +304,7 @@ Tych.prototype.composite = function(src, target, side)
 	target.activeLayer = target.layers[0];
 
 	// Copy the set into the target document.
-	this.copy_layer_to_document(src.layers[0], target);
+	copy_layer_to_document(src.layers[0], target);
 
 	src.close(SaveOptions.DONOTSAVECHANGES);
 	activeDocument = target;
@@ -570,45 +578,6 @@ Tych.prototype.get_psd_save_options = function()
 }
 
 
-/**
- * Copies the specified layer to the bottom of the layer stack of the given
- * document.
- */
-Tych.prototype.copy_layer_to_document = function(layer, target)
-{
-	activeDocument = layer.parent;
-	var temp = layer.parent.activeLayer;
-	layer.parent.activeLayer = layer;
-
-	for (i = 0; i < documents.length; i++) {
-		if (documents[i] == target)
-			target_index = i;
-
-		if (documents[i] == activeDocument)
-			active_index = i;
-	}
-
-	// We must iterate through the document stack in order to copy the layer to
-	// a specific document. It works by copying it one document at a time until
-	// it's in the right document.
-	for (i = active_index; i >= target_index; i--) {
-
-		tp_copy_layer_to_previous_document();
-
-		if (i != active_index)
-			// Remove when not the in target
-			documents[i].activeLayer.remove();
-
-		if (i - 1 == target_index) break;
-
-		activeDocument = documents[i - 1];
-
-	}
-	activeDocument = layer.parent;
-	layer.parent.activeLayer = temp;
-}
-
-
 Tych.prototype.add_rounded_corners = function()
 {
 	var doc, f, thiss;
@@ -785,6 +754,20 @@ Tych.prototype.clear_rounded_corner_masks = function()
 	for (var i = 0; i < doc.layerSets.length; i++)
 		for (var j = 0; j < doc.layerSets[i].layers.length; j++)
 			remove_mask(doc.layerSets[i].layers[j]);
+}
+
+
+/**
+ * Apply actions to the specified document.
+ */
+Tych.prototype.apply_actions = function(doc, when)
+{
+	for (var i in this.settings.actions)
+		if (when == this.settings.actions[i].apply)
+			app.doAction(this.settings.actions[i].action, this.settings.actions[i].set);
+
+	if ('Before layout' == when)
+		doc.flatten();
 }
 
 

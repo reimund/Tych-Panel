@@ -370,3 +370,51 @@ function save_layer(layer, path, options)
 	t.close(SaveOptions.DONOTSAVECHANGES);
 }
 
+
+/**
+ * Copies the specified layer to the bottom of the layer stack of the given
+ * document.
+ */
+copy_layer_to_document = function(layer, target_document)
+{
+	var d, ad, al, target_index;
+
+	d = parent_document(layer);
+
+	// Save the current active layer.
+	ad = activeDocument;
+	al = ad.activeLayer;
+
+	// Temporary set active layer.
+	activeDocument = d;
+	d.activeLayer = layer;
+
+	for (i = 0; i < documents.length; i++) {
+		if (documents[i] == target_document)
+			target_index = i;
+
+		if (documents[i] == activeDocument)
+			active_index = i;
+	}
+
+	// We must iterate through the document stack in order to copy the layer to
+	// a specific document. It works by copying it one document at a time until
+	// it's in the right document.
+	for (i = active_index; i >= target_index; i--) {
+
+		tp_copy_layer_to_previous_document();
+
+		if (i != active_index)
+			// Remove when not the in target
+			documents[i].activeLayer.remove();
+
+		if (i - 1 == target_index) break;
+
+		activeDocument = documents[i - 1];
+
+	}
+
+	// Restore active document & active layer.
+	activeDocument = ad;
+	ad.activeLayer = al;
+}
