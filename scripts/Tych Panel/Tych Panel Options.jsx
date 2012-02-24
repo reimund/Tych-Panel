@@ -771,16 +771,20 @@ TychOptions.prototype.new_action_row = function(container, action)
 
 	this.action_rows.push(container.add('group'));
 	row = this.action_rows[this.action_rows.length - 1];
+
+	row.number = row.add('statictext', undefined, this.action_rows.length + '.');
+
 	row.apply_timing = row.add('dropdownlist', undefined);
-	row.apply_timing.title = this.action_rows.length;
 	row.apply_timing.add('item', 'Before layout');
 	row.apply_timing.add('item', 'After layout');
+	row.apply_timing.preferredSize = [110, 24];
 	row.apply_timing.selection = row.apply_timing.items[1];
 
 	row.sets = row.add('dropdownlist', undefined);
-	row.sets.preferredSize = [150, 22];
+	row.sets.preferredSize = [150, 24];
+
 	row.actions = row.add('dropdownlist', undefined);
-	row.actions.preferredSize = [150, 22];
+	row.actions.preferredSize = [150, 24];
 
 	action_sets = get_action_set_info();
 	thiss = this;
