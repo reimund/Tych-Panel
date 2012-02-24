@@ -153,21 +153,6 @@ Tych.prototype.stack = function()
 }
 
 
-Tych.prototype.validate_input = function(alignment, number)
-{
-	var required = -1;
-
-	if (alignment < 3)
-		required = 2;
-	else if (alignment > 2 && alignment < 6)
-		required = 3;
-	else
-		required = 4;
-
-	return required;
-}
-
-
 Tych.prototype.finish = function()
 {
 	var bg_color = new SolidColor();
