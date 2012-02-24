@@ -46,12 +46,17 @@ TychTransformations.prototype.apply = function()
 
 	m = this.matrix;
 
+	// Resize canvas prior to contracting so that all parts of the layers are
+	// inside the canvas, otherwise off-screen pixels will remain.
+	this.layers[0].parent.resizeCanvas(this.target_size[0] + 2, this.target_size[1] + 2, AnchorPosition.TOPLEFT);
+
 	for(i = 0; i < this.layers.length; i++) {
 		if (i >= m.length) break;
 
 		l = this.doc.layers[this.layers.length - i - 1];
 		w = l.bounds[2].value - l.bounds[0].value;
 		h = l.bounds[3].value - l.bounds[1].value;
+
 		this.doc.activeLayer = l;
 
 		// Check if the layer should be resized.
@@ -364,7 +369,6 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 			? Math.min(doc.layerSets[0].layers[0].bounds[3].value, old_width / new_width * old_height)
 			: old_height;
 
-		//doc.resizeCanvas(tw, th, AnchorPosition.TOPLEFT);
 		doc.crop([
 			new UnitValue(minx + ' pixels'),
 			new UnitValue(miny + ' pixels'),
