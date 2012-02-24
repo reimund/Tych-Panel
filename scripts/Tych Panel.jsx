@@ -36,9 +36,8 @@ if (BridgeTalk.appName == 'bridge') {
     function row_top(){
         var ps_dir, f, s;
         ps_dir = new File(BridgeTalk.getAppPath('photoshop')).parent; 
-        ps_dir.changePath('Presets/Scripts/Tych Panel/Panel Helpers/tp_new_row_top.jsx');
+        ps_dir.changePath('Presets/Scripts/Tych Panel/Panel Helpers/New row (top).jsx');
         f = new File(ps_dir.fsName);
-        $.writeln('Running file from Bridge: ' + ps_dir.fsName);
         app.bringToFront();
             
         if (f.open('r'))
@@ -52,9 +51,8 @@ if (BridgeTalk.appName == 'bridge') {
     function row_bottom (){
         var ps_dir, f, s;
         ps_dir = new File(BridgeTalk.getAppPath('photoshop')).parent; 
-        ps_dir.changePath('Presets/Scripts/Tych Panel/Panel Helpers/tp_new_row_bottom.jsx');
+        ps_dir.changePath('Presets/Scripts/Tych Panel/Panel Helpers/New row (bottom).jsx');
         f = new File(ps_dir.fsName);
-        $.writeln('Running file from Bridge: ' + ps_dir.fsName);
         app.bringToFront();
             
         if (f.open('r'))
@@ -68,9 +66,8 @@ if (BridgeTalk.appName == 'bridge') {
     function column_left(){
         var ps_dir, f, s;
         ps_dir = new File(BridgeTalk.getAppPath('photoshop')).parent; 
-        ps_dir.changePath('Presets/Scripts/Tych Panel/Panel Helpers/tp_new_column_left.jsx');
+        ps_dir.changePath('Presets/Scripts/Tych Panel/Panel Helpers/New column (left).jsx');
         f = new File(ps_dir.fsName);
-        $.writeln('Running file from Bridge: ' + ps_dir.fsName);
         app.bringToFront();
             
         if (f.open('r'))
@@ -84,9 +81,8 @@ if (BridgeTalk.appName == 'bridge') {
     function column_right(){
         var ps_dir, f, s;
         ps_dir = new File(BridgeTalk.getAppPath('photoshop')).parent; 
-        ps_dir.changePath('Presets/Scripts/Tych Panel/Panel Helpers/tp_new_column_right.jsx');
+        ps_dir.changePath('Presets/Scripts/Tych Panel/Panel Helpers/New column (right).jsx');
         f = new File(ps_dir.fsName);
-        $.writeln('Running file from Bridge: ' + ps_dir.fsName);
         app.bringToFront();
             
         if (f.open('r'))
