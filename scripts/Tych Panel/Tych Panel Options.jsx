@@ -159,6 +159,20 @@ TychOptions.prototype.setup_ui = function()
 
 		this.new_action_row(w.actions);
 
+		w.actions.header_group.button_group.clear_button.onClick = function()
+		{
+			// First remove all rows.
+			for (var i in thiss.action_rows)
+				w.actions.remove(thiss.action_rows[i]);
+
+			thiss.action_rows = [];
+
+			// Then create an empty one.
+			thiss.new_action_row(w.actions);
+
+			w.layout.layout(true);
+		}
+
 		// Layout is needed after rows have been added.
 		w.layout.layout(true);
 
@@ -488,9 +502,18 @@ TychOptions.prototype.get_actions_res = function()
 	return "panel { \
 		text: 'Actions', \
 		alignChildren: 'left', \
-		label_group: Group { \
+		header_group: Group { \
 			margins: [0, 20, 0, 0] \
-			label: StaticText { text: 'Run actions:' } \
+			label: StaticText { \
+				text: 'Run actions:', \
+			}, \
+			button_group: Group { \
+				margins:  [312, 0, 0, 0], \
+				clear_button: Button { \
+					text: 'Clear', \
+					preferredSize: [50, 24], \
+				} \
+			} \
 		}, \
 	}";
 }
@@ -665,7 +688,8 @@ TychOptions.prototype.set_settings = function(tab)
 			var actions = [];
 
 			for (i in this.action_rows)
-				if (this.action_rows[i].actions.selection != null)
+				if (null != this.action_rows[i].actions.selection 
+						&& '' != this.action_rows[i].actions.selection)
 					actions.push({
 						'set': this.action_rows[i].sets.selection.text,
 						'action': this.action_rows[i].actions.selection.text,
@@ -778,7 +802,7 @@ TychOptions.prototype.new_action_row = function(container, action)
 	row.apply_timing.add('item', 'Before layout');
 	row.apply_timing.add('item', 'After layout');
 	row.apply_timing.preferredSize = [110, 24];
-	row.apply_timing.selection = row.apply_timing.items[1];
+	row.apply_timing.selection = row.apply_timing.items[0];
 
 	row.sets = row.add('dropdownlist', undefined);
 	row.sets.preferredSize = [150, 24];
@@ -797,6 +821,9 @@ TychOptions.prototype.new_action_row = function(container, action)
 	row.sets.onChange = function()
 	{
 		this.parent.actions.removeAll();
+
+		// Add an empty item used for deleting actions.
+		this.parent.actions.add('item', '');
 
 		for (var i in action_sets[this.selection.index].children)
 			this.parent.actions.add('item', action_sets[this.selection.index].children[i].name);
