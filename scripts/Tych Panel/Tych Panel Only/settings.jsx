@@ -29,6 +29,7 @@ defaults = {
 	'border_color': '#ffffff',
 	'corner_radius': [0, 0, 0, 0],
 	'round_all_layers': false,
+	'actions': [],
 };
 
 settings = new Settings();
@@ -42,10 +43,13 @@ settings.loadSettings();
  */
 function tp_get_settings()
 {
-	var tp_settings = {};
+	var tp_settings;
 
 	if (0 < settings.numEntries())
 		tp_settings = settings.getEntryAt(0);
+	
+	if (tp_settings == undefined)
+		tp_settings = {};
 
 	for (setting in defaults)
 		if (undefined == tp_settings[setting])

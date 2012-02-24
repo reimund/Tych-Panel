@@ -12,6 +12,7 @@
 //@include Tych%20Panel%20Only/settings.jsx
 //@include Tych%20Panel%20Only/PSSettings.jsx
 //@include Tych%20Panel%20Only/colorpicker.jsx
+//@include Tych%20Panel%20Only/actions.jsx
 
 //settings.clearSettings()
 //settings.saveSettings();
@@ -21,9 +22,6 @@
 var TychOptions = function(tp_settings)
 {
 	var window_res, w;
-
-	this.tp_settings = tp_settings;
-
 
 	window_res = "dialog { \
 		orientation: 'row', \
@@ -39,7 +37,7 @@ var TychOptions = function(tp_settings)
 						alignment: ['left', 'center'], \
 						margins: [2, 2, 2, 2] \
 					}, \
-					bounds: [0, 0, 94, 23] \
+					bounds: [0, 0, 100, 23] \
 				}, \
 				output_button: IconButton { \
 					title: 'Output', \
@@ -47,7 +45,7 @@ var TychOptions = function(tp_settings)
 						alignment: ['left', 'center'], \
 						margins: [2, 2, 2, 2] \
 					}, \
-					bounds: [0, 0, 94, 23] \
+					bounds: [0, 0, 74, 23] \
 				}, \
 				misc_button: IconButton { \
 					title: 'Misc', \
@@ -55,7 +53,7 @@ var TychOptions = function(tp_settings)
 						alignment: ['left', 'center'], \
 						margins: [2, 2, 2, 2] \
 					}, \
-					bounds: [0, 0, 94, 23] \
+					bounds: [0, 0, 74, 23] \
 				}, \
 			}, \
 			tab: Group { \
@@ -86,6 +84,7 @@ TychOptions.prototype.setup_ui = function()
 	thiss = this;
 	w = this.w;
 	tab_buttons = w.main_group.tab_buttons;
+	this.action_rows = [];
 
 	tab_buttons.appearance_button.onClick = function() { thiss.toggle_tab('appearance'); }
 	tab_buttons.output_button.onClick = function() { thiss.toggle_tab('output'); }
@@ -155,6 +154,14 @@ TychOptions.prototype.setup_ui = function()
 
 	} else if (this.current_tab == 'misc') {
 
+		for (var i in tp_settings.actions)
+			this.new_action_row(w.actions, tp_settings.actions[i]);
+
+		this.new_action_row(w.actions);
+
+		// Layout is needed after rows have been added.
+		w.layout.layout(true);
+
 		// Masks must be enabled with smart objects since it's the most
 		// convenient way to add seams. It doesn't really make sense to have
 		// smart objects without masks either.
@@ -172,6 +179,7 @@ TychOptions.prototype.setup_ui = function()
 			if (!w.misc.layer_mask_group.layer_mask.value)
 				w.misc.smart_object_group.smart_object.value = w.misc.layer_mask_group.layer_mask.value;
 		};
+
 	}
 
 	w.button_group.ok_button.onClick = function()
@@ -475,6 +483,19 @@ TychOptions.prototype.get_compositing_res = function()
 }
 
 
+TychOptions.prototype.get_actions_res = function()
+{
+	return "panel { \
+		text: 'Actions', \
+		alignChildren: 'left', \
+		label_group: Group { \
+			margins: [0, 20, 0, 0] \
+			label: StaticText { text: 'Run actions:' } \
+		}, \
+	}";
+}
+
+
 TychOptions.prototype.get_misc_res = function()
 {
 	return "panel { \
@@ -640,6 +661,19 @@ TychOptions.prototype.set_settings = function(tab)
 			tp_settings.mask_layers = this.w.misc.layer_mask_group.layer_mask.value;
 			tp_settings.reorder = this.w.misc.reorder_group.reorder.value;
 			tp_settings.use_bridge_selection = this.w.misc.bridge_group.use_bridge.value;
+
+			var actions = [];
+
+			for (i in this.action_rows)
+				if (this.action_rows[i].actions.selection != null)
+					actions.push({
+						'set': this.action_rows[i].sets.selection.text,
+						'action': this.action_rows[i].actions.selection.text,
+						'apply': this.action_rows[i].apply_timing.selection.text
+					});
+
+			tp_settings.actions = actions;
+
 			break;
 	}
 }
@@ -694,6 +728,7 @@ TychOptions.prototype.toggle_tab = function(tab)
 
 		case 'misc':
 			this.w.misc = this.w.main_group.tab.add(this.get_misc_res());
+			this.w.actions = this.w.main_group.tab.add(this.get_actions_res());
 			this.w.main_group.tab_buttons.misc_button.toggle();
 			break;
 	}
@@ -730,6 +765,70 @@ function color_click(el)
 		dummy_doc.close(SaveOptions.DONOTSAVECHANGES);
 }
 
+TychOptions.prototype.new_action_row = function(container, action)
+{
+	var action_sets, row, thiss;
+
+	this.action_rows.push(container.add('group'));
+	row = this.action_rows[this.action_rows.length - 1];
+	row.apply_timing = row.add('dropdownlist', undefined);
+	row.apply_timing.title = this.action_rows.length;
+	row.apply_timing.add('item', 'Before layout');
+	row.apply_timing.add('item', 'After layout');
+	row.apply_timing.selection = row.apply_timing.items[1];
+
+	row.sets = row.add('dropdownlist', undefined);
+	row.sets.preferredSize = [150, 22];
+	row.actions = row.add('dropdownlist', undefined);
+	row.actions.preferredSize = [150, 22];
+
+	action_sets = get_action_set_info();
+	thiss = this;
+
+	for (var i in action_sets)
+		row.sets.add('item', action_sets[i].name);
+
+	row.sets.selection = row.sets.items[0];
+
+	row.sets.onChange = function()
+	{
+		this.parent.actions.removeAll();
+
+		for (var i in action_sets[this.selection.index].children)
+			this.parent.actions.add('item', action_sets[this.selection.index].children[i].name);
+	}
+
+	row.actions.onChange = function()
+	{
+		// Add a new row of action controls only if the last row is set.
+		// Don't add new rows when action is set since then we'll get superfluos
+		// rows when populating any actions stored in the settings.
+		if (thiss.action_rows[thiss.action_rows.length - 1].actions.selection != null
+				&& action == undefined) {
+			thiss.new_action_row(container);
+			container.parent.parent.parent.layout.layout(true);
+		}
+	}
+	
+	// Trigger the set dropdown so that the actions are populated.
+	row.sets.notify('onChange');
+
+	if (action != undefined) {
+		row.sets.select(action.set);
+		row.actions.select(action.action);
+		row.apply_timing.select(action.apply);
+	}
+}
+
+DropDownList.prototype.select = function(text)
+{
+	for (var i = 0; i < this.items.length; i++)
+		if (this.items[i].text == text) {
+			this.selection = this.items[i];
+			break;
+		}
+}
+
 
 /**
  * Make custom toggle button.
@@ -739,19 +838,36 @@ function color_click(el)
  */
 IconButton.prototype.toggle = function()
 {
-	if (this.pressed)
-		this.image = toggle;
-	else
-		this.image = toggle_down;
+
+	// Use larger graphic for appearance button. Yeah it's butt ugly.
+	if (this.title == 'Appearance') {
+
+		if (this.pressed)
+			this.image = toggle;
+		else
+			this.image = toggle_down;
+
+		this.bounds = [0, 0, 100, 23];
+
+	} else {
+
+		if (this.pressed)
+			this.image = toggle_small;
+		else
+			this.image = toggle_down_small;
+
+		this.bounds = [0, 0, 74, 23];
+	}
 
 	this.margins = [0, 0, 0, 0];
-	this.bounds = [0, 0, 94, 23];
 	this.titleLayout = { alignment: ['center', 'center'], margins: [2, 2, 2, 2] }
-
 	this.pressed = this.pressed == undefined ? true : !this.pressed;
 }
+
 var toggle =  ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button.png'));
 var toggle_down = ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-down.png'));
+var toggle_small =  ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-small.png'));
+var toggle_down_small = ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-down-small.png'));
 
 
 var tp_settings = tp_get_settings();
