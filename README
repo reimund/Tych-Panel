@@ -1,17 +1,17 @@
 Tych Panel 
 ==========
 
-Version 0.9.96 - Sun 8 May 2011
+Version 2.0.0 - Sat 25 Febrary 2012
 
 by Reimund Trost <reimund@code7.se>
 <http://lumens.se/tychpanel/>
 
 Description
 -----------
-Tych Panel is an extension to Adobe Photoshop that automates diptychs and
-triptychs creation. It supports an arbitrary number of layouts using the
-compositing feature. Together with the panel, Tych Panel is more powerful than
-any other similiar script I've come across. 
+Tych Panel is an extension for Adobe Photoshop that automates diptychs and
+triptychs creation. It supports an arbitrary number of layouts using a powerful
+row/column compositing paradigm. Together with a super easy panel interface,
+Tych Panel is the ultimate diptych, tripych & ntych automation tool.
 
 Tych Panel is released as open source and can be used, modified and
 redistributed in any way possible.
@@ -20,33 +20,26 @@ What's new in Tych Panel 2.0?
 -----------------------------
 Features:
 * Reorder images with thumbnails.
-* Added option to use selected images in Adobe Bridge as input.
-* Save as PSD.
+* New impoved row/column paradigm that allows virtually unlimited number of layouts.
+* Rows & columns can be attached on either side of your document.
+* Resize to both target width & height.
+* Maintain width or height when adding new rows & columns.
 * Convert images to smart objects.
-* Use unlinked layer masks instead of cropping images.
-
-Bug fixes:
-* Compositing images with the same name in different iterations now work as
-  expected.
-
-On the list:
-v Support image formats with layers.
+* Ability to use layer masks instead of cropping images.
+* Run Tych Panel on selected images in Adobe Bridge.
+* Added option to use selected images in Adobe Bridge as input
+* Save as PSD.
 * Background color option.
-* Target height option.
+* Support for images with layers (via Flatten Image)
 * Outer border width and color options.
+* Rounded corners on each image.
+* Rounded corners on outermost images.
+* Added option to save each individual layer.
+* Smarter file naming so that allows the resulting file name to derive from input files.
+* Save as PNG.
 * Apply an arbitrary number of actions.
-* Smarter quaptych.
-* More layouts.
-* Remove the annoying popup about not being able to use the clipboard in external applications.
-* Ability to decide when to apply actions - before resizing, after resizing and on end result.
-* Added option to run Tych Panel on selected images via Adobe Photoshop Lightroom.
-* Adding columns.
-* Maintaining width/height when adding columns/columns.
-* Smarter file naming so that for instance the resulting file name can derive from input files.
-
-Removed from the list:
-X Ability to rearrange layers over and over again with the layout buttons.
-X Image spacing in percent.
+* Decide when to apply actions - before laying out pictures, or after.
+- CS6 support.
 
 Installation
 ------------
