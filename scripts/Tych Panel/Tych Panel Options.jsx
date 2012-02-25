@@ -220,7 +220,7 @@ TychOptions.prototype.setup_ui = function()
 					text: StaticText { text: '' } \
 				}, \
 				pic: Image { \
-					image: '" + new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/reimund.jpg') + "', \
+					image: '" + escape(reimund.fsName) + "', \
 					helpTip: 'Photo by Isak Barbopoulos' \
 				}, \
 				twitter_text: StaticText { text: 'Follow me on Twitter', } \
@@ -1012,9 +1012,8 @@ var toggle =  ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel
 var toggle_down = ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-down.png'));
 var toggle_small =  ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-small.png'));
 var toggle_down_small = ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-down-small.png'));
+var reimund = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/reimund.jpg');
 
 
 var tp_settings = tp_get_settings();
 var dialog = new TychOptions(tp_settings);
-
-

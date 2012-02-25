@@ -38,7 +38,7 @@ var Tych = function(settings)
  */
 Tych.prototype.select = function()
 {
-	var images, thumbs;
+	var images, thumbs, docc, dup;
 
 	// Use bridge selection if there is one.
 	if (this.settings.use_bridge_selection && BridgeTalk.isRunning('bridge')) {
@@ -60,19 +60,34 @@ Tych.prototype.select = function()
 		return false;
 	}
 
-
-	// If the user opens a file that is already open we will have a document
-	// collision problem. To solve it we duplicate the open, colliding document
-	// to get a copy of it with a new name. We then close the original
-	// document.
-	for (i in images) {
+	// Always duplicate target document if we're on Windows, in order to
+	// workaround a nasty, unknown bug in Photoshop for Windows.
+	if (app.path.fsName.toString().substr(0, 1) != '/') {
 		try {
-			var docc = documents.getByName(images[i].name);
-			var dup = docc.duplicate();
+			docc = this.comp_doc;
+			dup = docc.duplicate();
+
 			if (this.settings.composite)
 				this.comp_doc = dup;
 			docc.close(SaveOptions.DONOTSAVECHANGES);
 		} catch (err) { }
+	} else {
+		// On Mac OSX, we only need to duplicate if a collision exists.
+		//
+		// If the user opens a file that is already open we will have a document
+		// collision problem. To solve it we duplicate the open, colliding document
+		// to get a copy of it with a new name. We then close the original
+		// document.
+		for (i in images) {
+			try {
+				docc = documents.getByName(images[i].name);
+				dup = docc.duplicate();
+
+				if (this.settings.composite)
+					this.comp_doc = dup;
+				docc.close(SaveOptions.DONOTSAVECHANGES);
+			} catch (err) { }
+		}
 	}
 
 	this.images = images;
@@ -526,24 +541,31 @@ Tych.prototype.save = function()
  */
 Tych.prototype.layout = function()
 {
-	var layers, set;
+	var layers, set, thiss, f;
 
-	this.trans.apply();
+	thiss = this;
 
-	// Get rid of outside pixels;
-	this.doc.crop([0, 0, this.doc.width, this.doc.height]);
-	
-	layers = [];
-	set = this.doc.layerSets.add();
+	f = function()
+	{
+		thiss.trans.apply();
 
-	// Put the tych into a set.
-	for (var i = this.doc.layers.length - 1; i > 0; i--)
-		this.doc.layers[i].move(set, ElementPlacement.INSIDE);
+		// Get rid of outside pixels;
+		thiss.doc.crop([0, 0, thiss.doc.width, thiss.doc.height]);
+		
+		layers = [];
+		set = thiss.doc.layerSets.add();
 
-	if (ROW == this.alignment || 1 == layers.length)
-		set.name = 'Row 1';
-	else 
-		set.name = 'Column 1';
+		// Put the tych into a set.
+		for (var i = thiss.doc.layers.length - 1; i > 0; i--)
+			thiss.doc.layers[i].move(set, ElementPlacement.INSIDE);
+
+		if (ROW == thiss.alignment || 1 == layers.length)
+			set.name = 'Row 1';
+		else 
+			set.name = 'Column 1';
+	}
+
+	this.doc.suspendHistory('Layout images', 'f()');
 }
 
 
