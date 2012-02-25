@@ -194,6 +194,89 @@ TychOptions.prototype.setup_ui = function()
 				w.misc.smart_object_group.smart_object.value = w.misc.layer_mask_group.layer_mask.value;
 		};
 
+		w.about.about_button.onClick = function()
+		{
+			var about_window_res, large_font, small_font, g;
+
+			large_font = ScriptUI.newFont(thiss.w.graphics.font.name, ScriptUI.FontStyle.BOLD, 20);
+			small_font = ScriptUI.newFont(thiss.w.graphics.font.name, ScriptUI.FontStyle.REGULAR, 10);
+
+			about_window_res = "dialog { \
+				orientation: 'column', \
+				alignChildren: 'center', \
+				spacing: 5, \
+				margins: [50, 50, 50, 20], \
+				header_group: Group { \
+					orientation: 'column', \
+					spacing: 1, \
+					heading: StaticText { \
+						text: 'Tych Panel', \
+						margins: [0, 0, 0, 0], \
+					}, \
+					author: StaticText { text: 'by Reimund Trost', }, \
+				}, \
+				sep1: Group { \
+					margins: [0, 5, 0, 5], \
+					text: StaticText { text: '' } \
+				}, \
+				pic: Image { \
+					image: '" + new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/reimund.jpg') + "', \
+					helpTip: 'Photo by Isak Barbopoulos' \
+				}, \
+				twitter_text: StaticText { text: 'Follow me on Twitter', } \
+				sep2: Group { \
+					margins: [0, 5, 0, 5], \
+					text: StaticText { text: '' } \
+				}, \
+				bottom_line: Group { \
+					orientation: 'row', \
+					spacing: 50, \
+					www: StaticText { text: 'Website', } \
+					license: StaticText { text: 'Licensed under the MIT license', } \
+					donate: StaticText { text: 'Donate', } \
+				}, \
+				sep3: Group { \
+					margins: [0, 2, 0, 2], \
+					text: StaticText { text: '' } \
+				}, \
+			}";
+
+
+			aw =  new Window(about_window_res, 'About Tych Panel');
+
+			aw.header_group.heading.graphics.font = large_font;
+			aw.header_group.author.graphics.font = small_font;
+			aw.bottom_line.www.graphics.font = small_font;
+			aw.bottom_line.license.graphics.font = small_font;
+			aw.bottom_line.donate.graphics.font = small_font;
+
+			link_blue = [0, 0.4, 1];
+
+			g = aw.twitter_text.graphics;
+			g.font = small_font;
+			g.foregroundColor = g.newPen(g.PenType.SOLID_COLOR, link_blue, 1);
+
+			g = aw.bottom_line.www.graphics;
+			g.foregroundColor = g.newPen(g.PenType.SOLID_COLOR, link_blue, 1);
+
+			g = aw.bottom_line.donate.graphics;
+			g.foregroundColor = g.newPen(g.PenType.SOLID_COLOR, link_blue, 1);
+
+			g = aw.graphics;
+			g.backgroundColor = g.newBrush(g.BrushType.SOLID_COLOR, [1, 1, 1], 1);
+
+			aw.twitter_text.onClick = function() { open_url('http://twitter.com/reimundtrost/'); }
+			aw.bottom_line.www.onClick = function() { open_url('http://lumens.se/tychpanel/'); }
+			aw.bottom_line.donate.onClick = function() { open_url('http://lumens.se/tychpanel/donate/'); }
+
+			aw.onClick
+				= aw.pic.onClick
+				= aw.bottom_line.onClick
+				= function() { aw.close(2); };
+			
+			aw.show();
+		}
+
 	}
 
 	w.button_group.ok_button.onClick = function()
@@ -519,6 +602,18 @@ TychOptions.prototype.get_actions_res = function()
 }
 
 
+TychOptions.prototype.get_about_res = function()
+{
+	return "panel { \
+		alignChildren: 'right', \
+		about_button: Button { \
+			text: 'About...', \
+			preferredSize: [80, 35], \
+		} \
+	}";
+}
+
+
 TychOptions.prototype.get_misc_res = function()
 {
 	return "panel { \
@@ -753,6 +848,7 @@ TychOptions.prototype.toggle_tab = function(tab)
 		case 'misc':
 			this.w.misc = this.w.main_group.tab.add(this.get_misc_res());
 			this.w.actions = this.w.main_group.tab.add(this.get_actions_res());
+			this.w.about = this.w.main_group.tab.add(this.get_about_res());
 			this.w.main_group.tab_buttons.misc_button.toggle();
 			break;
 	}
@@ -859,6 +955,23 @@ DropDownList.prototype.select = function(text)
 			break;
 		}
 }
+
+
+function open_url(url)
+{
+	var filename, shortcut;
+
+	filename = 'shortcut.url';
+	shortcut = new File(Folder.temp + '/' + filename);
+
+	shortcut.open('w');
+	shortcut.writeln('[InternetShortcut]');
+	shortcut.writeln('URL=' + url);
+	shortcut.writeln();
+	shortcut.close();
+	shortcut.execute();
+	shortcut.remove();
+};
 
 
 /**
