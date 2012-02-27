@@ -13,8 +13,7 @@ triptychs creation. It supports an arbitrary number of layouts using a powerful
 row/column compositing paradigm. Together with a super easy panel interface,
 Tych Panel is the ultimate diptych, tripych & ntych automation tool.
 
-Tych Panel is released as open source and can be used, modified and
-redistributed in any way possible.
+Tych Panel is released as open source and licensed under the MIT license.
 
 What's new in Tych Panel 2.0?
 -----------------------------
