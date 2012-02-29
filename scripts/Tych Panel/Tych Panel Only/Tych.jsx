@@ -40,8 +40,7 @@ Tych.prototype.select = function()
 {
 	var images, thumbs, docc, dup;
 
-	// Use bridge selection if there is one.
-	if (this.settings.use_bridge_selection && BridgeTalk.isRunning('bridge')) {
+	if ((this.settings.use_bridge_selection || called_from_bridge) && BridgeTalk.isRunning('bridge')) {
 		var bridge_selection = tp_get_bridge_selection();
 		images = bridge_selection[0];
 		thumbs = bridge_selection[1];
