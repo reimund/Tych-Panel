@@ -79,7 +79,7 @@ Tych.prototype.select = function()
 		// document.
 		for (i in images) {
 			try {
-				docc = documents.getByName(images[i].name.replace('%20', ' '));
+				docc = documents.getByName(images[i].name.replace('%20', ' ', 'g'));
 				dup = docc.duplicate();
 
 				if (this.settings.composite)
@@ -109,7 +109,7 @@ Tych.prototype.revert = function()
  */
 Tych.prototype.stack = function()
 {
-	var thiss, last, doc;
+	var thiss, last, doc, i;
 
 	thiss = this;
 	last = this.images.length - 1;
@@ -343,7 +343,7 @@ Tych.prototype.composite = function(src, target, side)
 		new_width = target.width.value;
 		new_height = target.height.value + src_height + this.settings.spacing;
 	} else if (RIGHT == side || LEFT == side) {
-		offset_x = target.width.value - target.activeLayer.bounds[0].value + this.settings.spacing;
+		offset_x = target.width.value - target.layers[0].bounds[0].value + this.settings.spacing;
 		offset_y = 0;
 
 		if (LEFT == side) {
@@ -354,7 +354,6 @@ Tych.prototype.composite = function(src, target, side)
 		new_width = target.width.value + src_width + this.settings.spacing;
 		new_height = target.height.value;
 	}
-
 	target.layers[0].translate(offset_x, offset_y);
 
 	// Make the document bigger so the inserted layers can be seen.
