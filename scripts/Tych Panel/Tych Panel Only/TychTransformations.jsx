@@ -362,22 +362,18 @@ TychTransformations.prototype.readjust = function(tych, doc, old_width, old_heig
 		// pre-calculated size.
 		tw = tych.settings.maintain_width
 			? old_width
-			: Math.min(doc.layerSets[0].layers[0].bounds[2].value, old_height / new_height * old_width);
-		// XXX: How can this work now that rows can be added on top? Wouldnt
-		// its bounds[3] value be way to small to fit everything?
+			: Math.min(doc.layerSets[0].layers[0].bounds[2].value, Math.floor(old_height / new_height * old_width));
+		// XXX: How can this work now that rows can be added on top? Wouldn't
+		// its bounds[3] value be way to small to fit everything? -No prob when adding columns.
 		th = tych.settings.maintain_width
-			? Math.min(doc.layerSets[0].layers[0].bounds[3].value, old_width / new_width * old_height)
+			? Math.min(doc.layerSets[0].layers[0].bounds[3].value, Math.floor(old_width / new_width * old_height))
 			: old_height;
 
-		doc.crop([
-			new UnitValue(minx + ' pixels'),
-			new UnitValue(miny + ' pixels'),
-			new UnitValue((minx + tw) + ' pixels'),
-			new UnitValue((miny + th) + ' pixels')
-		]);
+		doc.crop([minx, miny, minx + tw, miny + th]);
 
+		// XXX: Did I have a good reason to add this second crop?
 		// Remove any pixels that lie outside the canvas.
-		doc.crop([0, 0, doc.width, doc.height]);
+		//doc.crop([0, 0, doc.width, doc.height]);
 	}
 
 }
@@ -492,7 +488,6 @@ TychTransformations.prototype.get_new_size = function(doc, l, lm, s1, rx, ry, i,
 			cx = 0
 
 		w1 = Math.round(w0 - cx - rx);
-
 
 		// Is it the only row?
 		if ((doc.layerSets.length - 1) == i && !tp_row_below(s.layers[j], j))
