@@ -79,7 +79,7 @@ Tych.prototype.select = function()
 		// document.
 		for (i in images) {
 			try {
-				docc = documents.getByName(images[i].name);
+				docc = documents.getByName(images[i].name.replace('%20', ' '));
 				dup = docc.duplicate();
 
 				if (this.settings.composite)
