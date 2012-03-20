@@ -50,7 +50,7 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
-2.0.00
+2.0.0
 ------
 * Added a bunch of really cool stuff.
 
