@@ -267,7 +267,7 @@ TychOptions.prototype.setup_ui = function()
 
 			aw.twitter_text.onClick = function() { open_url('http://twitter.com/reimundtrost/'); }
 			aw.bottom_line.www.onClick = function() { open_url('http://lumens.se/tychpanel/'); }
-			aw.bottom_line.donate.onClick = function() { open_url('http://lumens.se/tychpanel/donate/'); }
+			aw.bottom_line.donate.onClick = function() { open_url('http://lumens.se/tychpanel/#donate'); }
 
 			aw.onClick
 				= aw.pic.onClick
@@ -963,6 +963,7 @@ function open_url(url)
 
 	filename = 'shortcut.url';
 	shortcut = new File(Folder.temp + '/' + filename);
+	$.writeln(Folder.temp);
 
 	shortcut.open('w');
 	shortcut.writeln('[InternetShortcut]');
@@ -970,6 +971,8 @@ function open_url(url)
 	shortcut.writeln();
 	shortcut.close();
 	shortcut.execute();
+
+	$.sleep(1000)
 	shortcut.remove();
 };
 
