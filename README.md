@@ -3,7 +3,7 @@ Tych Panel
 
 Version 2.0.0 - Mon 26 March 2012
 
-by Reimund Trost <reimund@code7.se>
+by Reimund Trost <reimund@code7.se> 
 <http://lumens.se/tychpanel/>
 
 Description
