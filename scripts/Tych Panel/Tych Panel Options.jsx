@@ -963,7 +963,6 @@ function open_url(url)
 
 	filename = 'shortcut.url';
 	shortcut = new File(Folder.temp + '/' + filename);
-	$.writeln(Folder.temp);
 
 	shortcut.open('w');
 	shortcut.writeln('[InternetShortcut]');
