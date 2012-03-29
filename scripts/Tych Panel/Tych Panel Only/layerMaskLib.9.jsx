@@ -62,11 +62,7 @@ if(layerMask.selectLayerMask() == false){
 		desc.putEnumerated( lMID.using, lMID.userMask, type );
 		executeAction( lMID.make, desc, DialogModes.NO );
 	} catch (e) {
-	if (e.toString().match(/Make.+is not currently available/)) {//change if not english PS
 		return false;
-	} else {
-		throw e;
-	}
   }
   returnToLayer();
   lMID.eror = ""
@@ -99,11 +95,7 @@ if(layerMask.selectLayerMask() == false){
 		desc.putEnumerated( lMID.using, lMID.userMask, lMID.maskReveals );
 		executeAction( lMID.make, desc, DialogModes.NO );	
 	} catch (e) {
-    if (e.toString().match(/Make.+is not currently available/)) {//change if not english PS
 		return false;
-	} else {
-		throw e;
-    }
   }
   returnToLayer();
   lMID.eror = "";
@@ -142,11 +134,7 @@ if(bool !== true){
 			executeAction( lMID.Delete, desc, DialogModes.NO );
 			}
 	} catch (e) {
-    if (e.toString().match(/Delete.+is not currently available/)) {//change if not english PS
       return false;
-    } else {
-      throw e;
-    }
   }
   lMID.eror = "";
   return true;
@@ -174,11 +162,7 @@ layerMask.enabled = function(bool){
 			executeAction( lMID.set, desc, DialogModes.NO );
 				}
 	} catch (e) {
-    if (e.toString().match(/Set.+is not currently available/)) {//change if not english PS
       return false;
-    } else {
-      throw e;
-    }
   }
   returnToLayer();
   lMID.error = "";
@@ -224,11 +208,7 @@ layerMask.editMode = function(bool){
 			executeAction( lMID.select, desc, DialogModes.NO );
 							}
 	} catch (e) {
-    if (e.toString().match(/Set.+is not currently available/)) {//change if not english PS
       return false;
-    } else {
-      throw e;
-    }
   }
   if(bool == false){
 	returnToLayer();
@@ -259,11 +239,7 @@ layerMask.link = function(bool){
 		executeAction( lMID.set, desc, DialogModes.NO );
 	}
 	} catch (e) {
-    if (e.toString().match(/Set.+is not currently available/)) {//change if not english PS
       return false;
-    } else {
-      throw e;
-    }
   }
   returnToLayer();
   lMID.error = ""
@@ -312,11 +288,7 @@ try {
 	}
 	}
 	 catch (e) {
-    if (e.toString().match(/Set.+is not currently available/)) {//change if not english PS
       return false;
-    } else {
-      throw e;
-    }
    }
 
   lMID.error = "";
@@ -343,11 +315,7 @@ if (lMID.isBackground == true){
     desc.putBoolean( lMID.visible, false );
 	executeAction( lMID.select, desc, DialogModes.NO );
  } catch (e) {
-    if (e.toString().match(/Select.+is not currently available/)) {//change if not english PS
       return false;
-    } else {
-      throw e;
-    }
   }
   lMID.error = "";
   return true;
