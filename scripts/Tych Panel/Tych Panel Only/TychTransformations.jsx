@@ -120,7 +120,8 @@ TychTransformations.prototype.compute_ntych_vertical_matrix = function()
 	// Computes the size the canvas need to be after arranging all the layers
 	// into position.
 	this.target_size = [
-		Math.round(s1 * size[0]) - 1, // Crop away pixels that don't match the pixel grid.
+		Math.round(s1 * size[0])
+			- (this.settings.fit_height || this.settings.fit_width ? 1 : 0),
 		Math.round(s1 * size[1] + this.settings.spacing * (this.n - 1))
 	];
 	
@@ -200,8 +201,12 @@ TychTransformations.prototype.compute_ntych_horizontal_matrix = function()
 	// into position.
 	this.target_size = [
 		Math.round(s1 * size[0] + this.settings.spacing * (this.n - 1)),
-		Math.round(s1 * size[1] - 1) // Crop away one line of pixels since we
-		                             // might get uneven pixels in the y direction.
+		Math.round(s1 * size[1])
+			- (this.settings.fit_height
+				|| this.settings.fit_width ? 1 : 0) // Crop away one line of
+													// pixels since we might
+													// get uneven pixels in the
+													// y direction.
 	];
 
 	// Finally compute the matrix...
