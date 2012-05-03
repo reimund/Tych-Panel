@@ -984,6 +984,11 @@ function open_url(url)
  */
 IconButton.prototype.toggle = function()
 {
+	var version, d;
+	
+	// If we're on Photoshop CS6 or higher, the margin should be 2 pixels less.
+	version = app.version.split('.');
+	d = version[0] < 13 ? 0 : 2;
 
 	// Use larger graphic for appearance button. Yeah it's butt ugly.
 	if (this.title == 'Appearance') {
@@ -993,7 +998,7 @@ IconButton.prototype.toggle = function()
 		else
 			this.image = toggle_down;
 
-		this.bounds = [0, 0, 100, 23];
+		this.bounds = [0, 0, 100 - d, 23 - d];
 
 	} else {
 
@@ -1002,11 +1007,11 @@ IconButton.prototype.toggle = function()
 		else
 			this.image = toggle_down_small;
 
-		this.bounds = [0, 0, 74, 23];
+		this.bounds = [0, 0, 74 - d, 23 - d];
 	}
 
 	this.margins = [0, 0, 0, 0];
-	this.titleLayout = { alignment: ['center', 'center'], margins: [2, 2, 2, 2] }
+	this.titleLayout = { alignment: ['center', 'center'], margins: [2 - d, 2 - d, 2 - d, 2 - d] }
 	this.pressed = this.pressed == undefined ? true : !this.pressed;
 }
 

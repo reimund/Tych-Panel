@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <asf locale="sv_SE" version="1.0" xmlns="http://ns.adobe.com/asf">
+  <str name="Configurator/ActionScript/Action/desc###17" translate="yes">
+    <val>Kör funktionsmakro för Photoshop</val>
+  </str>
+  <str name="Configurator/ActionScript/Action/name###16" translate="yes">
+    <val>Funktionsmakro</val>
+  </str>
   <str name="Configurator/ActionScript/Script/desc###17" translate="yes">
     <val>Kör JavaScript</val>
   </str>
@@ -7,6 +13,9 @@
     <val>Kör JavaScript</val>
   </str>
   <str name="Configurator/ActionScript/Script/desc###25" translate="yes">
+    <val>Kör JavaScript</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/desc###31" translate="yes">
     <val>Kör JavaScript</val>
   </str>
   <str name="Configurator/ActionScript/Script/name###1" translate="yes">
@@ -17,6 +26,12 @@
   </str>
   <str name="Configurator/ActionScript/Script/name###24" translate="yes">
     <val>Skript</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/name###30" translate="yes">
+    <val>Skript</val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/desc###11" translate="yes">
+    <val>Kör JavaScript-fil</val>
   </str>
   <str name="Configurator/ActionScript/ScriptFile/desc###13" translate="yes">
     <val>Kör JavaScript-fil</val>
@@ -41,6 +56,9 @@
   </str>
   <str name="Configurator/ActionScript/ScriptFile/desc###9" translate="yes">
     <val>Kör JavaScript-fil</val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/name###10" translate="yes">
+    <val>Skriptfil</val>
   </str>
   <str name="Configurator/ActionScript/ScriptFile/name###12" translate="yes">
     <val>Skriptfil</val>
@@ -72,31 +90,55 @@
   <str name="Configurator/Attribute/showNavBar/value###29" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/showNavBar/value###3" translate="yes">
+    <val>False</val>
+  </str>
   <str name="Configurator/Attribute/showNavBar/value###36" translate="yes">
     <val>False</val>
   </str>
   <str name="Configurator/Attribute/visible/value###10" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###12" translate="yes">
+    <val>True</val>
+  </str>
   <str name="Configurator/Attribute/visible/value###14" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###15" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Attribute/visible/value###18" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###19" translate="yes">
+    <val>True</val>
+  </str>
   <str name="Configurator/Attribute/visible/value###22" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###25" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Attribute/visible/value###26" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###27" translate="yes">
+    <val>True</val>
+  </str>
   <str name="Configurator/Attribute/visible/value###28" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###29" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Attribute/visible/value###3" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Attribute/visible/value###32" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###33" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Attribute/visible/value###35" translate="yes">
@@ -132,6 +174,9 @@
   <str name="Configurator/Attribute/visible/value###65" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###9" translate="yes">
+    <val>True</val>
+  </str>
   <str name="Configurator/Container/Canvas/desc" translate="yes">
     <val/>
   </str>
@@ -144,6 +189,12 @@
   <str name="Configurator/key_###11" translate="yes">
     <val>/Applications/Adobe Photoshop CS5/Presets/Scripts/rtTych.jsx</val>
   </str>
+  <str name="Configurator/key_###13" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/key_###14" translate="yes">
+    <val>/Users/reimund/Projects/tychpanel/repository/Tych Panel.assets/media/img/add-row-top.png</val>
+  </str>
   <str name="Configurator/key_###15" translate="yes">
     <val/>
   </str>
@@ -153,11 +204,20 @@
   <str name="Configurator/key_###21" translate="yes">
     <val/>
   </str>
+  <str name="Configurator/key_###22" translate="yes">
+    <val/>
+  </str>
   <str name="Configurator/key_###23" translate="yes">
     <val><![CDATA[<html><head><title>Tych Panel by Reimund Trost</title><style type="text/css">body{margin:0;background:#dedede}span.icon a{height:15px;border:1px solid #333;border-top:1px solid #ededed;display:block;background:#e0e0e0;padding:10px 8px 10px 10px}span.icon a:hover{background-color:#cacaca}span.icon a:active{background-color:#b0b0b0;border-top:1px solid #a0a0a0}span.icon{display:block;border:1px solid #ededed;border-top:1px solid #333;font-size:10px;color:#000;text-decoration:none;float:left;margin:2px}span.icon a{background-position:6px 4px;background-repeat:no-repeat}small{clear:right;text-align:center;display:block;margin:10px 0 0 0;font-size:9px;color:#555}a{color:#555}.clear{height:0;clear:both;font-size:0;line-height:0}.icon.diptych1 a{background-image:url(http://lumens.se/media/img/tychpanel/diptych1.png)}.icon.diptych2 a{background-image:url(http://lumens.se/media/img/tychpanel/diptych2.png)}.icon.diptych3 a{background-image:url(http://lumens.se/media/img/tychpanel/diptych3.png)}.icon.triptych1 a{background-image:url(http://lumens.se/media/img/tychpanel/triptych1.png)}.icon.triptych2 a{background-image:url(http://lumens.se/media/img/tychpanel/triptych2.png)}.icon.triptych3 a{background-image:url(http://lumens.se/media/img/tychpanel/triptych3.png)}.icon.quaptych1 a{background-image:url(http://lumens.se/media/img/tychpanel/quaptych1.png)}.icon.quaptych2 a{background-image:url(http://lumens.se/media/img/tychpanel/quaptych2.png)}.diptych1 .i{margin-top:2px}.diptych1 .d1,.diptych2 .d1,.diptych3 .d1,.triptych1 .t1,.triptych2 .t1,.triptych3 .c,.quaptych1 .c1{margin-left:-3px}.quaptych2 .t1{margin-left:-2px}.diptych2 .i,.diptych3 .i{margin-top:1px}.triptych2 .i,.triptych3 .i{margin-top:-2px}.quaptych1 .i{margin-top:-2px}.quaptych2 .i{margin-top:3px}.i{background:#adadad;border:1px solid #494949;height:7px;width:10px;float:left}.d2,.t2,.t3,.t4{border-left:0}.diptych2 .i,.diptych3 .i{height:9px}.diptych2 .d1{width:14px}.diptych2 .d2{width:6px}.diptych3 .d1{width:6px}.diptych3 .d2{width:14px}.triptych1 .i{width:6px;height:11px}.triptych2 .t1,.triptych3 .t1{width:9px;height:15px}.triptych3 .c,.triptych2 .c,.quaptych1 .c{width:12px;height:17px;float:left}.triptych2 .i.t3,.triptych3 .i.t3,.quaptych1 .i.t4,.quaptych1 .i.t2{border-top:0;margin:0}.triptych3 .t1{border-left:0}.triptych3 .t2,.triptych3 .t3,.quaptych1 .t2{border:1px solid #494949}.quaptych2 .i{width:4px;height:8px}</style></head><body><span class="icon diptych1"><a href="adobe://photoshop.cs5/Scripts/rtTychDiptych1"><div class="d1 i"></div><div class="d2 i"></div></a></span><span class="icon diptych2"><a href="adobe://photoshop.cs5/Scripts/rtTychDiptych2"><div class="d1 i"></div><div class="d2 i"></div></a></span><span class="icon diptych3"><a href="adobe://photoshop.cs5/Scripts/rtTychDiptych3"><div class="d1 i"></div><div class="d2 i"></div></a></span><span class="icon triptych1"><a href="adobe://photoshop.cs5/Scripts/rtTychTriptych1"><div class="t1 i"></div><div class="t2 i"></div><div class="t3 i"></div></a></span><span class="icon triptych2"><a href="adobe://photoshop.cs5/Scripts/rtTychTriptych2"><div class="t1 i"></div><div class="c"><div class="t2 i"></div><div class="t3 i"></div></div></a></span><span class="icon triptych3"><a href="adobe://photoshop.cs5/Scripts/rtTychTriptych3"><div class="c"><div class="t2 i"></div><div class="t3 i"></div></div><div class="t1 i"></div></a></span><span class="icon quaptych1"><a href="adobe://photoshop.cs5/Scripts/rtTychQuaptych1"><div class="c c1"><div class="t1 i"></div><div class="t2 i"></div></div><div class="c"><div class="t3 i"></div><div class="t4 i"></div></div></a></span><span class="icon quaptych2"><a href="adobe://photoshop.cs5/Scripts/rtTychQuaptych2"><div class="t1 i"></div><div class="t2 i"></div><div class="t3 i"></div><div class="t4 i"></div></a></span><div class="clear">&nbsp;</div><small>Tych Panel by <a href="http://lumens.se/tychpanel/" title="Tych Panel">Reimund Trost</a></small></body></html>]]></val>
   </str>
+  <str name="Configurator/key_###24" translate="yes">
+    <val/>
+  </str>
   <str name="Configurator/key_###27" translate="yes">
     <val>diptych1.png</val>
+  </str>
+  <str name="Configurator/key_###28" translate="yes">
+    <val/>
   </str>
   <str name="Configurator/key_###30" translate="yes">
     <val/>
@@ -177,6 +237,9 @@
   <str name="Configurator/key_###38" translate="yes">
     <val/>
   </str>
+  <str name="Configurator/key_###4" translate="yes">
+    <val>./tychpanel.html</val>
+  </str>
   <str name="Configurator/key_###40" translate="yes">
     <val/>
   </str>
@@ -187,6 +250,9 @@
     <val/>
   </str>
   <str name="Configurator/key_###49" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/key_###5" translate="yes">
     <val/>
   </str>
   <str name="Configurator/key_###54" translate="yes">
@@ -205,7 +271,10 @@
     <val/>
   </str>
   <str name="Configurator/key_###7" translate="yes">
-    <val>/Applications/Adobe Photoshop CS5/Presets/Scripts/Load Files into Stack.jsx</val>
+    <val/>
+  </str>
+  <str name="Configurator/key_###8" translate="yes">
+    <val/>
   </str>
   <str name="Configurator/Widget/HTML/backwardToolTip" translate="yes">
     <val>Gå tillbaka till föregående sida</val>
@@ -249,10 +318,22 @@
   <str name="Configurator/Widget/HTML/reloadText" translate="yes">
     <val>Klicka för att testa anslutning</val>
   </str>
+  <str name="Configurator/Widget/PanelLoader/desc" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/Widget/PanelLoader/invalidPanelPrompt" translate="yes">
+    <val>Panelen det hänvisas till är ogiltig.</val>
+  </str>
   <str name="Configurator/Widget/Swf/desc" translate="yes">
     <val>SWF- eller bildinläsare</val>
   </str>
   <str name="Configurator/Widget/Swf/noDisplayPrompt" translate="yes">
     <val>SWF-innehållet kan visas i förhandsvisningsgränssnittet eller när panelen exporteras till produkten.</val>
+  </str>
+  <str name="Script-Hide_Kuler/desc" translate="yes">
+    <val>Hide Kuler</val>
+  </str>
+  <str name="Script-Hide_Kuler/name" translate="yes">
+    <val>Hide Kuler</val>
   </str>
 </asf>
