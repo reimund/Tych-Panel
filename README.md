@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.0.0 - Mon 26 March 2012
+Version 2.0.2 - Thur 3 May 2012
 
 by Reimund Trost <reimund@code7.se> 
 Website <http://lumens.se/tychpanel/>
@@ -29,6 +29,15 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+2.0.2
+-----
+*	Minor fix for PS CS6.
+
+2.0.1
+-----
+*	Fixes a bug that breaks Tych Panel in non-English Photoshop installs.
+
 2.0.0
 ------
 *	Reorder images with thumbnails.
