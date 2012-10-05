@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.0.2 - Thur 3 May 2012
+Version 2.1.0 - Fri 5 Oct 2012
 
 by Reimund Trost <reimund@code7.se> 
 Website <http://lumens.se/tychpanel/>
@@ -15,13 +15,9 @@ Tych Panel is the ultimate diptych, tripych & ntych automation tool.
 
 Tych Panel is released as open source and licensed under the MIT license.
 
-Roadmap
--------
--	CS6 support.
-
 Installation
 ------------
-1.	Copy __scripts/Tych__ Panel to __<your photoshop directory>/Presets/Scripts__.
+1.	Copy __scripts/Tych Panel__ to __<your photoshop directory>/Presets/Scripts__.
 2.	Open __Tych Panel.gpc__ in Adobe Configurator and export it to __<your photoshop
 directory>/Plug-ins/Panels__.
 3.	Enable the panel via __Window/Extensions/Tych Panel__ in Photoshop.
@@ -29,6 +25,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+2.1.0
+-----
+*	Changed theming of CS6 panel to match the default (dark) theme of PS CS6.
 
 2.0.2
 -----

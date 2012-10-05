@@ -3,7 +3,13 @@
   <str name="Configurator/ActionScript/Action/desc###17" translate="yes">
     <val>Kör funktionsmakro för Photoshop</val>
   </str>
+  <str name="Configurator/ActionScript/Action/desc###45" translate="yes">
+    <val>Kör funktionsmakro för Photoshop</val>
+  </str>
   <str name="Configurator/ActionScript/Action/name###16" translate="yes">
+    <val>Funktionsmakro</val>
+  </str>
+  <str name="Configurator/ActionScript/Action/name###44" translate="yes">
     <val>Funktionsmakro</val>
   </str>
   <str name="Configurator/ActionScript/Script/desc###17" translate="yes">
@@ -18,6 +24,21 @@
   <str name="Configurator/ActionScript/Script/desc###31" translate="yes">
     <val>Kör JavaScript</val>
   </str>
+  <str name="Configurator/ActionScript/Script/desc###82" translate="yes">
+    <val>Kör JavaScript</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/desc###85" translate="yes">
+    <val>Kör JavaScript</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/desc###88" translate="yes">
+    <val>Kör JavaScript</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/desc###91" translate="yes">
+    <val>Kör JavaScript</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/desc###94" translate="yes">
+    <val>Kör JavaScript</val>
+  </str>
   <str name="Configurator/ActionScript/Script/name###1" translate="yes">
     <val>Load into stack</val>
   </str>
@@ -30,10 +51,31 @@
   <str name="Configurator/ActionScript/Script/name###30" translate="yes">
     <val>Skript</val>
   </str>
+  <str name="Configurator/ActionScript/Script/name###81" translate="yes">
+    <val>Top</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/name###84" translate="yes">
+    <val><![CDATA[    Bottom]]></val>
+  </str>
+  <str name="Configurator/ActionScript/Script/name###87" translate="yes">
+    <val>Left</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/name###90" translate="yes">
+    <val>Right</val>
+  </str>
+  <str name="Configurator/ActionScript/Script/name###93" translate="yes">
+    <val>Options</val>
+  </str>
   <str name="Configurator/ActionScript/ScriptFile/desc###11" translate="yes">
     <val>Kör JavaScript-fil</val>
   </str>
   <str name="Configurator/ActionScript/ScriptFile/desc###13" translate="yes">
+    <val>Kör JavaScript-fil</val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/desc###35" translate="yes">
+    <val>Kör JavaScript-fil</val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/desc###41" translate="yes">
     <val>Kör JavaScript-fil</val>
   </str>
   <str name="Configurator/ActionScript/ScriptFile/desc###42" translate="yes">
@@ -48,10 +90,22 @@
   <str name="Configurator/ActionScript/ScriptFile/desc###52" translate="yes">
     <val>Kör JavaScript-fil</val>
   </str>
+  <str name="Configurator/ActionScript/ScriptFile/desc###54" translate="yes">
+    <val>Kör JavaScript-fil</val>
+  </str>
   <str name="Configurator/ActionScript/ScriptFile/desc###60" translate="yes">
     <val>Kör JavaScript-fil</val>
   </str>
+  <str name="Configurator/ActionScript/ScriptFile/desc###62" translate="yes">
+    <val>Kör JavaScript-fil</val>
+  </str>
   <str name="Configurator/ActionScript/ScriptFile/desc###64" translate="yes">
+    <val>Kör JavaScript-fil</val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/desc###66" translate="yes">
+    <val>Kör JavaScript-fil</val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/desc###70" translate="yes">
     <val>Kör JavaScript-fil</val>
   </str>
   <str name="Configurator/ActionScript/ScriptFile/desc###9" translate="yes">
@@ -63,8 +117,14 @@
   <str name="Configurator/ActionScript/ScriptFile/name###12" translate="yes">
     <val>Skriptfil</val>
   </str>
+  <str name="Configurator/ActionScript/ScriptFile/name###34" translate="yes">
+    <val>Top</val>
+  </str>
   <str name="Configurator/ActionScript/ScriptFile/name###4" translate="yes">
     <val>Stack it up</val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/name###40" translate="yes">
+    <val>Top</val>
   </str>
   <str name="Configurator/ActionScript/ScriptFile/name###41" translate="yes">
     <val>Options</val>
@@ -75,11 +135,23 @@
   <str name="Configurator/ActionScript/ScriptFile/name###51" translate="yes">
     <val>Skriptfil</val>
   </str>
+  <str name="Configurator/ActionScript/ScriptFile/name###53" translate="yes">
+    <val><![CDATA[     Bottom]]></val>
+  </str>
   <str name="Configurator/ActionScript/ScriptFile/name###59" translate="yes">
     <val>Skriptfil</val>
   </str>
+  <str name="Configurator/ActionScript/ScriptFile/name###61" translate="yes">
+    <val>Left</val>
+  </str>
   <str name="Configurator/ActionScript/ScriptFile/name###63" translate="yes">
     <val>Skriptfil</val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/name###65" translate="yes">
+    <val><![CDATA[  Right]]></val>
+  </str>
+  <str name="Configurator/ActionScript/ScriptFile/name###69" translate="yes">
+    <val><![CDATA[     Options]]></val>
   </str>
   <str name="Configurator/ActionScript/ScriptFile/name###8" translate="yes">
     <val>Make Tych</val>
@@ -95,6 +167,9 @@
   </str>
   <str name="Configurator/Attribute/showNavBar/value###36" translate="yes">
     <val>False</val>
+  </str>
+  <str name="Configurator/Attribute/showNavBar/value###76" translate="yes">
+    <val>false</val>
   </str>
   <str name="Configurator/Attribute/visible/value###10" translate="yes">
     <val>True</val>
@@ -144,10 +219,19 @@
   <str name="Configurator/Attribute/visible/value###35" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###36" translate="yes">
+    <val>True</val>
+  </str>
   <str name="Configurator/Attribute/visible/value###39" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###42" translate="yes">
+    <val>true</val>
+  </str>
   <str name="Configurator/Attribute/visible/value###43" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###46" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Attribute/visible/value###47" translate="yes">
@@ -156,13 +240,22 @@
   <str name="Configurator/Attribute/visible/value###50" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###51" translate="yes">
+    <val>True</val>
+  </str>
   <str name="Configurator/Attribute/visible/value###53" translate="yes">
     <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###55" translate="yes">
+    <val>true</val>
   </str>
   <str name="Configurator/Attribute/visible/value###56" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Attribute/visible/value###58" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###59" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Attribute/visible/value###6" translate="yes">
@@ -171,10 +264,40 @@
   <str name="Configurator/Attribute/visible/value###61" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###63" translate="yes">
+    <val>true</val>
+  </str>
   <str name="Configurator/Attribute/visible/value###65" translate="yes">
     <val>True</val>
   </str>
+  <str name="Configurator/Attribute/visible/value###67" translate="yes">
+    <val>true</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###71" translate="yes">
+    <val>true</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###74" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###79" translate="yes">
+    <val>true</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###83" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###86" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###89" translate="yes">
+    <val>True</val>
+  </str>
   <str name="Configurator/Attribute/visible/value###9" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###92" translate="yes">
+    <val>True</val>
+  </str>
+  <str name="Configurator/Attribute/visible/value###95" translate="yes">
     <val>True</val>
   </str>
   <str name="Configurator/Container/Canvas/desc" translate="yes">
@@ -237,13 +360,22 @@
   <str name="Configurator/key_###38" translate="yes">
     <val/>
   </str>
+  <str name="Configurator/key_###39" translate="yes">
+    <val/>
+  </str>
   <str name="Configurator/key_###4" translate="yes">
     <val>./tychpanel.html</val>
   </str>
   <str name="Configurator/key_###40" translate="yes">
     <val/>
   </str>
+  <str name="Configurator/key_###43" translate="yes">
+    <val/>
+  </str>
   <str name="Configurator/key_###44" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/key_###47" translate="yes">
     <val/>
   </str>
   <str name="Configurator/key_###48" translate="yes">
@@ -255,26 +387,68 @@
   <str name="Configurator/key_###5" translate="yes">
     <val/>
   </str>
+  <str name="Configurator/key_###50" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/key_###52" translate="yes">
+    <val><![CDATA[New rows]]></val>
+  </str>
   <str name="Configurator/key_###54" translate="yes">
     <val/>
   </str>
   <str name="Configurator/key_###55" translate="yes">
     <val/>
   </str>
+  <str name="Configurator/key_###56" translate="yes">
+    <val/>
+  </str>
   <str name="Configurator/key_###57" translate="yes">
     <val/>
   </str>
+  <str name="Configurator/key_###60" translate="yes">
+    <val>New columns</val>
+  </str>
   <str name="Configurator/key_###62" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/key_###64" translate="yes">
     <val/>
   </str>
   <str name="Configurator/key_###66" translate="yes">
     <val/>
   </str>
+  <str name="Configurator/key_###68" translate="yes">
+    <val/>
+  </str>
   <str name="Configurator/key_###7" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/key_###72" translate="yes">
+    <val>./scripts/Presets/Tych Panel Options.jsx</val>
+  </str>
+  <str name="Configurator/key_###75" translate="yes">
+    <val>Tych Panel by Reimund Trost</val>
+  </str>
+  <str name="Configurator/key_###77" translate="yes">
+    <val>tychpanel.html</val>
+  </str>
+  <str name="Configurator/key_###78" translate="yes">
     <val/>
   </str>
   <str name="Configurator/key_###8" translate="yes">
     <val/>
+  </str>
+  <str name="Configurator/key_###80" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/watermark/htmlText" translate="yes">
+    <val>Skapad av &lt;a href='http://lumens.se/tychpanel/' target='_blank'&gt;Reimund Trost&lt;/a&gt; med &lt;a href='http://labs.adobe.com/technologies/configurator/' target='_blank'&gt;Configurator&lt;/a&gt;</val>
+  </str>
+  <str name="Configurator/watermark/width" translate="yes">
+    <val>181</val>
+  </str>
+  <str name="Configurator/watermark/x" translate="yes">
+    <val>19</val>
   </str>
   <str name="Configurator/Widget/HTML/backwardToolTip" translate="yes">
     <val>Gå tillbaka till föregående sida</val>
@@ -329,6 +503,15 @@
   </str>
   <str name="Configurator/Widget/Swf/noDisplayPrompt" translate="yes">
     <val>SWF-innehållet kan visas i förhandsvisningsgränssnittet eller när panelen exporteras till produkten.</val>
+  </str>
+  <str name="Configurator/Widget/Text/desc" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/Widget/Text/desc###57" translate="yes">
+    <val/>
+  </str>
+  <str name="Configurator/Widget/Text/desc###73" translate="yes">
+    <val/>
   </str>
   <str name="Script-Hide_Kuler/desc" translate="yes">
     <val>Hide Kuler</val>
