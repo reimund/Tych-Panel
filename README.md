@@ -29,6 +29,7 @@ Changelog
 2.1.0
 -----
 *	Changed theming of CS6 panel to match the default (dark) theme of PS CS6.
+*	Added icon.
 
 2.0.2
 -----
