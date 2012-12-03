@@ -114,6 +114,7 @@ Tych.prototype.stack = function()
 	thiss = this;
 	last = this.images.length - 1;
 	doc = app.open(this.images[0]);
+	doc.changeMode(ChangeMode.RGB);
 
 	f = function()
 	{
