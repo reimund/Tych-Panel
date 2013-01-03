@@ -2,8 +2,8 @@
 <gpc defaultLocale="sv_SE" version="3" keySequence="95" currentLocale="sv_SE">
   <product appid="PHSP" version="13" name="Photoshop CS6"/>
   <target id="PHSP-13"/>
-  <ConfiguratorPanel name="Tych Panel" width="210" height="160" init="doInit" close="doClose" persistent="False" extensionId="com.configurator.extension" extensionVersion="2.1.0" menuName="Tych Panel" maxWidth="210" maxHeight="160" normalIcon="res/icon.png" darkNormalIcon="res/res0_icon.png">
-    <extensionDescription><![CDATA[]]></extensionDescription>
+  <ConfiguratorPanel name="Tych Panel" width="210" height="160" init="doInit" close="doClose" persistent="False" extensionId="com.configurator.extension" extensionVersion="2.1.0" menuName="Tych Panel" maxWidth="210" maxHeight="160" normalIcon="res/icon.png" darkNormalIcon="">
+    <extensionDescription><![CDATA[The ultimate diptych, triptych and n-tych automation tool for Adobe Photoshop.]]></extensionDescription>
     <extensionAuthor><![CDATA[Reimund Trost]]></extensionAuthor>
     <onInit><![CDATA[]]></onInit>
     <aboutBox><![CDATA[]]></aboutBox>
@@ -23,7 +23,7 @@
       <text _itemId="widget_text" toolTip="$$$/Configurator/Widget/Text/desc###57" styleName="scopeTextArea" width="71" height="20" backgroundAlpha="0" cfgVisible="$$$/Configurator/Attribute/visible/value###59" fontSize="10" fontWeight="normal" fontStyle="normal" textDecoration="none" textAlign="center" backgroundColor="16777215" borderColor="12040892" borderStyle="none" borderThickness="0" x="101" y="10">
         <text><![CDATA[$$$/Configurator/key_###60]]></text>
       </text>
-      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###81" toolTip="$$$/Configurator/ActionScript/Script/desc###82" cfgVisible="$$$/Configurator/Attribute/visible/value###83" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/res2_button-add-row-top.png" mouseDownSkinIcon="res/res0_button-add-row-top-down.png" x="10" y="31" width="88" height="25">
+      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###81" toolTip="$$$/Configurator/ActionScript/Script/desc###82" cfgVisible="$$$/Configurator/Attribute/visible/value###83" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/button-add-row-top.png" mouseDownSkinIcon="res/button-add-row-top-down.png" x="10" y="31" width="88" height="25">
         <script><![CDATA[var called_from_bridge = false;$.evalFile(app.path + '/Presets/Scripts/Tych%20Panel/Tych%20Panel%20Only/tych.jsx');t.layout_and_composite(ROW, TOP);]]></script>
         <eventListeners>
           <function id="onClick" actionType="jsfunction" jsFunctionName="ps_invoke_script">
@@ -31,7 +31,7 @@
           </function>
         </eventListeners>
       </ps_script>
-      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###84" toolTip="$$$/Configurator/ActionScript/Script/desc###85" cfgVisible="$$$/Configurator/Attribute/visible/value###86" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/res2_button-add-row-top.png" mouseDownSkinIcon="res/res0_button-add-row-top-down.png" x="10" y="59" width="88" height="25">
+      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###84" toolTip="$$$/Configurator/ActionScript/Script/desc###85" cfgVisible="$$$/Configurator/Attribute/visible/value###86" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/button-add-row-bottom.png" mouseDownSkinIcon="res/button-add-row-bottom-down.png" x="10" y="59" width="88" height="25">
         <script><![CDATA[var called_from_bridge = false;$.evalFile(app.path + '/Presets/Scripts/Tych%20Panel/Tych%20Panel%20Only/tych.jsx');t.layout_and_composite(ROW, BOTTOM);]]></script>
         <eventListeners>
           <function id="onClick" actionType="jsfunction" jsFunctionName="ps_invoke_script">
@@ -39,7 +39,7 @@
           </function>
         </eventListeners>
       </ps_script>
-      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###87" toolTip="$$$/Configurator/ActionScript/Script/desc###88" cfgVisible="$$$/Configurator/Attribute/visible/value###89" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/res0_button-add-row-left.png" mouseDownSkinIcon="res/res0_button-add-row-left-down.png" x="102" y="31" width="88" height="25">
+      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###87" toolTip="$$$/Configurator/ActionScript/Script/desc###88" cfgVisible="$$$/Configurator/Attribute/visible/value###89" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/button-add-row-left.png" mouseDownSkinIcon="res/button-add-row-left-down.png" x="102" y="31" width="88" height="25">
         <script><![CDATA[var called_from_bridge = false;$.evalFile(app.path + '/Presets/Scripts/Tych%20Panel/Tych%20Panel%20Only/tych.jsx');t.layout_and_composite(COLUMN, LEFT);]]></script>
         <eventListeners>
           <function id="onClick" actionType="jsfunction" jsFunctionName="ps_invoke_script">
@@ -47,7 +47,7 @@
           </function>
         </eventListeners>
       </ps_script>
-      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###90" toolTip="$$$/Configurator/ActionScript/Script/desc###91" cfgVisible="$$$/Configurator/Attribute/visible/value###92" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/res0_button-add-row-right.png" mouseDownSkinIcon="res/res0_button-add-row-right-down.png" x="102" y="59" width="88" height="25">
+      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###90" toolTip="$$$/Configurator/ActionScript/Script/desc###91" cfgVisible="$$$/Configurator/Attribute/visible/value###92" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/button-add-row-right.png" mouseDownSkinIcon="res/button-add-row-right-down.png" x="102" y="59" width="88" height="25">
         <script><![CDATA[var called_from_bridge = false;$.evalFile(app.path + '/Presets/Scripts/Tych%20Panel/Tych%20Panel%20Only/tych.jsx');t.layout_and_composite(COLUMN, RIGHT);]]></script>
         <eventListeners>
           <function id="onClick" actionType="jsfunction" jsFunctionName="ps_invoke_script">
@@ -55,7 +55,7 @@
           </function>
         </eventListeners>
       </ps_script>
-      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###93" toolTip="$$$/Configurator/ActionScript/Script/desc###94" cfgVisible="$$$/Configurator/Attribute/visible/value###95" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/res0_button-options.png" mouseDownSkinIcon="res/res0_button-options-down.png" x="10" y="113" width="88" height="25">
+      <ps_script _itemId="ps_actionscript_script" label="$$$/Configurator/ActionScript/Script/name###93" toolTip="$$$/Configurator/ActionScript/Script/desc###94" cfgVisible="$$$/Configurator/Attribute/visible/value###95" click="onClick" icon="ps_script" overIcon="ps_script_r" showIcon="true" mouseUpIcon="res/button-options.png" mouseDownSkinIcon="res/button-options-down.png" x="10" y="113" width="88" height="25">
         <script><![CDATA[$.evalFile(app.path + '/Presets/Scripts/Tych%20Panel/Tych%20Panel%20Options.jsx');]]></script>
         <eventListeners>
           <function id="onClick" actionType="jsfunction" jsFunctionName="ps_invoke_script">

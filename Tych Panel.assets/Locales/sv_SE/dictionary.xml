@@ -445,10 +445,10 @@
     <val>Skapad av &lt;a href='http://lumens.se/tychpanel/' target='_blank'&gt;Reimund Trost&lt;/a&gt; med &lt;a href='http://labs.adobe.com/technologies/configurator/' target='_blank'&gt;Configurator&lt;/a&gt;</val>
   </str>
   <str name="Configurator/watermark/width" translate="yes">
-    <val>181</val>
+    <val>197</val>
   </str>
   <str name="Configurator/watermark/x" translate="yes">
-    <val>19</val>
+    <val>13</val>
   </str>
   <str name="Configurator/Widget/HTML/backwardToolTip" translate="yes">
     <val>Gå tillbaka till föregående sida</val>
