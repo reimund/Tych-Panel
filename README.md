@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.1.1 - Thu 3 Jan 2013
+Version 2.1.2 - Sat 16 Jan 2013
 
 by Reimund Trost <reimund@code7.se> 
 Website <http://lumens.se/tychpanel/>
@@ -25,6 +25,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+2.1.2
+-----
+*	Alert the user when trying to save to invalid directory.
 
 2.1.1
 -----
