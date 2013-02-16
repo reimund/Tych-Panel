@@ -478,13 +478,18 @@ Tych.prototype.bookkeep = function(side)
  */
 Tych.prototype.save = function()
 {
-	var options, basename, filename, layers, tmp;
+	var options, basename, save_path, layers, tmp;
 
 	options = {
 		'jpg': this.get_jpeg_save_options(),
 		'psd': this.get_psd_save_options(),
 		'png': this.get_png_save_options()
 	};
+
+	if (!new File(this.settings.save_directory).exists) {
+		alert('Document could not be saved.\n\nThe specified output directory does not exist. Please choose another directory.');
+		return false;
+	}
 
 	if (this.settings.save_each_layer) {
 
@@ -499,7 +504,7 @@ Tych.prototype.save = function()
 				else
 					basename = this.settings.filename;
 
-				filename = tp_next_filename(
+				save_path = tp_next_filename(
 					this.settings.save_directory,
 					basename,
 					this.settings.output_formats,
@@ -508,7 +513,7 @@ Tych.prototype.save = function()
 
 				for (format in this.settings.output_formats)
 					if (this.settings.output_formats[format])
-						save_layer(layers[j], filename, options[format]);
+						save_layer(layers[j], save_path, options[format]);
 			}
 
 		}
@@ -520,7 +525,7 @@ Tych.prototype.save = function()
 		else
 			basename = this.settings.filename;
 
-		filename = tp_next_filename(
+		save_path = tp_next_filename(
 			this.settings.save_directory,
 			basename,
 			this.settings.output_formats,
@@ -529,7 +534,7 @@ Tych.prototype.save = function()
 
 		for (format in this.settings.output_formats)
 			if (this.settings.output_formats[format])
-				this.save_doc.saveAs(new File(filename), options[format], true, Extension.LOWERCASE);
+				this.save_doc.saveAs(new File(save_path), options[format], true, Extension.LOWERCASE);
 	}
 }
 
