@@ -305,8 +305,6 @@ Tych.prototype.composite = function(src, target, side)
 	var i, placement, src_width, src_height, old_width, old_height, new_width,
 		new_height, anchor_position;
 	
-	$.writeln('src: ' + src + ' target: ' + target);
-
 	// Store away the width & height of the source document before we close it.
 	src_width = src.width;
 	src_height = src.height;
