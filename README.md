@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.1.2 - Sat 16 Jan 2013
+Version 2.1.3 - Sat 16 Jan 2013
 
 by Reimund Trost <reimund@code7.se> 
 Website <http://lumens.se/tychpanel/>
@@ -25,6 +25,11 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+2.1.3
+-----
+*	Fixed bug with long filenames. Names with more than 255 characters will be
+	truncated.
 
 2.1.2
 -----
