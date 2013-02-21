@@ -32,7 +32,6 @@ var Tych = function(settings)
 	this.table = this.get_table();
 }
 
-
 /**
  * Select the images that should be part of this Tych.
  */
@@ -59,6 +58,15 @@ Tych.prototype.select = function()
 		return false;
 	}
 
+	this.images = images;
+	return true;
+}
+
+/**
+ * Workarounds problem with having multiple documents with the same name.
+ */
+Tych.prototype.avoid_document_collisions = function()
+{
 	// Always duplicate target document if we're on Windows, in order to
 	// workaround a nasty, unknown bug in Photoshop for Windows.
 	if (app.path.fsName.toString().substr(0, 1) != '/') {
@@ -77,9 +85,9 @@ Tych.prototype.select = function()
 		// collision problem. To solve it we duplicate the open, colliding document
 		// to get a copy of it with a new name. We then close the original
 		// document.
-		for (i in images) {
+		for (i in this.images) {
 			try {
-				docc = documents.getByName(images[i].name.replace('%20', ' ', 'g'));
+				docc = documents.getByName(this.images[i].name.replace('%20', ' ', 'g'));
 				dup = docc.duplicate();
 
 				if (this.settings.composite)
@@ -88,11 +96,7 @@ Tych.prototype.select = function()
 			} catch (err) { }
 		}
 	}
-
-	this.images = images;
-	return true;
 }
-
 
 /**
  * Reverts to the preferences the user had before execution.
@@ -102,7 +106,6 @@ Tych.prototype.revert = function()
 	preferences.ruler_units = this.rulerUnits;
 	preferences.exportClipboard = this.export_clipboard;
 }
-
 
 /**
  * Stack the images of this Tych instance.
@@ -169,7 +172,6 @@ Tych.prototype.stack = function()
 	this.trans = new TychTransformations(this);
 }
 
-
 Tych.prototype.finish = function()
 {
 	var bg_color;
@@ -204,7 +206,6 @@ Tych.prototype.finish = function()
 	this.revert();
 }
 
-
 Tych.prototype.link = function(link)
 {
 	var doc, f;
@@ -225,19 +226,27 @@ Tych.prototype.link = function(link)
 	link ? doc.suspendHistory('Link layer masks', 'f()') :  doc.suspendHistory('Unlink layer masks', 'f()');
 }
 
-
-Tych.prototype.layout_and_composite = function(alignment, side)
+/**
+ * Lays out and composites the specified images. If no images are specified, it
+ * will open a file dialog and let the user pick images.
+ */
+Tych.prototype.layout_and_composite = function(alignment, side, images)
 {
 	var thiss, doc, f;
 
 	this.alignment = alignment;
 
-	// Select the images to layout.
-	if (!this.select()) {
-		// Abort if no images are selected.
-		this.revert();
-		return;
-	}
+	if (null == images || 0 == images.length) {
+		// No images were specified, let the user pick images from the gui instead.
+		if (!this.select()) {
+			// Abort if no images are selected.
+			this.revert();
+			return;
+		}
+	} else
+		this.images = images;
+
+	this.avoid_document_collisions();
 	
 	// Stack it up.
 	this.stack();
@@ -273,11 +282,7 @@ Tych.prototype.layout_and_composite = function(alignment, side)
 
 			// Remove possible left over masks.
 			thiss.clear_rounded_corner_masks();
-
-			if (COLUMN == alignment)
-				thiss.composite(thiss.doc, thiss.comp_doc, side);
-			else
-				thiss.composite(thiss.doc, thiss.comp_doc, side);
+			thiss.composite(thiss.doc, thiss.comp_doc, side);
 		}
 
 		// Save, close etc.
@@ -292,7 +297,6 @@ Tych.prototype.layout_and_composite = function(alignment, side)
 	doc.suspendHistory('New ' + tp_const_string(this.alignment) + ' (' + tp_const_string(side) + ')' , 'f()');
 }
 
-
 /**
  * Places the contents of one document at the bottom of another.
  */
@@ -300,6 +304,8 @@ Tych.prototype.composite = function(src, target, side)
 {
 	var i, placement, src_width, src_height, old_width, old_height, new_width,
 		new_height, anchor_position;
+	
+	$.writeln('src: ' + src + ' target: ' + target);
 
 	// Store away the width & height of the source document before we close it.
 	src_width = src.width;
@@ -363,7 +369,6 @@ Tych.prototype.composite = function(src, target, side)
 	if (this.settings.maintain_width || this.settings.maintain_height)
 		this.trans.readjust(this, target, old_width, old_height, new_width, new_height);
 }
-
 
 /**
  * Do some bookkeeping for the latest added ntych.
@@ -465,7 +470,6 @@ Tych.prototype.bookkeep = function(side)
 	this.save_table();
 }
 
-
 /**
  * Saves the specified document according to the output options set in the
  * options dialog. If any of the files already exist the sequence number will
@@ -538,10 +542,8 @@ Tych.prototype.save = function()
 	}
 }
 
-
 /**
- * Makes an horizontal n-tych by spacing out the layers in the specified
- * document.
+ * Makes an n-tych by spacing out the layers in the specified document.
  */
 Tych.prototype.layout = function()
 {
@@ -572,7 +574,6 @@ Tych.prototype.layout = function()
 	this.doc.suspendHistory('Layout images', 'f()');
 }
 
-
 Tych.prototype.get_jpeg_save_options = function()
 {
 	options = new JPEGSaveOptions();
@@ -583,14 +584,12 @@ Tych.prototype.get_jpeg_save_options = function()
 	return options;
 }
 
-
 Tych.prototype.get_png_save_options = function()
 {
 	options = new PNGSaveOptions();
 	options.interlaced = false;
 	return options;
 }
-
 
 Tych.prototype.get_psd_save_options = function()
 {
@@ -602,7 +601,6 @@ Tych.prototype.get_psd_save_options = function()
 	options.spotColors = true;
 	return options;
 }
-
 
 Tych.prototype.add_rounded_corners = function()
 {
@@ -682,7 +680,6 @@ Tych.prototype.add_rounded_corners = function()
 	doc.suspendHistory('Round corners', 'f()');
 }
 
-
 Tych.prototype.add_border = function()
 {
 	var doc_size, border, border_layer, color, f, thiss;
@@ -756,7 +753,6 @@ Tych.prototype.add_border = function()
 	this.save_doc.suspendHistory('Add border', 'f()');
 }
 
-
 /**
  * Removes any masks left over from a previous round of adding rounded corners.
  */
@@ -782,7 +778,6 @@ Tych.prototype.clear_rounded_corner_masks = function()
 			remove_mask(doc.layerSets[i].layers[j]);
 }
 
-
 /**
  * Apply actions to the specified document.
  */
@@ -795,7 +790,6 @@ Tych.prototype.apply_actions = function(doc, when)
 	if ('Before layout' == when)
 		doc.flatten();
 }
-
 
 /**
  * Get the lookup table for past transformations. Needed when we need to
@@ -834,7 +828,6 @@ Tych.prototype.get_table = function()
 
 	return table;
 }
-
 
 Tych.prototype.save_table = function()
 {
