@@ -508,11 +508,10 @@ Tych.prototype.save = function()
 
 				save_path = tp_next_filename(
 					this.settings.save_directory,
-					basename,
+					basename.substr(0, 254), // Only allow file names of at max 255 characters.
 					this.settings.output_formats,
 					!this.settings.derive_filename
 				);
-
 				for (format in this.settings.output_formats)
 					if (this.settings.output_formats[format])
 						save_layer(layers[j], save_path, options[format]);
@@ -529,7 +528,7 @@ Tych.prototype.save = function()
 
 		save_path = tp_next_filename(
 			this.settings.save_directory,
-			basename,
+			basename.substr(0, 254), // Only allow file names of at max 255 characters.
 			this.settings.output_formats,
 			!this.settings.derive_filename
 		);
