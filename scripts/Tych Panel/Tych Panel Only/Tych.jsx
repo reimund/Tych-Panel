@@ -238,13 +238,22 @@ Tych.prototype.layout_and_composite = function(alignment, side, images)
 
 	if (null == images || 0 == images.length) {
 		// No images were specified, let the user pick images from the gui instead.
-		if (!this.select()) {
-			// Abort if no images are selected.
-			this.revert();
+		if (!this.select())
 			return;
+	} else {
+		if (this.settings.reorder) {
+			images = tp_reorder(images, null);
+
+			if (undefined == images || images.length < 1) {
+				// The reorder window was dismissed. Revert settings and stop
+				// the script.
+				this.revert();
+				return;
+			}
 		}
-	} else
+
 		this.images = images;
+	}
 
 	this.avoid_document_collisions();
 	
