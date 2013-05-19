@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.1.3 - Sat 16 Jan 2013
+Version 2.1.4 - Sun 19 May 2013
 
 by Reimund Trost <reimund@code7.se> 
 Website <http://lumens.se/tychpanel/>
@@ -26,6 +26,11 @@ directory>/Plug-ins/Panels__.
 Changelog
 =========
 
+2.1.4
+-----
+*	Fixed issue with reorder window not appearing when called from command
+	line.
+
 2.1.3
 -----
 *	Fixed bug with long filenames. Names with more than 255 characters will be
@@ -33,7 +38,7 @@ Changelog
 
 2.1.2
 -----
-*	Alert the user when trying to save to invalid directory.
+*	Alert the user when trying to save to an invalid directory.
 
 2.1.1
 -----
