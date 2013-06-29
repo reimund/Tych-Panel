@@ -48,7 +48,7 @@ Tych.prototype.select = function()
 	if (undefined == images || images.length < 1)
 		images = File.openDialog("Choose file(s) to add to composite", undefined, true);
 
-	if (undefined != images && images.length > 1 && this.settings.reorder)
+	if (undefined != images && 1 < images.length && this.settings.reorder)
 		images = tp_reorder(images, thumbs);
 
 	if (undefined == images || images.length < 1) {
@@ -241,7 +241,7 @@ Tych.prototype.layout_and_composite = function(alignment, side, images)
 		if (!this.select())
 			return;
 	} else {
-		if (this.settings.reorder) {
+		if (this.settings.reorder && 1 < images.length) {
 			images = tp_reorder(images, null);
 
 			if (undefined == images || images.length < 1) {
