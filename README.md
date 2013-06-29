@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.1.4 - Sun 19 May 2013
+Version 2.1.5 - Sat 29 Jun 2013
 
 by Reimund Trost <reimund@code7.se> 
 Website <http://lumens.se/tychpanel/>
@@ -25,6 +25,11 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+2.1.5
+-----
+*	Prevent reorder window from appearing when with only one image from command
+	line.
 
 2.1.4
 -----
