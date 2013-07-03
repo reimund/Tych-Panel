@@ -98,6 +98,7 @@ Tych.prototype.avoid_document_collisions = function()
 	}
 }
 
+
 /**
  * Reverts to the preferences the user had before execution.
  */
@@ -116,7 +117,9 @@ Tych.prototype.stack = function()
 
 	thiss = this;
 	last = this.images.length - 1;
-	doc = app.open(this.images[0]);
+
+	docs = tp_safe_open(thiss.images[0]);
+	doc = docs.opened;
 	doc.changeMode(ChangeMode.RGB);
 
 	f = function()
@@ -135,7 +138,11 @@ Tych.prototype.stack = function()
 		for (i = 0; i <= last; i++) {
 
 			if (i > 0) {
-				d = app.open(thiss.images[i]);
+				docs = tp_safe_open(thiss.images[i]);
+				d = docs.opened;
+				if (null != docs.duplicate)
+					doc = docs.duplicate;
+
 				d.flatten();
 				thiss.apply_actions(d, 'Before layout');
 				d.selection.selectAll();
@@ -842,3 +849,7 @@ Tych.prototype.save_table = function()
 }
 
 var t = new Tych(tp_get_settings());
+//t.layout_and_composite(ROW, TOP, [
+	//new File('/Volumes/System2/Users/reimund/Desktop/1.jpg'),
+	//new File('/Volumes/System2/Users/reimund/Desktop/1.jpg')
+//]);

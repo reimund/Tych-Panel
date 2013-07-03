@@ -600,3 +600,29 @@ function tp_combine_filenames(names)
 	
 	return combined.join('_');
 }
+
+/**
+ * Safe open document, duplicate and close any already open document which
+ * collides with the specified file.
+ */
+function tp_safe_open(file)
+{
+	var orig, copy;
+
+	copy = null;
+
+	try {
+		orig = documents.getByName(file.name.replace('%20', ' ', 'g'));
+
+		if (null != orig) {
+			copy = orig.duplicate();
+			orig.close(SaveOptions.DONOTSAVECHANGES);
+		}
+	} catch (e) {
+	} 
+
+	return {
+		opened:    app.open(file),
+		duplicate: copy
+	}
+}
