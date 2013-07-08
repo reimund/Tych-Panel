@@ -626,3 +626,12 @@ function tp_safe_open(file)
 		duplicate: copy
 	}
 }
+
+/**
+ * Only flattens when possible and keeps transparency.
+ */
+function tp_flatten(doc)
+{
+	if (1 > doc.layers.length)
+		doc.mergeVisibleLayers();
+}

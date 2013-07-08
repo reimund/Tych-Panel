@@ -128,7 +128,8 @@ Tych.prototype.stack = function()
 		var maxx = doc.width;
 		var maxy = doc.height;
 
-		d.flatten();
+		tp_flatten(d);
+
 		thiss.apply_actions(d, 'Before layout');
 		d.layers[0].isBackgroundLayer = false;
 
@@ -143,7 +144,7 @@ Tych.prototype.stack = function()
 				if (null != docs.duplicate)
 					doc = docs.duplicate;
 
-				d.flatten();
+				tp_flatten(d);
 				thiss.apply_actions(d, 'Before layout');
 				d.selection.selectAll();
 
@@ -801,7 +802,7 @@ Tych.prototype.apply_actions = function(doc, when)
 			app.doAction(this.settings.actions[i].action, this.settings.actions[i].set);
 
 	if ('Before layout' == when)
-		doc.flatten();
+		tp_flatten(doc);
 }
 
 /**
@@ -849,7 +850,3 @@ Tych.prototype.save_table = function()
 }
 
 var t = new Tych(tp_get_settings());
-//t.layout_and_composite(ROW, TOP, [
-	//new File('/Volumes/System2/Users/reimund/Desktop/1.jpg'),
-	//new File('/Volumes/System2/Users/reimund/Desktop/1.jpg')
-//]);
