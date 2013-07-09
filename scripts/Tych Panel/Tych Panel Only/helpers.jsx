@@ -622,7 +622,7 @@ function tp_safe_open(file)
 	} 
 
 	return {
-		opened:    app.open(file),
+		opened:    tp_bounds_workaround(app.open(file), file),
 		duplicate: copy
 	}
 }
@@ -635,3 +635,48 @@ function tp_flatten(doc)
 	if (1 > doc.layers.length)
 		doc.mergeVisibleLayers();
 }
+
+/**
+ * Fills top left and bottom right corner pixels with almost invisible color.
+ * 
+ * This can be used as a workaround to get the bounds of a picture with
+ * transparancy to correspond to the pictures actual dimensions.
+ */
+function tp_dot_corner(doc)
+{
+	// Select top left corner pixel.
+	doc.selection.select([[0, 0], [0, 1], [1, 1], [1, 0]])
+
+	// Select bottom right corner pixel.
+	doc.selection.select([
+		[doc.width - 1, doc.height - 1],
+		[doc.width - 1, doc.height],
+		[doc.width, doc.height],
+		[doc.width, doc.height - 1]
+	], SelectionType.EXTEND)
+
+	// Fill the selected pixels.
+	color = new SolidColor();
+	color.rgb.hexValue = '808080';
+	doc.selection.fill(color, ColorBlendMode.NORMAL, 1);
+}
+
+/**
+ * Applies the bounds workaround to the specified document, if it's filename
+ * has a png or psd extension.
+ */
+function tp_bounds_workaround(doc)
+{
+	var tmp, ext;
+
+	tmp = doc.name.split('.');
+	ext = tmp[tmp.length - 1];
+
+	// Only apply workaround on files with png or psd extension.
+	if ('png' != ext && 'psd' != ext)
+		return doc;
+	
+	tp_dot_corner(doc);
+	return doc;
+}
+

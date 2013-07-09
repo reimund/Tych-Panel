@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.1.8 - Mon 8 Jul 2013
+Version 2.1.8 - Tue 9 Jul 2013
 
 by Reimund Trost <reimund@code7.se> 
 Website <http://lumens.se/tychpanel/>
