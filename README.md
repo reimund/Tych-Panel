@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.1.8 - Tue 9 Jul 2013
+Version 2.2 - Fri 6 Sep 2013
 
 by Reimund Trost <reimund@code7.se> 
 Website <http://lumens.se/tychpanel/>
@@ -25,6 +25,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+2.2.0
+-----
+*   Tych Panel ProTools support.
 
 2.1.8
 -----
