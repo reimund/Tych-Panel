@@ -104,7 +104,7 @@ Tych.prototype.avoid_document_collisions = function()
  */
 Tych.prototype.revert = function()
 {
-	preferences.ruler_units = this.rulerUnits;
+	preferences.rulerUnits = this.ruler_units;
 	preferences.exportClipboard = this.export_clipboard;
 }
 
@@ -850,3 +850,5 @@ Tych.prototype.save_table = function()
 }
 
 var t = new Tych(tp_get_settings());
+//var called_from_bridge = false;
+//t.layout_and_composite(ROW, TOP);
