@@ -26,6 +26,11 @@ directory>/Plug-ins/Panels__.
 Changelog
 =========
 
+2.2.1
+-----
+*   Fixed revert units bug.
+*   Fixed bug which caused documents being closed when autosave=false.
+
 2.2.0
 -----
 *   Tych Panel ProTools support.
