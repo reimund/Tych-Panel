@@ -207,7 +207,7 @@ Tych.prototype.finish = function()
 	if (this.settings.autosave)
 		this.save(this.save_doc);
 	
-	if (this.settings.autoclose)
+	if (this.settings.autoclose && this.settings.autosave)
 		this.save_doc.close(SaveOptions.DONOTSAVECHANGES);
 
 	// Revert settings.
