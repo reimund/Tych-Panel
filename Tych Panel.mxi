@@ -1,0 +1,41 @@
+<macromedia-extension
+     name="Tych Panel"
+     version="2.2.1"
+	 icon="icon.png"
+     type="object">
+
+    <author name="Reimund Trost." />
+
+    <products>
+        <product familyname="Photoshop" version="12.0" primary="true" />
+    </products>
+
+    <description>
+	<![CDATA[<meta http-equiv=Content-Type content="text/html;charset=UTF-8">
+    The ultimate diptych, triptych and n-tych automation tool for Adobe Photoshop.<br />
+    ]]>
+    </description>
+
+    <ui-access>
+	<![CDATA[<meta http-equiv=Content-Type content="text/html;charset=UTF-8">
+    Open Tych Panel from Window > Extensions > Tych Panel.
+    ]]>
+    </ui-access>
+
+    <license-agreement>
+    <![CDATA[
+    ]]>
+    </license-agreement>
+
+    <files>
+        <file source="icon.png" destination="$ExtensionSpecificEMStore/icon.png" />
+		<file source="panels/cs5/Tych Panel/content" destination="$panels/Tych Panel" minVersion="12" maxVersion="12.99" />
+        <file source="panels/cs6/Tych Panel/content" destination="$panels/Tych Panel" minVersion="13" />
+        <file source="scripts/Tych Panel" destination="$scripts/" />
+		<file source="scripts/Tych Panel.jsx" destination="$startupscripts/Adobe Bridge" minVersion="13" />
+		<file source="scripts/Tych Panel.jsx" destination="$userscripts/Adobe Bridge" minVersion="12" maxVersion="12.9" />
+    </files>
+
+    <configuration-changes>
+    </configuration-changes>
+</macromedia-extension>

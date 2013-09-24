@@ -1,0 +1,13 @@
+#!/bin/zsh
+mkdir panels
+mkdir panels/cs5
+mkdir panels/cs5/Tych\ Panel
+mkdir panels/cs6
+mkdir panels/cs6/Tych\ Panel
+cp -r /Applications/Adobe\ Photoshop\ CS5/Plug-ins/Panels/Tych\ Panel/content panels/cs5/Tych\ Panel/
+cp -r /Applications/Adobe\ Photoshop\ CC/Plug-ins/Panels/Tych\ Panel/content panels/cs6/Tych\ Panel/
+
+zip tychpanel.zip scripts/**/* panels/**/* icon.png readme.txt Tych\ Panel.mxi 
+mv tychpanel.zip tychpanel.zxp
+rm -rf panels
+
