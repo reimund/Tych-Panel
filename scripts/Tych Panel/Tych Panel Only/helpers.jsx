@@ -632,7 +632,7 @@ function tp_safe_open(file)
  */
 function tp_flatten(doc)
 {
-	if (1 > doc.layers.length)
+	if (1 < doc.layers.length)
 		doc.mergeVisibleLayers();
 }
 
