@@ -1,0 +1,48 @@
+/* Theme colors {{{ */
+body.light {
+	background: #d6d6d6;
+	color: #555;
+}
+
+body.medium {
+	background: #b8b8b8;
+	color: #222;
+}
+
+body,
+body.dark {
+	background: #535353;
+	color: #e7e7e7;
+
+	span.btn {
+		border: 1px solid #272727;
+
+		background-image: linear-gradient(bottom, rgb(99,99,99) 0%, rgb(116,116,116) 100%);
+
+		span { border-top: 1px solid #919191; }
+		a { color: #e7e7e7; }
+	}
+
+	span.btn:hover {
+		background-image: linear-gradient(bottom, rgb(115,115,115) 0%, rgb(130,130,130) 100%);
+		color: #212121;
+	}
+
+	span.btn:active {
+		background-image: linear-gradient(bottom, rgb(63,63,63) 100%, rgb(55,55,55) 0%);
+		color: #212121;
+
+		a {
+			margin-top: 1px;
+			margin-bottom: -1px;
+		}
+
+		span { border-top: 1px solid #333; }
+	}
+}
+
+body.darker {
+	background: #343434;
+	color: #c4c4c4;
+}
+/* }}} End Theme colors */

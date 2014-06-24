@@ -2,8 +2,9 @@
 //@include ImageList.jsx
 //@include ImageItem.jsx
 
-var iconLeft = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/left-arrow.png');
-var iconRight = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/right-arrow.png');
+var imageRoot = app.path + '/Presets/Scripts/Tych Panel/Images/';
+var iconLeft  = new File(imageRoot + 'left-arrow.png');
+var iconRight = new File(imageRoot + 'right-arrow.png');
 var image_list;
 
 /**

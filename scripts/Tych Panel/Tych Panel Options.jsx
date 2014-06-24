@@ -1015,12 +1015,12 @@ IconButton.prototype.toggle = function()
 	this.pressed = this.pressed == undefined ? true : !this.pressed;
 }
 
-var toggle =  ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button.png'));
-var toggle_down = ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-down.png'));
-var toggle_small =  ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-small.png'));
-var toggle_down_small = ScriptUI.newImage(new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/toggle-button-down-small.png'));
-var reimund = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/reimund.jpg');
-
+var imageRoot         = app.path + '/Presets/Scripts/Tych Panel/Images/';
+var toggle            = ScriptUI.newImage(new File(imageRoot + 'toggle-button.png'));
+var toggle_down       = ScriptUI.newImage(new File(imageRoot + 'toggle-button-down.png'));
+var toggle_small      = ScriptUI.newImage(new File(imageRoot + 'toggle-button-small.png'));
+var toggle_down_small = ScriptUI.newImage(new File(imageRoot + 'toggle-button-down-small.png'));
+var reimund           = new File(imageRoot + 'reimund.jpg');
 
 var tp_settings = tp_get_settings();
 var dialog = new TychOptions(tp_settings);

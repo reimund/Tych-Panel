@@ -37,7 +37,7 @@ var Tych = function(settings)
  */
 Tych.prototype.select = function()
 {
-	var images, thumbs, docc, dup;
+	var images, thumbs, docc, dup, selectNormally;
 
 	if ((this.settings.use_bridge_selection || called_from_bridge) && BridgeTalk.isRunning('bridge')) {
 		var bridge_selection = tp_get_bridge_selection();
@@ -45,7 +45,22 @@ Tych.prototype.select = function()
 		thumbs = bridge_selection[1];
 	}
 
-	if (undefined == images || images.length < 1)
+	selectNormally = true;
+
+	try
+	{
+		if (undefined !== selectedFiles)
+		{
+			for (var i = 0; i < selectedFiles.length; i++)
+				selectedFiles[i] = new File(selectedFiles[i]);
+
+			images = selectedFiles;
+			selectNormally = false;
+		}
+	}
+	catch(err) {}
+
+	if (selectNormally && (undefined == images || images.length < 1))
 		images = File.openDialog("Choose file(s) to add to composite", undefined, true);
 
 	if (undefined != images && 1 < images.length && this.settings.reorder)

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<macromedia-extension
+	id="Tych Panel"
+	name="Tych Panel"
+	requires-restart="true"
+	icon="icon.png"
+	version="2.3">
+
+	<author name="Reimund Trost"/>
+	<description><![CDATA[The ultimate diptych, triptych & ntych automation tool for Photoshop.]]></description>
+	<license-agreement><![CDATA[MIT License.]]></license-agreement>
+
+    <ui-access>
+	<![CDATA[<meta http-equiv=Content-Type content="text/html;charset=UTF-8">
+    Open Tych Panel from Window > Extensions > Tych Panel.
+    ]]>
+    </ui-access>
+
+	<products>
+		<product familyname="Photoshop" maxversion="" primary="true" version="15.0"/>
+	</products>
+
+	<files>
+        <file source="icon.png" destination="$ExtensionSpecificEMStore/icon.png" />
+		<file destination="" file-type="CSXS" products="" minVersion="15" source="tychpanel_cc.zxp"/>
+		<!--<file destination="" file-type="CSXS" products="" minVersion="14" maxVersion="14.9" source="tychpanel.zxp"/>-->
+		<file source="scripts/Tych Panel" destination="$scripts/" />
+		<file source="scripts/Tych Panel.jsx" destination="$startupscripts/Adobe Bridge" minVersion="13" />
+		<file source="scripts/Tych Panel.jsx" destination="$userscripts/Adobe Bridge" minVersion="12" maxVersion="12.9" />
+    </files>
+</macromedia-extension>

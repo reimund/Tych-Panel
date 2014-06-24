@@ -1,1 +1,5 @@
 .DS_Store
+node_modules
+*.p12
+Tych Panel CC/**/*.zxp
+Tych Panel CC/hybrid/scripts

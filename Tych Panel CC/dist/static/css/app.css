@@ -1,0 +1,160 @@
+body {
+  margin: 8px 0 12px 0;
+  font-family: sans-serif;
+  font-size: 10px;
+  overfow: hidden;
+}
+div.container {
+  width: 176px;
+  text-align: center;
+  margin: 0 auto 0 auto;
+}
+div.container div {
+  text-align: left;
+  float: left;
+}
+span.btn {
+  border-radius: 3px;
+  display: inline-block;
+  -webkit-box-shadow: 0 1px 0px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 1px 0px rgba(255, 255, 255, 0.12);
+  text-align: left;
+  margin: 0 2px 4px 0;
+  width: 78px;
+}
+span.btn span {
+  display: inline-block;
+  width: 100%;
+  border-radius: 3px;
+}
+span.btn a {
+  padding: 0 0 0 30px;
+  display: inline-block;
+  height: 22px;
+  line-height: 22px;
+  text-decoration: none;
+}
+div.about {
+  margin-top: 2.2em;
+  color: #aaa;
+}
+a {
+  color: #cccccc;
+}
+a:hover {
+  color: #f2f2f2;
+  cursor: pointer;
+}
+span.btn:hover {
+  cursor: default;
+}
+div.main-container {
+  margin: 0 12px 0 12px;
+}
+div.options {
+  margin: 2.5em 0 0 0;
+}
+/* Theme colors {{{ */
+body.light {
+  background: #d6d6d6;
+  color: #555;
+}
+body.medium {
+  background: #b8b8b8;
+  color: #222;
+}
+body,
+body.dark {
+  background: #535353;
+  color: #e7e7e7;
+}
+body span.btn,
+body.dark span.btn {
+  border: 1px solid #272727;
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#636363), to(#747474));
+  background-image: -webkit-linear-gradient(bottom, #636363 0%, #747474 100%);
+  background-image: linear-gradient(bottom, #636363 0%, #747474 100%);
+}
+body span.btn span,
+body.dark span.btn span {
+  border-top: 1px solid #919191;
+}
+body span.btn a,
+body.dark span.btn a {
+  color: #e7e7e7;
+}
+body span.btn:hover,
+body.dark span.btn:hover {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#737373), to(#828282));
+  background-image: -webkit-linear-gradient(bottom, #737373 0%, #828282 100%);
+  background-image: linear-gradient(bottom, #737373 0%, #828282 100%);
+  color: #212121;
+}
+body span.btn:active,
+body.dark span.btn:active {
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(100%, #3f3f3f), color-stop(0%, #373737));
+  background-image: -webkit-linear-gradient(bottom, #3f3f3f 100%, #373737 0%);
+  background-image: linear-gradient(bottom, #3f3f3f 100%, #373737 0%);
+  color: #212121;
+}
+body span.btn:active a,
+body.dark span.btn:active a {
+  margin-top: 1px;
+  margin-bottom: -1px;
+}
+body span.btn:active span,
+body.dark span.btn:active span {
+  border-top: 1px solid #333;
+}
+body.darker {
+  background: #343434;
+  color: #c4c4c4;
+}
+/* }}} End Theme colors */
+/* Utility classes {{{ */
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+* html .clearfix {
+  zoom: 1;
+}
+*:inner-child + html .clearfix {
+  zoom: 1;
+}
+/* }}} End Utility classes */
+/* Icons {{{ */
+.icon {
+  padding-left: 25px;
+  background-position: 2px -1px;
+  background-repeat: no-repeat;
+}
+.icon.options {
+  background: url(../img/gear.png) 4px 3px no-repeat;
+  padding-left: 26px;
+}
+.icon.add-row-top,
+.icon.add-row-bottom {
+  background-position: 2px -2px;
+}
+.icon.button.add-column-left,
+.icon.button.add-column-right {
+  background-position: -5px -6px;
+}
+.icon.add-row-bottom {
+  background-image: url(../img/add-row-bottom.png);
+}
+.icon.add-row-top {
+  background-image: url(../img/add-row-top.png);
+}
+.icon.add-column-left {
+  background-image: url(../img/add-column-left.png);
+}
+.icon.add-column-right {
+  background-image: url(../img/add-column-right.png);
+}
+/* }}} End Icons */
