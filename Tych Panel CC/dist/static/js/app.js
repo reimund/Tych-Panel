@@ -20,9 +20,9 @@ jQuery(document).ready(function($) {
 	$('a.about')
 		.on('click', function() { CSLibrary.openURLInDefaultBrowser('http://lumens.se/tychpanel/'); });
 
-    CSLibrary.addEventListener("com.adobe.csxs.events.ThemeColorChanged", themeChangedEventListener); 
+    CSLibrary.addEventListener("com.adobe.csxs.events.ThemeColorChanged", changeTheme); 
     
-	changeThemeColor();
+	changeTheme();
 });
 
 /**
@@ -53,34 +53,39 @@ function evalScript(scriptPath)
 }
 
 /**
- * This function will be called when PP's theme color been changed and it will change
- * extension's background color according to PP's.
- **/
-function themeChangedEventListener(event)
-{
-    changeThemeColor();
-}
-
-function changeThemeColor()
+ * This function will be called when PP's theme color been changed.
+ */
+function changeTheme(event)
 {
 	var hostEnv = CSLibrary.getHostEnvironment();
-    var UIColorObj = new UIColor();
+	var bgColor = toHex(hostEnv.appSkinInfo.panelBackgroundColor);
+
+	$('body').removeClass('darker');
+	$('body').removeClass('dark');
+	$('body').removeClass('light');
+	$('body').removeClass('lighter');
+
+	if ('#343434' == bgColor)
+		$('body').addClass('darker');
+
+	else if ('#535353' == bgColor)
+		$('body').addClass('dark');
+
+	else if ('#b8b8b8' == bgColor)
+		$('body').addClass('light');
+
+	else if ('#d6d6d6' == bgColor)
+		$('body').addClass('lighter');
     
-    UIColorObj = hostEnv.appSkinInfo.appBarBackgroundColor;
-    var red = Math.round(UIColorObj.color.red);
-    var green = Math.round(UIColorObj.color.green);
-    var blue = Math.round(UIColorObj.color.blue);
-    var alpha = Math.round(UIColorObj.color.alpha);
-    var colorRGB = "#" + red.toString(16) + green.toString(16) + blue.toString(16);
-    
-    if ("#535353" != colorRGB) /* "#535353" is the original color */
-    {
-        document.getElementById("index_body").style.backgroundImage = "none";
-    }
-    else /* for show background color distinctly */
-    {
-        document.getElementById("index_body").style.backgroundImage = imageURL;
-    }
-    document.getElementById("index_body").style.backgroundColor = colorRGB;
-    document.getElementById("index_body").style.opacity = alpha / 255;
 }
+
+function toHex(color)
+{
+    var red      = Math.round(color.color.red);
+    var green    = Math.round(color.color.green);
+    var blue     = Math.round(color.color.blue);
+    var alpha    = Math.round(color.color.alpha);
+
+    return '#' + red.toString(16) + green.toString(16) + blue.toString(16);
+}
+

@@ -16,8 +16,8 @@ div.container div {
 span.btn {
   border-radius: 3px;
   display: inline-block;
-  -webkit-box-shadow: 0 1px 0px rgba(255, 255, 255, 0.12);
-  box-shadow: 0 1px 0px rgba(255, 255, 255, 0.12);
+  -webkit-box-shadow: 0 1px 0px rgba(255, 255, 255, 0.09);
+  box-shadow: 0 1px 0px rgba(255, 255, 255, 0.09);
   text-align: left;
   margin: 0 2px 4px 0;
   width: 78px;
@@ -30,9 +30,9 @@ span.btn span {
 span.btn a {
   padding: 0 0 0 30px;
   display: inline-block;
-  height: 22px;
-  line-height: 22px;
   text-decoration: none;
+  height: 20px;
+  line-height: 21px;
 }
 div.about {
   margin-top: 2.2em;
@@ -55,13 +55,40 @@ div.options {
   margin: 2.5em 0 0 0;
 }
 /* Theme colors {{{ */
-body.light {
-  background: #d6d6d6;
-  color: #555;
+body.darker {
+  background: #343434;
+  color: #c4c4c4;
 }
-body.medium {
-  background: #b8b8b8;
-  color: #222;
+body.darker span.btn {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#414141), to(#505050));
+  background-image: -webkit-linear-gradient(bottom, #414141 0%, #505050 100%);
+  background-image: linear-gradient(bottom, #414141 0%, #505050 100%);
+  border: 1px solid #272727;
+}
+body.darker span.btn span {
+  border-top: 1px solid #626262;
+}
+body.darker span.btn a {
+  color: #c4c4c4;
+}
+body.darker span.btn:hover {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#4d4d4d), to(#5c5c5c));
+  background-image: -webkit-linear-gradient(bottom, #4d4d4d 0%, #5c5c5c 100%);
+  background-image: linear-gradient(bottom, #4d4d4d 0%, #5c5c5c 100%);
+  color: #212121;
+}
+body.darker span.btn:active {
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(100%, #2d2d2d), color-stop(0%, #2a2a2a));
+  background-image: -webkit-linear-gradient(bottom, #2d2d2d 100%, #2a2a2a 0%);
+  background-image: linear-gradient(bottom, #2d2d2d 100%, #2a2a2a 0%);
+  color: #212121;
+}
+body.darker span.btn:active a {
+  margin-top: 1px;
+  margin-bottom: -1px;
+}
+body.darker span.btn:active span {
+  border-top: 1px solid #333;
 }
 body,
 body.dark {
@@ -70,10 +97,10 @@ body.dark {
 }
 body span.btn,
 body.dark span.btn {
-  border: 1px solid #272727;
   background-image: -webkit-gradient(linear, left bottom, left top, from(#636363), to(#747474));
   background-image: -webkit-linear-gradient(bottom, #636363 0%, #747474 100%);
   background-image: linear-gradient(bottom, #636363 0%, #747474 100%);
+  border: 1px solid #272727;
 }
 body span.btn span,
 body.dark span.btn span {
@@ -106,9 +133,67 @@ body span.btn:active span,
 body.dark span.btn:active span {
   border-top: 1px solid #333;
 }
-body.darker {
-  background: #343434;
-  color: #c4c4c4;
+body.light {
+  background: #b8b8b8;
+  color: #222;
+}
+body.light span.btn {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#bfbfbf), to(#e7e7e7));
+  background-image: -webkit-linear-gradient(bottom, #bfbfbf 0%, #e7e7e7 100%);
+  background-image: linear-gradient(bottom, #bfbfbf 0%, #e7e7e7 100%);
+  border: 1px solid #5e5e5e;
+}
+body.light span.btn span {
+  border-top: 1px solid #f4f4f4;
+  border-bottom: 1px solid #d7d7d7;
+}
+body.light span.btn a {
+  color: #222;
+}
+body.light span.btn:hover {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#c8c8c8), to(#f4f4f4));
+  background-image: -webkit-linear-gradient(bottom, #c8c8c8 0%, #f4f4f4 100%);
+  background-image: linear-gradient(bottom, #c8c8c8 0%, #f4f4f4 100%);
+}
+body.light span.btn:active {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#7a7a7a), color-stop(73%, #a1a1a1));
+  background-image: -webkit-linear-gradient(bottom, #7a7a7a 0%, #a1a1a1 73%);
+  background-image: linear-gradient(bottom, #7a7a7a 0%, #a1a1a1 73%);
+}
+body.light span.btn:active span {
+  border-top: 1px solid #888;
+  border-bottom: 1px solid #888;
+}
+body.lighter {
+  background: #d6d6d6;
+  color: #555;
+}
+body.lighter span.btn {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#d3d3d3), to(#e1e1e1));
+  background-image: -webkit-linear-gradient(bottom, #d3d3d3 0%, #e1e1e1 100%);
+  background-image: linear-gradient(bottom, #d3d3d3 0%, #e1e1e1 100%);
+  border: 1px solid #5e5e5e;
+}
+body.lighter span.btn span {
+  border-top: 1px solid #f9f9f9;
+  border-bottom: 1px solid #dcdcdc;
+}
+body.lighter span.btn a {
+  color: #555;
+}
+body.lighter span.btn:active {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#7a7a7a), color-stop(73%, #a1a1a1));
+  background-image: -webkit-linear-gradient(bottom, #7a7a7a 0%, #a1a1a1 73%);
+  background-image: linear-gradient(bottom, #7a7a7a 0%, #a1a1a1 73%);
+}
+body.lighter span.btn:active span {
+  border-top: 1px solid #888;
+  border-bottom: 1px solid #888;
+}
+body.lighter span.btn:hover {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#bdbdbd), to(#ededed));
+  background-image: -webkit-linear-gradient(bottom, #bdbdbd 0%, #ededed 100%);
+  background-image: linear-gradient(bottom, #bdbdbd 0%, #ededed 100%);
 }
 /* }}} End Theme colors */
 /* Utility classes {{{ */

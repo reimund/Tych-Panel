@@ -33,11 +33,11 @@
                     <Menu>Tych Panel</Menu>
                     <Geometry>
                         <Size>
-                            <Height>300</Height>
+                            <Height>150</Height>
                             <Width>200</Width>
                         </Size>
                         <MaxSize>
-                            <Height>600</Height>
+                            <Height>300</Height>
                             <Width>400</Width>
                         </MaxSize>
                         <MinSize>
