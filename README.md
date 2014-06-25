@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.2.1 - Tue 24 Sep 2013
+Version 2.2.2 - Mon 21 Oct 2013
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -25,6 +25,10 @@ directory>/Plug-ins/Panels__.
 
 Changelog
 =========
+
+2.2.2
+-----
+*   Fixed flatten bug.
 
 2.2.1
 -----
