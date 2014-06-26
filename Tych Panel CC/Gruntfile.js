@@ -64,6 +64,6 @@ module.exports = function(grunt) {
 
 	});
 
-	grunt.registerTask('default', ['less', 'autoprefixer', 'watch']);
+	grunt.registerTask('default', ['sync', 'less', 'autoprefixer', 'watch']);
 
 };
