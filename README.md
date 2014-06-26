@@ -15,8 +15,8 @@ Tych Panel is the ultimate diptych, tripych & ntych automation tool.
 
 Tych Panel is released as open source and licensed under the MIT license.
 
-Installation CC 2014 - Html5 panel
-----------------------------------
+Installation (CC 2014) - Html5 panel
+------------------------------------
 
 1. Copy __Tych Panel CC/dist__ to the Photshop extensions directory.
 2. Copy __scripts/Tych Panel__ to __<your Photoshop version>/Presets/scripts__.
