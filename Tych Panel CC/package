@@ -1,0 +1,6 @@
+#!/bin/zsh
+rm -f ./hybrid/html5panel.zxp \
+&&  zxpsigncmd -sign ./dist ./hybrid/html5panel.zxp lumens.p12 $1 \
+&& rm -f tychpanel_cc.zxp \
+&& zxpsigncmd -sign hybrid ../tychpanel_cc.zxp lumens.p12 $1 \
+&& open ../tychpanel_cc.zxp

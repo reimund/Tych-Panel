@@ -22,7 +22,7 @@
 
 	<files>
         <file source="icon.png" destination="$ExtensionSpecificEMStore/icon.png" />
-		<file destination="" file-type="CSXS" products="" minVersion="15" source="tychpanel_cc.zxp"/>
+		<file destination="" file-type="CSXS" products="" minVersion="15" source="html5panel.zxp"/>
 		<file source="scripts/Tych Panel" destination="$scripts/" />
 		<file source="scripts/Tych Panel.jsx" destination="$startupscripts/Adobe Bridge" minVersion="13" />
 		<file source="scripts/Tych Panel.jsx" destination="$userscripts/Adobe Bridge" minVersion="12" maxVersion="12.9" />
