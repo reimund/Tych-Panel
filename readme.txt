@@ -1,7 +1,32 @@
-Manual installation
-===================
+Installation
+============
 
-Before installing, make sure any old Tych Panel files have been removed.
+1. Unzip the archive
+2. Use Adobe Extension Manager to install the ZXP file that corresponds to your
+   Photoshop version.
+
+   Photoshop CC 2014:        tychpanel_cc.zxp.
+   Photoshop CS5 / CS6 / CC: tychpanel_cs.zxp.
+
+3. Show the panel by going to Window / Extensions / Tych Panel in Photoshop.
+
+
+Manual installation (CS 5 / CS 6 / CC only)
+===========================================
+
+Note these steps are not intended for Photoshop CC 2014.
+
+Before doing a manual installation, make sure any old Tych Panel files have
+been removed.
+
+
+Photoshop CS 5 / CS 6 / CC
+--------------------------
+
+1. Rename tychpanel_cs.zxp to tychpanel_cs.zip.
+2. Unzip tychpanel_cs.zip.
+3. Go to the directory with the newly uncompressed files.
+4: Follow the instructions below that corresponds to your Photoshop version.
 
 
 Photoshop CS 6 / CC

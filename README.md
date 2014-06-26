@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.2.2 - Mon 21 Oct 2013
+Version 2.3 - Thu 26 Jun 2013
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -15,16 +15,30 @@ Tych Panel is the ultimate diptych, tripych & ntych automation tool.
 
 Tych Panel is released as open source and licensed under the MIT license.
 
-Installation
-------------
-1.	Copy __scripts/Tych Panel__ to __<your photoshop directory>/Presets/Scripts__.
-2.	Open __Tych Panel.gpc__ in Adobe Configurator and export it to __<your photoshop
-directory>/Plug-ins/Panels__.
-3.	Enable the panel via __Window/Extensions/Tych Panel__ in Photoshop.
+Installation CC 2014 - (html5 panel)
+------------------------------------
+
+1. Copy __Tych Panel CC/dist__ to the Photshop extensions directory.
+2. Copy __scripts/Tych Panel__ to __<your Photoshop version>/Presets/scripts__.
+3. Enable the panel via __Window/Extensions/Tych Panel__ in Photoshop.
+
+
+Installation (CS5, CS6, CC) - Flash panel
+-----------------------------------------
+
+1. Copy Tych Panel CS/scripts/Tych Panel to /Presets/Scripts.
+2. Open Tych Panel CS/Tych Panel.gpc in Adobe Configurator and export it to /Plug-ins/Panels.
+3. Enable the panel via Window/Extensions/Tych Panel in Photoshop.
 
 
 Changelog
 =========
+
+2.3
+-----
+*   Ported panel to html5 panel (Flash panels were discontinued in Photoshop CC 2014).
+*   Added color theme support.
+*   Adapted for retina displays.
 
 2.2.2
 -----
