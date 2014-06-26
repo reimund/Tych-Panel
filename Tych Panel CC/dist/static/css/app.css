@@ -221,14 +221,20 @@ body.lighter span.btn:hover {
 .icon.options {
   background: url(../img/gear.png) 4px 3px no-repeat;
   padding-left: 26px;
+  -webkit-background-size: 16px 16px;
+  background-size: 16px;
 }
 .icon.add-row-top,
 .icon.add-row-bottom {
-  background-position: 2px -2px;
+  background-position: 5px 3px;
+  -webkit-background-size: 22px 22px;
+  background-size: 22px;
 }
-.icon.button.add-column-left,
-.icon.button.add-column-right {
-  background-position: -5px -6px;
+.icon.add-column-left,
+.icon.add-column-right {
+  background-position: 5px 3px;
+  -webkit-background-size: 18px 18px;
+  background-size: 18px;
 }
 .icon.add-row-bottom {
   background-image: url(../img/add-row-bottom.png);
