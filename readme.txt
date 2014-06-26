@@ -1,14 +1,13 @@
 Installation
 ============
 
-1. Unzip the archive
-2. Use Adobe Extension Manager to install the ZXP file that corresponds to your
+1. Use Adobe Extension Manager to install the ZXP file that corresponds to your
    Photoshop version.
 
    Photoshop CC 2014:        tychpanel_cc.zxp.
    Photoshop CS5 / CS6 / CC: tychpanel_cs.zxp.
 
-3. Show the panel by going to Window / Extensions / Tych Panel in Photoshop.
+2. Show the panel by going to Window / Extensions / Tych Panel in Photoshop.
 
 
 Manual installation (CS 5 / CS 6 / CC only)
