@@ -6,16 +6,16 @@ jQuery(document).ready(function($) {
 		.on('click', function() { evalScript('Tych Panel/Tych Panel Options.jsx'); });
 
 	$('.btn.add-column-left')
-		.on('click', function() { selectAndRun('Tych Panel/Panel Helpers/New column (left).jsx'); });
+		.on('click', function() { runScript('Tych Panel/Panel Helpers/New column (left).jsx'); });
 
 	$('.btn.add-column-right')
-		.on('click', function() { selectAndRun('Tych Panel/Panel Helpers/New column (right).jsx'); });
+		.on('click', function() { runScript('Tych Panel/Panel Helpers/New column (right).jsx'); });
 
 	$('.btn.add-row-top')
-		.on('click', function() { selectAndRun('Tych Panel/Panel Helpers/New row (top).jsx'); });
+		.on('click', function() { runScript('Tych Panel/Panel Helpers/New row (top).jsx'); });
 
 	$('.btn.add-row-bottom')
-		.on('click', function() { selectAndRun('Tych Panel/Panel Helpers/New row (bottom).jsx'); });
+		.on('click', function() { runScript('Tych Panel/Panel Helpers/New row (bottom).jsx'); });
 
 	$('a.about')
 		.on('click', function() { CSLibrary.openURLInDefaultBrowser('http://lumens.se/tychpanel/'); });
@@ -27,29 +27,45 @@ jQuery(document).ready(function($) {
 
 /**
  * Use showOpenDialog since File.openDialog behaves buggy when called via the
- * panel.
+ * panel (at least on OS X).
  */
-function selectAndRun(scriptPath)
+function runScript(scriptPath)
 {
-	var files = null;
-	var selectResult = window.cep.fs.showOpenDialog(true, false, 'Choose file(s) to add to composite', null);
+	var dialogResult  = null
+	  , selectedFiles = 'var selectedFiles = undefined;';
+	;
 
-	if (selectResult.err === window.cep.fs.NO_ERROR) {
-		files = selectResult.data;
-	}
+	CSLibrary.evalScript(getUseBridgeSelectionScript(), function(useBridgeSelection) {
 
-	var script = 'var selectedFiles = ' + JSON.stringify(files) + ';'
-		+ 'var scriptFile = new File(app.path + \'/Presets/Scripts/' + scriptPath + '\');'
-		+ '$.evalFile(scriptFile, 30000);';
+		if ('false' === useBridgeSelection) {
+			dialogResult = window.cep.fs.showOpenDialog(true, false, 'Choose file(s) to add to composite', null);
 
-	setTimeout(function() { CSLibrary.evalScript(script) }, 100);
+			if (dialogResult.err === window.cep.fs.NO_ERROR)
+				selectedFiles = 'var selectedFiles = ' + JSON.stringify(dialogResult.data) + ';'
+		}
+
+		var script = selectedFiles + evalFileScript(scriptPath);
+
+		setTimeout(function() { CSLibrary.evalScript(script) }, 100);
+	});
+
 }
 
-function evalScript(scriptPath)
+function getUseBridgeSelectionScript()
 {
-	var script = 'var scriptFile = new File(app.path + \'/Presets/Scripts/' + scriptPath + '\');'
+	return script = evalFileScript('Tych Panel/Tych Panel Only/bridge.jsx')
+		+ 'useBridgeSelection;';
+}
+
+function evalFileScript(path)
+{
+	return 'var scriptFile = new File(app.path + \'/Presets/Scripts/' + path + '\');'
 		+ '$.evalFile(scriptFile, 30000);';
-	CSLibrary.evalScript(script);
+}
+
+function evalScript(path)
+{
+	CSLibrary.evalScript(evalFileScript(path));
 }
 
 /**
