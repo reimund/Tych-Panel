@@ -1,4 +1,4 @@
-if (BridgeTalk.appName == 'bridge') { 
+if (BridgeTalk.appName == 'bridge' && undefined == MenuElement.find('tp_row_top')) { 
 	var menu_elements, i, script, paths;
 	
 	menu_elements = [
