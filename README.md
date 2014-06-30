@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.3 - Fri 27 Jun 2013
+Version 2.3.1 - Mon 30 Jun 2013
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -33,6 +33,12 @@ Installation (CS5, CS6, CC) - Flash panel
 
 Changelog
 =========
+
+2.3.1
+-----
+*   Fixed broken 'Use selected images in Adobe Bridge'.
+*   Fixed issue with Bridge startup script adding menu elements multiple times.
+*   Fixed issue with large images.
 
 2.3
 -----
