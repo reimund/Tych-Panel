@@ -1,4 +1,4 @@
-var placeholder = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych Panel.assets/media/img/thumbnail-unavailable.png');
+var placeholder = new File(app.path + '/Presets/Scripts/Tych Panel/Images/thumbnail-unavailable.png');
 
 /*
  * Image list item constructor. Creates the objects needed to present an image
@@ -6,47 +6,50 @@ var placeholder = new File(app.path + '/Plug-ins/Panels/Tych Panel/content/Tych 
  */
 var ImageItem = function(container, file, index, thumbnail)
 {
-	var border = container.add('group');
+	var border     = container.add('group');
 	border.margins = 1;
 	setBackgroundColor(border, [0.8, 0.8, 0.8]);
 
-	var item_container = border.add('group');
+	var item_container         = border.add('group');
 	item_container.orientation = 'column';
-	item_container.onClick = clickItem;
-	item_container.item = this;
+	item_container.onClick     = clickItem;
+	item_container.item        = this;
 
 	var image;
 
-	try {
+	try
+	{
 		if (thumbnail != undefined)
 			image = item_container.add('Image', [0, 0, 256, 256], thumbnail);
 		else
 			image = item_container.add('Image', [0, 0, 256, 256], file);
-	} catch (err) {
+	}
+	catch (err)
+	{
 		image = item_container.add('Image', [0, 0, 256, 256], placeholder);
 	}
+
 	image.onClick = clickItem;
 
-	var label_container = item_container.add('group');
-	label_container.margins = [0, 8, 0, 0];
+	var label_container         = item_container.add('group');
+	label_container.margins     = [0, 8, 0, 0];
 	label_container.orientation = 'column';
-	label_container.size = [200, 30];
-	label_container.onClick = clickItem;
+	label_container.size        = [200, 30];
+	label_container.onClick     = clickItem;
 
-	this.file = file;
-	this.container = container;
-	this.border = border;
-	this.image = image;
-	this.item_container = item_container;
-	this.label = label_container.add('statictext', undefined, file.name);
+	this.file            = file;
+	this.container       = container;
+	this.border          = border;
+	this.image           = image;
+	this.item_container  = item_container;
+	this.label           = label_container.add('statictext', undefined, file.name);
 	this.label_container = label_container;
-	this.label.onClick = clickItem;
-	this.index = index;
-	this.thumbnail = thumbnail;
+	this.label.onClick   = clickItem;
+	this.index           = index;
+	this.thumbnail       = thumbnail;
 
 	this.deselect();
 }
-
 
 /*
  * Sets the image of the image item.
@@ -59,7 +62,6 @@ ImageItem.prototype.setImage = function(file) { this.image.image = file; }
  */
 ImageItem.prototype.setLabel = function(text) { this.label.text = text; }
 
-
 /*
  * Selects the image item, making it light blue.
  */
@@ -69,7 +71,6 @@ ImageItem.prototype.select = function()
 	setBackgroundColor(this.border, [0.65, 0.65, 0.65]);
 	this.selected = true;
 }
-
 
 /*
  * Deselects the image item, making it white.
@@ -81,7 +82,6 @@ ImageItem.prototype.deselect = function()
 	this.selected = false;
 }
 
-
 /*
  * Toggles the selection of the image item.
  */
@@ -92,7 +92,6 @@ ImageItem.prototype.toggleSelection = function()
 	else
 		this.deselect();
 }
-
 
 /*
  * Draws image within its bounding box.
@@ -115,7 +114,6 @@ Image.prototype.onDraw = function()
 	WH = wh = xy = null;
 }
 
-
 /*
  * Sets the background color of the specified element.
  */
@@ -124,7 +122,6 @@ function setBackgroundColor(element, color)
 	var gfx = element.graphics;
 	gfx.backgroundColor = gfx.newBrush(gfx.BrushType.SOLID_COLOR, color);
 }
-
 
 /*
  * Click handler for image items.
