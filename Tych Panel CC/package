@@ -1,6 +1,6 @@
 #!/bin/zsh
 rm -f ./hybrid/html5panel.zxp \
-&&  zxpsigncmd -sign ./dist ./hybrid/html5panel.zxp lumens.p12 $1 \
+&&  zxpsigncmd -sign ./dist ./hybrid/html5panel.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa \
 && rm -f ../tychpanel_cc.zxp \
-&& zxpsigncmd -sign hybrid ../tychpanel_cc.zxp lumens.p12 $1 \
+&& zxpsigncmd -sign hybrid ../tychpanel_cc.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa \
 && open ../tychpanel_cc.zxp
