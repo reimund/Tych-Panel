@@ -365,10 +365,12 @@ TychOptions.prototype.get_main_res = function()
 		}, \
 		resize_to_fit: Group { \
 			width_button: RadioButton { \
+				preferredSize: [60, -1], \
 				text: 'Width', \
 				value: " + tp_settings.fit_width + " \
 			}, \
 			height_button: RadioButton { \
+				preferredSize: [60, -1], \
 				text: 'Height', \
 				value: " + tp_settings.fit_height + " \
 			}, \
@@ -563,10 +565,12 @@ TychOptions.prototype.get_compositing_res = function()
 		}, \
 		maintain_group: Group { \
 			maintain_width: RadioButton { \
+				preferredSize: [60, -1], \
 				text: 'Width', \
 				value: " + tp_settings.maintain_width + ", \
 			}, \
 			maintain_height: RadioButton { \
+				preferredSize: [60, -1], \
 				text: 'Height', \
 				value: " + tp_settings.maintain_height + ", \
 			}, \
@@ -695,15 +699,18 @@ TychOptions.prototype.get_output_res = function()
 		save_types: Group { \
 			jpeg: Checkbox { \
 				text: 'Jpeg', \
+				preferredSize: [45, -1], \
 				value: " + tp_settings.output_formats.jpg + ", \
 				enabled: " + tp_settings.autosave + ", \
 			}, \
 			png: Checkbox { \
+				preferredSize: [45, -1], \
 				text: 'Png', \
 				value: " + tp_settings.output_formats.png + ", \
 				enabled: " + tp_settings.autosave + ", \
 			}, \
 			psd: Checkbox { \
+				preferredSize: [45, -1], \
 				text: 'Psd', \
 				value: " + tp_settings.output_formats.psd + ", \
 				enabled: " + tp_settings.autosave + ", \
