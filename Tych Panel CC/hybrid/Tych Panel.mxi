@@ -4,7 +4,7 @@
 	name="Tych Panel"
 	requires-restart="true"
 	icon="icon.png"
-	version="2.3.1">
+	version="2.3.2">
 
 	<author name="Reimund Trost"/>
 	<description><![CDATA[The ultimate diptych, triptych & ntych automation tool for Photoshop.]]></description>

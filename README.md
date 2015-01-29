@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.3.1 - Mon 30 Jun 2013
+Version 2.3.2 - Thur 29 Jan 2015
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -33,6 +33,10 @@ Installation (CS5, CS6, CC) - Flash panel
 
 Changelog
 =========
+
+2.3.2
+-----
+*   Included missing thumbnail placeholder image.
 
 2.3.1
 -----
