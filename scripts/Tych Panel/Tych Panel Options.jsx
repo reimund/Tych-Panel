@@ -699,7 +699,7 @@ TychOptions.prototype.get_output_res = function()
 		save_types: Group { \
 			jpeg: Checkbox { \
 				text: 'Jpeg', \
-				preferredSize: [45, -1], \
+				preferredSize: [50, -1], \
 				value: " + tp_settings.output_formats.jpg + ", \
 				enabled: " + tp_settings.autosave + ", \
 			}, \
