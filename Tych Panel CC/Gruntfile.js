@@ -37,7 +37,7 @@ module.exports = function(grunt) {
 					syncImport: true
 				},
 				files: {
-					'dist/static/css/app.css': 'less/tychpanel.less',
+					'html-panel/styles/app.css': 'less/tychpanel.less',
 				}
 			}
 		},
@@ -49,7 +49,7 @@ module.exports = function(grunt) {
 					src: [
 						'**',
 					],
-					dest: 'hybrid/scripts',
+					dest: 'hybrid-panel/scripts',
 				}],
 				verbose: true,
 			}
@@ -57,8 +57,8 @@ module.exports = function(grunt) {
 
 		autoprefixer: {
 			main: {
-				src: 'dist/static/css/app.css',
-				dest: 'dist/static/css/app.css',
+				src: 'html-panel/styles/app.css',
+				dest: 'html-panel/styles/app.css',
 			},
 		},
 

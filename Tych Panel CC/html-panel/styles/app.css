@@ -219,7 +219,7 @@ body.lighter span.btn:hover {
   background-repeat: no-repeat;
 }
 .icon.options {
-  background: url(../img/gear.png) 4px 3px no-repeat;
+  background: url(../images/gear.png) 4px 3px no-repeat;
   padding-left: 26px;
   -webkit-background-size: 16px 16px;
   background-size: 16px;
@@ -237,15 +237,15 @@ body.lighter span.btn:hover {
   background-size: 18px;
 }
 .icon.add-row-bottom {
-  background-image: url(../img/add-row-bottom.png);
+  background-image: url(../images/add-row-bottom.png);
 }
 .icon.add-row-top {
-  background-image: url(../img/add-row-top.png);
+  background-image: url(../images/add-row-top.png);
 }
 .icon.add-column-left {
-  background-image: url(../img/add-column-left.png);
+  background-image: url(../images/add-column-left.png);
 }
 .icon.add-column-right {
-  background-image: url(../img/add-column-right.png);
+  background-image: url(../images/add-column-right.png);
 }
 /* }}} End Icons */

@@ -3,5 +3,5 @@ node_modules
 *.p12
 *.zxp
 Tych Panel CC/**/*.zxp
-Tych Panel CC/hybrid/scripts
-Tych Panel CC/dist/.debug
+Tych Panel CC/hybrid-panel/scripts
+Tych Panel CC/html-panel/.debug
