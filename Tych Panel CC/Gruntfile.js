@@ -14,12 +14,12 @@ module.exports = function(grunt) {
 				tasks: ['less', 'autoprefixer']
 			},
 
-			sync: {
-				files: [
-					'../scripts/**/*',
-				],
-				tasks: ['sync'],
-			},
+			//sync: {
+				//files: [
+					//'../scripts/**/*',
+				//],
+				//tasks: ['sync'],
+			//},
 
 			configFiles: {
 				files: ['Gruntfile.js',],
@@ -42,18 +42,18 @@ module.exports = function(grunt) {
 			}
 		},
 
-		sync: {
-			main: {
-				files: [{
-					cwd: '../scripts',
-					src: [
-						'**',
-					],
-					dest: 'hybrid-panel/scripts',
-				}],
-				verbose: true,
-			}
-		},
+		//sync: {
+			//main: {
+				//files: [{
+					//cwd: '../scripts',
+					//src: [
+						//'**',
+					//],
+					//dest: 'hybrid-panel/scripts',
+				//}],
+				//verbose: true,
+			//}
+		//},
 
 		autoprefixer: {
 			main: {

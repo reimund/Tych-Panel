@@ -1,8 +1,15 @@
 #!/bin/zsh
-rm -f ./hybrid-panel/html5panel.zxp \
+rm -f ./hybrid-panel/cep5-panel.zxp \
+rm -f ./hybrid-panel/cep6-panel.zxp \
 && rm -rf ./hybrid-panel/scripts \
 && cp -r ../scripts hybrid-panel \
-&&  zxpsigncmd -sign ./html-panel ./hybrid-panel/html5panel.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa \
+&& cp html-panel/cep5/CEP_5.x/CSInterface.js html-panel/panel/js/ \
+&& cp html-panel/cep5/manifest.xml html-panel/panel/CSXS/ \
+&& zxpsigncmd -sign ./html-panel/panel ./hybrid-panel/cep5-panel.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa \
+&& cp html-panel/cep6/CEP_6.x/CSInterface.js html-panel/panel/js/ \
+&& cp html-panel/cep6/manifest.xml html-panel/panel/CSXS/ \
+&& zxpsigncmd -sign ./html-panel/panel ./hybrid-panel/cep6-panel.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa \
+&& rm -f ./html-panel/panel/js/CSInterface.js \
 && rm -f ../tychpanel_cc.zxp \
 && zxpsigncmd -sign hybrid-panel ../tychpanel_cc.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa \
 && open ../tychpanel_cc.zxp

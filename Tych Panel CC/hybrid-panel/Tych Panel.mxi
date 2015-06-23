@@ -4,7 +4,7 @@
 	name="Tych Panel"
 	requires-restart="true"
 	icon="icon.png"
-	version="2.3.2">
+	version="2.3.3">
 
 	<author name="Reimund Trost"/>
 	<description><![CDATA[The ultimate diptych, triptych & ntych automation tool for Photoshop.]]></description>
@@ -22,7 +22,8 @@
 
 	<files>
         <file source="icon.png" destination="$ExtensionSpecificEMStore/icon.png" />
-		<file destination="" file-type="CSXS" products="" minVersion="15" source="html5panel.zxp"/>
+		<file destination="" file-type="CSXS" products="" minVersion="15" maxVersion="15.99" source="cep5-panel.zxp"/>
+		<file destination="" file-type="CSXS" products="" minVersion="16" source="cep6-panel.zxp"/>
 		<file source="scripts/Tych Panel" destination="$scripts/" />
 		<file source="scripts/Tych Panel.jsx" destination="$startupscripts/Adobe Bridge" minVersion="13" />
 		<file source="scripts/Tych Panel.jsx" destination="$userscripts/Adobe Bridge" minVersion="12" maxVersion="12.9" />

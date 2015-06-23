@@ -2,6 +2,7 @@ var CSLibrary = new CSInterface();
 
 jQuery(document).ready(function($) {
 
+
 	$('.btn.options')
 		.on('click', function() { evalScript('Tych Panel/Tych Panel Options.jsx'); });
 
