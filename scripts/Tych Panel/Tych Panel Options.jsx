@@ -55,9 +55,16 @@ var TychOptions = function(tp_settings)
 			alignChildren: 'fill', \
 		}, \
 		button_group: Group { \
+			margins: [0, 20, 0, 0], \
 			orientation: 'column', \
-			ok_button: Button { text: 'Ok' }, \
-			cancel_button: Button { text: 'Cancel' } \
+			ok_button: Button { \
+				text: 'Ok', \
+				preferredSize: [65, 22], \
+			}, \
+			cancel_button: Button { \
+				text: 'Cancel', \
+				preferredSize: [65, 22], \
+			} \
 		}, \
 	}";
 
