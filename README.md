@@ -22,7 +22,7 @@ Installation (CC 2014, CC 2015) - Html5 panel
 
 1. Run __package-html__ to build the panel.
 
-2. Install it by running the installer script in Photoshop: File > Scripts > Browse...
+2. Install using installer script. In Photoshop, goto File > Scripts > Browse...
 
 2. Select the installer.jsx that corresponds to your Photoshop version.
 
