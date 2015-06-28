@@ -144,8 +144,8 @@ TychOptions.prototype.setup_ui = function()
 	actions.header_group.button_group.clear_button.onClick = function()
 	{
 		// First remove all rows.
-		for (var i in this.action_rows)
-			actions.remove(this.action_rows[i]);
+		for (var i in self.action_rows)
+			actions.remove(self.action_rows[i]);
 
 		self.action_rows = [];
 
