@@ -1,0 +1,5 @@
+#!/bin/zsh
+cd dist
+zip -r tychpanel.zip CC\ 2014 CC\ 2015 CS5-CC readme.txt
+mv tychpanel.zip ..
+cd ..

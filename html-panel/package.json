@@ -1,0 +1,27 @@
+{
+  "name": "tychpanel-cc",
+  "version": "2.3.0",
+  "description": "Easy diptychs in Photoshop.",
+  "main": "gulpfile.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tych",
+    "panel",
+    "photoshop",
+    "diptych",
+    "triptych",
+    "panel"
+  ],
+  "author": "Reimund Trost",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-less": "^3.0.3",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2"
+  }
+}
