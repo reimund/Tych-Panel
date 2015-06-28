@@ -34,8 +34,9 @@ Installation (CC 2014, CC 2015) - Html5 panel
 Installation (CS5, CS6, CC) - Flash panel
 -----------------------------------------
 
-1. Copy Tych Panel CS/scripts/Tych Panel to /Presets/Scripts.
-2. Open Tych Panel CS/Tych Panel.gpc in Adobe Configurator and export it to /Plug-ins/Panels.
+1. Copy the contents of scripts/photoshop to /Presets/Scripts/Tych Panel
+   (create the "Tych Panel" directory if needed).
+2. Open flash-panel/Tych Panel.gpc in Adobe Configurator and export it to /Plug-ins/Panels.
 3. Enable the panel via Window/Extensions/Tych Panel in Photoshop.
 
 
