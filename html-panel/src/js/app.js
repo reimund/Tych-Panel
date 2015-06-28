@@ -4,19 +4,19 @@ jQuery(document).ready(function($) {
 
 
 	$('.btn.options')
-		.on('click', function() { evalScript('Tych Panel/Tych Panel Options.jsx'); });
+		.on('click', function() { evalScript('Tych Panel/Tych Panel - Options.jsx'); });
 
 	$('.btn.add-column-left')
-		.on('click', function() { runScript('Tych Panel/Panel Helpers/New column (left).jsx'); });
+		.on('click', function() { runScript('Tych Panel/Panel Helpers/Tych Panel - New column (left).jsx'); });
 
 	$('.btn.add-column-right')
-		.on('click', function() { runScript('Tych Panel/Panel Helpers/New column (right).jsx'); });
+		.on('click', function() { runScript('Tych Panel/Panel Helpers/Tych Panel - New column (right).jsx'); });
 
 	$('.btn.add-row-top')
-		.on('click', function() { runScript('Tych Panel/Panel Helpers/New row (top).jsx'); });
+		.on('click', function() { runScript('Tych Panel/Panel Helpers/Tych Panel - New row (top).jsx'); });
 
 	$('.btn.add-row-bottom')
-		.on('click', function() { runScript('Tych Panel/Panel Helpers/New row (bottom).jsx'); });
+		.on('click', function() { runScript('Tych Panel/Panel Helpers/Tych Panel - New row (bottom).jsx'); });
 
 	$('a.about')
 		.on('click', function() { CSLibrary.openURLInDefaultBrowser('http://lumens.se/tychpanel/'); });
