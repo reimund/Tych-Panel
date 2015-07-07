@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.3.4 - Sun 28 Jun 2015
+Version 2.3.5 - Tue 7 Jul 2015
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -42,6 +42,10 @@ Installation (CS5, CS6, CC) - Flash panel
 
 Changelog
 =========
+
+2.3.5
+-----
+*   Fixed incorrect paths in Bridge script.
 
 2.3.4
 -----

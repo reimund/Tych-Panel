@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="Tych Panel" ExtensionBundleVersion="2.3.3" Version="5.0">
+<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="Tych Panel" ExtensionBundleVersion="2.3.5" Version="5.0">
     <ExtensionList>
         <Extension Id="se.lumens.TychPanel" Version="1.0"/>
     </ExtensionList>
