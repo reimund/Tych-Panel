@@ -9,10 +9,10 @@ if (BridgeTalk.appName == 'bridge' && undefined == MenuElement.find('tp_row_top'
 	];
 
 	paths = [
-        'Presets/Scripts/Tych Panel/Panel Helpers/New row (top).jsx',
-        'Presets/Scripts/Tych Panel/Panel Helpers/New row (bottom).jsx',
-        'Presets/Scripts/Tych Panel/Panel Helpers/New column (left).jsx',
-        'Presets/Scripts/Tych Panel/Panel Helpers/New column (right).jsx'
+        'Presets/Scripts/Tych Panel/Panel Helpers/Tych Panel - New row (top).jsx',
+        'Presets/Scripts/Tych Panel/Panel Helpers/Tych Panel - New row (bottom).jsx',
+        'Presets/Scripts/Tych Panel/Panel Helpers/Tych Panel - New column (left).jsx',
+        'Presets/Scripts/Tych Panel/Panel Helpers/Tych Panel - New column (right).jsx'
 	];
 	
 	for (i in menu_elements) {
