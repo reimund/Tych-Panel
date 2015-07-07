@@ -10,7 +10,7 @@ Photoshop CC 2014 and beyond
 
 3. Restart Photoshop.
 
-4. Show the panel by going to Window / Extensions / Tych Panel in Photoshop.
+4. Show the panel by going to Window / Extensions / Tych Panel.
 
 
 Photoshop CS 5, CS 6 and CC
@@ -18,21 +18,6 @@ Photoshop CS 5, CS 6 and CC
 
 1. Install tychpanel_cs.zxp with Adobe Extension Manager.
 2. Show the panel by going to Window / Extensions / Tych Panel in Photoshop.
-
-
-Bridge integration
-------------------
-
-1. Copy the file <Photoshop version>/assets/bridge-context-menu/Tych Panel.jsx
-to the Bridge Startup scripts directory.
-
-The Bridge Startup scripts directory are located in the following locations:
-
-On Mac OS X:
-~/Library/Application Support/Adobe/Bridge [version]/Startup Scripts/
-
-On Windows:
-~\AppData\Roaming\Adobe\Bridge [version]\Startup Scripts\
 
 
 Manual installation (CS 5 / CS 6 / CC only)
