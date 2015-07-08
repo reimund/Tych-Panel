@@ -1,5 +1,5 @@
 {
-  "name": "tychpanel-cc",
+  "name": "tychpanel",
   "version": "2.3.0",
   "description": "Easy diptychs in Photoshop.",
   "main": "gulpfile.js",
