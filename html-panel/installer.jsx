@@ -471,7 +471,7 @@ PSInstaller = (function() {
 
   PSInstaller.prototype.wrapUp = function() {
     //alert("Complete!\nAn installation LOG file has been created in:\n" + G.LOG_FILE);
-    alert("Installation complete\nYou must restart the application in orded to use " + G.PRODUCT_NAME + ", thank you!");
+    alert("Installation complete\nYou must restart the application in order to use " + G.PRODUCT_NAME + ", thank you!");
     if (G.README) {
       return (File("" + G.CURRENT_PATH + "/" + G.README)).execute();
     }
