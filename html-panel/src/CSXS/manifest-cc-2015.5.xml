@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="Tych Panel" ExtensionBundleVersion="2.3.5" Version="7.0">
+    <ExtensionList>
+        <Extension Id="se.lumens.TychPanel" Version="1.0"/>
+    </ExtensionList>
+    <ExecutionEnvironment>
+        <HostList>
+            <Host Name="PHXS" Version="[17.0,17.9]"/>
+        </HostList>
+        <LocaleList>
+            <Locale Code="All"/>
+        </LocaleList>
+        <RequiredRuntimeList>
+            <RequiredRuntime Name="CSXS" Version="7.0"/>
+        </RequiredRuntimeList>
+    </ExecutionEnvironment>
+    <DispatchInfoList>
+        <Extension Id="se.lumens.TychPanel">
+            <DispatchInfo>
+                <Resources>
+                    <MainPath>./index.html</MainPath>
+                    <CEFCommandLine>
+                        <Parameter>--enable-speech-input</Parameter>
+						<Parameter>--enable-media-stream</Parameter>
+                    </CEFCommandLine>
+                </Resources>
+                <Lifecycle>
+                    <AutoVisible>true</AutoVisible>
+                </Lifecycle>
+                <UI>
+                    <Type>Panel</Type>
+                    <Menu>Tych Panel</Menu>
+                    <Geometry>
+                        <Size>
+                            <Height>150</Height>
+                            <Width>200</Width>
+                        </Size>
+                        <MaxSize>
+                            <Height>300</Height>
+                            <Width>400</Width>
+                        </MaxSize>
+                        <MinSize>
+                            <Height>100</Height>
+                            <Width>100</Width>
+                        </MinSize>
+                    </Geometry>
+                    <Icons>
+                        <Icon Type="Normal">./icon.png</Icon>
+                        <Icon Type="DarkNormal">./icon.png</Icon>
+                    </Icons>
+                </UI>
+            </DispatchInfo>
+        </Extension>
+    </DispatchInfoList>
+</ExtensionManifest>

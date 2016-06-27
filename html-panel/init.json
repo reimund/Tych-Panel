@@ -1,0 +1,60 @@
+{    
+  /* INFO ======================================= */
+  COMPANY: "",
+  CONTACT_INFO: "reimund@code7.se",
+  PRODUCT_NAME: "Tych Panel",
+  PRODUCT_ID: "Tych Panel",
+  PRODUCT_VERSION: "2.3.4",
+
+  /* PRODUCTS =================================== */
+
+  /* Photoshop versions range */
+
+  /* Leave undefined for no limit */
+  MIN_VERSION: void 0,
+  MAX_VERSION: void 0,
+
+  /* Product Source Folders */
+
+  /* Leave undefined for no product to install */
+
+  /* Make sure tha paths (relative to the installer.jsx) do NOT start or end with "/" */
+  HTML_PANEL: "assets/html-panel",
+  FLASH_PANEL: null,
+  SCRIPT: "assets/scripts",
+  MAC_PLUGIN: null,
+  WIN_PLUGIN: null,
+  EXTRA: void 0,
+
+  /* If you have a readme file to display, put it here (path and filename) */
+  README: null,
+
+  /* System vs. User installation */
+  SYSTEM_INSTALL: false,
+  /* Use PS shared folder for plugins */
+  SHARED_PLUGINS: false,
+
+  /* DEBUG ===================================== */
+  INSTALLER_VERSION: "0.1.1",
+  ENABLE_LOG: true,
+  LOG_FILE_PATH: "~/Desktop",
+
+  /* will be created as LOG_FILE_PATH / PRODUCT_NAME.log */
+  LOG_FILE: "",
+
+  /* Array of RegExp for Files to be ignored (escape "\" -> "\\") 
+  	Possibly a very bad idea, because the HTML Panel Signing and Timestamping
+  	may easily get corrupted if something is missing in the folder.
+  	Examples:
+  	IGNORE		 : [  
+  		"^\\.\\w+",	// starting with . 
+  		"^\\_\\w+", // starting with _ 
+  	]
+  	Leaving undefined means: don't ignore
+   */
+  IGNORE: void 0,
+
+  /* UTILS ===================================== */
+  CURRENT_PATH: File($.fileName).path,
+  CURRENT_PS_VERSION: app.version.split('.')[0]
+};
