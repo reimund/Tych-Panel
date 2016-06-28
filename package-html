@@ -40,11 +40,11 @@ rm dist/temp-2015/.debug
 mv dist/temp-2015/js/CSInterface6.js dist/temp-2015/js/CSInterface.js
 rm dist/temp-2015/js/CSInterface5.js
 rm dist/temp-2015/js/CSInterface7.js
-mv dist/temp-2015.5/CSXS/manifest-cc-2015.5.xml dist/temp-2015/CSXS/manifest.xml
+mv dist/temp-2015.5/CSXS/manifest-cc-2015.5.xml dist/temp-2015.5/CSXS/manifest.xml
 rm dist/temp-2015.5/CSXS/manifest-cc-2014.xml
 rm dist/temp-2015.5/CSXS/manifest-cc-2015.xml
 rm dist/temp-2015.5/.debug
-mv dist/temp-2015.5/js/CSInterface7.js dist/temp-2015/js/CSInterface.js
+mv dist/temp-2015.5/js/CSInterface7.js dist/temp-2015.5/js/CSInterface.js
 rm dist/temp-2015.5/js/CSInterface5.js
 rm dist/temp-2015.5/js/CSInterface6.js
 find . -name "*.DS_Store" -type f -delete; find . -name "*.ds_store" -type f -delete;
