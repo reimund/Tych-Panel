@@ -1,0 +1,24 @@
+{
+  "name": "tychpanel",
+  "description": "Easy diptychs in Photoshop.",
+  "main": "gulpfile.js",
+  "authors": [
+    "Reimund Trost"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "tych",
+    "panel",
+    "photoshop",
+    "diptych",
+    "triptych",
+    "panel"
+  ],
+  "homepage": "https://github.com/reimund/Tych-Panel",
+  "private": true,
+  "dependencies": {
+    "lodash": "^4.13.1",
+    "adobe-cep": "^7.0.0",
+    "jquery": "^3.1.0"
+  }
+}

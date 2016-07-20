@@ -1,5 +1,6 @@
 .DS_Store
 node_modules
+bower_components
 *.p12
 builds
 html-panel/dist
