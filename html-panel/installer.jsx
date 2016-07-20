@@ -366,6 +366,28 @@ PSInstaller = (function() {
       if (destinationPath === "") {
         continue;
       }
+
+      // XXX: Remove dest folder before installing or the signature verification might break.
+      var existingFolder = new Folder(destinationPath);
+      var removeFolder = function(folder) {
+        var files = folder.getFiles();
+
+        if (files) {
+          for (var i in files) {
+            if (!files[i].getFiles) {
+              files[i].remove();
+            }
+            else {
+              removeFolder(files[i]);
+            }
+          }
+        }
+
+        folder.remove()
+      }
+
+      removeFolder(existingFolder);
+
       PSU.log("\n\nAdding " + product + "\n----------------------------\nDestination folder: " + (Folder(destinationPath).fsName));
 
       /* Create destination Folder */
@@ -458,7 +480,7 @@ PSInstaller = (function() {
         }
       }
       PSU.log("---------------------------------------\n Removing FOLDERS...");
-      for (k = folders.length - 1; k >= 0; k += -1) {
+      for (k = folders.length - 1; k >= 0; k += -1){
         eachFolder = folders[k];
         try {
           folder = Folder(eachFolder);
