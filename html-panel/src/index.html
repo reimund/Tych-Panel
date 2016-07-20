@@ -13,13 +13,13 @@
 		<div class="container clearfix">
 			<div>
 				<p>New rows</p>
-				<span class="btn add-row-top"><span><a class="icon add-row-top" href="#">Top</a></span></span><br />
-				<span class="btn add-row-bottom"><span><a class="icon add-row-bottom" href="#">Bottom</a></span></span>
+				<span class="btn add-row-top" ondrop="drop('top', event)" ondragover="allowDrop(event)"><span><a class="icon add-row-top" href="#">Top</a></span></span><br />
+				<span class="btn add-row-bottom" ondrop="drop('bottom', event)" ondragover="allowDrop(event)"><span><a class="icon add-row-bottom" href="#">Bottom</a></span></span>
 			</div>
 			<div>
 				<p>New columns</p>
-				<span class="btn add-column-left"><span><a class="icon add-column-left" href="#">Left</a></span></span><br />
-				<span class="btn add-column-right"><span><a class="icon add-column-right" href="#">Right</a></span></span>
+				<span class="btn add-column-left" ondrop="drop('left', event)" ondragover="allowDrop(event)"><span><a class="icon add-column-left" href="#">Left</a></span></span><br />
+				<span class="btn add-column-right" ondrop="drop('right', event)" ondragover="allowDrop(event)"><span><a class="icon add-column-right" href="#">Right</a></span></span>
 			</div>
 			<div class="options">
 				<span class="btn options"><span><a class="icon options" href="#">Options</a></span>
