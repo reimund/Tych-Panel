@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ondragenter="showDroppables(event)" ondragleave="hideDroppables(event)" ondragover="allowDrop(event)" ondrop="noDrop(event)">
 
 	<head>
 		<script src="js/CSInterface.js"></script>
@@ -11,15 +11,15 @@
 	<body class="">
 
 		<div class="container clearfix">
-			<div>
+			<div class="dropable-buttons">
 				<p>New rows</p>
-				<span class="btn add-row-top" ondrop="drop('top', event)" ondragover="allowDrop(event)"><span><a class="icon add-row-top" href="#">Top</a></span></span><br />
-				<span class="btn add-row-bottom" ondrop="drop('bottom', event)" ondragover="allowDrop(event)"><span><a class="icon add-row-bottom" href="#">Bottom</a></span></span>
+				<span class="btn add-row-top" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop('top', event)" ondragover="allowDrop(event)"><span><small>Drop top</small><a class="icon add-row-top" href="#">Top</a></span></span><br />
+				<span class="btn add-row-bottom" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop('bottom', event)" ondragover="allowDrop(event)"><span><small>Drop bottom</small><a class="icon add-row-bottom" href="#">Bottom</a></span></span>
 			</div>
-			<div>
+			<div class="dropable-buttons">
 				<p>New columns</p>
-				<span class="btn add-column-left" ondrop="drop('left', event)" ondragover="allowDrop(event)"><span><a class="icon add-column-left" href="#">Left</a></span></span><br />
-				<span class="btn add-column-right" ondrop="drop('right', event)" ondragover="allowDrop(event)"><span><a class="icon add-column-right" href="#">Right</a></span></span>
+				<span class="btn add-column-left" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop('left', event)" ondragover="allowDrop(event)"><span><small>Drop left</small><a class="icon add-column-left" href="#">Left</a></span></span><br />
+				<span class="btn add-column-right" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop('right', event)" ondragover="allowDrop(event)"><span><small>Drop right</small><a class="icon add-column-right" href="#">Right</a></span></span>
 			</div>
 			<div class="options">
 				<span class="btn options"><span><a class="icon options" href="#">Options</a></span>

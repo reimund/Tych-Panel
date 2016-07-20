@@ -1,4 +1,5 @@
 var CSLibrary = null;
+var dragStartTime = 0;
 
 if (typeof(CSInterface) !== 'undefined')
 	CSLibrary = new CSInterface();
@@ -64,6 +65,32 @@ function drop(compositeType, event) {
 
 function allowDrop(event) {
 	event.preventDefault();
+}
+
+function dragEnter(event) {
+	$(event.target).addClass('active')
+}
+
+function dragLeave(event) {
+	$(event.target).removeClass('active')
+}
+
+function showDroppables(event) {
+	dragStartTime = Date.now();
+	$('.container').addClass('dragging');
+}
+
+function hideDroppables(event) {
+	// Avoid flickering.
+	if ((Date.now() - dragStartTime) > 8) {
+		$('.container').removeClass('dragging');
+	}
+}
+
+function noDrop(event) {
+	event.preventDefault();
+	$('.container').removeClass('dragging');
+	$('span.btn').removeClass('active')
 }
 
 /**

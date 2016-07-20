@@ -14,6 +14,36 @@ div.container {
 		text-align: left;
 		float: left;
 	}
+	
+	&.dragging {
+		.dropable-buttons {
+			span.btn {
+				border: 1px dashed #888;
+				text-align: center;
+				background: #333;
+				box-shadow: none;
+				color: #999;
+				
+				&.active {
+					border-color: #ccc;
+					color: #ccc;
+					background: #555;
+				}
+				
+				span { border: none; }
+				span { pointer-events: none; }
+
+				small {
+					display: inline-block;
+					text-transform: uppercase;
+					height: 20px;
+					line-height: 22px;
+				}
+
+				a {display: none; }
+			}
+		}
+	}
 }
 
 span.btn {
@@ -23,6 +53,8 @@ span.btn {
 	text-align: left;
 	margin: 0 2px 4px 0;
 	width: 78px;
+	
+	small { display: none; }
 
 	span {
 		display: inline-block;
