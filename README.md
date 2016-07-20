@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.3.6 - Tue 28 Jun 2016
+Version 2.4.0 - Wed 20 Jul 2016
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -42,6 +42,10 @@ Installation (CS5, CS6, CC) - Flash panel
 
 Changelog
 =========
+
+2.4.0
+-----
+*   Added drag & drop support. Just drag pictures to the buttons in the panels.
 
 2.3.6
 -----
