@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="TychPanel" ExtensionBundleVersion="2.3.6" Version="7.0">
+<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="TychPanel" ExtensionBundleVersion="2.4.1" Version="7.0">
     <ExtensionList>
         <Extension Id="se.lumens.TychPanel" Version="1.0"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
-            <Host Name="PHXS" Version="[17.0,17.9]"/>
+            <Host Name="PHXS" Version="[17.0,18.9]"/>
         </HostList>
         <LocaleList>
             <Locale Code="All"/>
