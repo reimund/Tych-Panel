@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
 		.on('click', function() { CSLibrary.openURLInDefaultBrowser('http://lumens.se/tychpanel/'); });
 
 	if (CSLibrary) {
-		CSLibrary.addEventListener('com.adobe.csxs.events.ThemeColorChanged', changeTheme); 
+		CSLibrary.addEventListener('com.adobe.csxs.events.ThemeColorChanged', changeTheme);
 
 		changeTheme();
 	}
@@ -40,23 +40,23 @@ jQuery(document).ready(function($) {
 
 function drop(compositeType, event) {
 	event.preventDefault();
-	
+
 	var files = event.dataTransfer.files
 	  , selectedFiles = []
 	  , selectedFilesScript = 'var selectedFiles = '
 	;
-	
+
 	for (var i in files) {
 		if (files.hasOwnProperty(i)) {
 			var path = files[i].path ? files[i].path : files[i].name;
-			
+
 			if (path)
 				selectedFiles.push(path);
 		}
 	};
-	
+
 	selectedFilesScript += JSON.stringify(selectedFiles) + ';';
-	
+
 	if (CSLibrary) {
 		var script = selectedFilesScript + evalFileScript(scripts[compositeType]);
 		setTimeout(function() { CSLibrary.evalScript(script) }, 100);
@@ -155,14 +155,14 @@ function changeTheme(event) {
 
 	else if ('#d6d6d6' == bgColor)
 		$('body').addClass('lighter');
-    
+
 }
 
 function toHex(color) {
-    var red      = Math.round(color.color.red);
-    var green    = Math.round(color.color.green);
-    var blue     = Math.round(color.color.blue);
-    var alpha    = Math.round(color.color.alpha);
+	var red      = Math.round(color.color.red);
+	var green    = Math.round(color.color.green);
+	var blue     = Math.round(color.color.blue);
+	var alpha    = Math.round(color.color.alpha);
 
-    return '#' + red.toString(16) + green.toString(16) + blue.toString(16);
+	return '#' + red.toString(16) + green.toString(16) + blue.toString(16);
 }
