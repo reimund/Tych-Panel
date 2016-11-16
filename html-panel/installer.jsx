@@ -63,7 +63,7 @@ PSU = (function(GLOBAL) {
   exceptionMessage = function(e) {
     var fname, str;
     fname = !e.fileName ? '???' : decodeURI(e.fileName);
-    str = "\tMessage: " + e.message + "\n\tFile: " + fname + "\n\tLine: " + (e.line || '???') + "\n\tError Name: " + e.name + "\n\tError Number: " + e.number;
+    str = e.message + "\n\tFile: " + fname + "\n\tLine: " + (e.line || '???') + "\n\tError Name: " + e.name + "\n\tError Number: " + e.number;
     if ($.stack) {
       str += "\t" + $.stack;
     }
@@ -83,8 +83,12 @@ PSU = (function(GLOBAL) {
       return throwFileError(file, "Unable to write to log file");
     }
   };
-  createFolder = function(fptr) {
+  createFolder = function(fptr, test) {
     var rc;
+
+	if (typeof(test) === 'undefined')
+		test = false;
+
     if (fptr == null) {
       Error.runtimeError(19, "No Folder name specified");
     }
@@ -94,7 +98,7 @@ PSU = (function(GLOBAL) {
 
     /* Recursion if the arg is a File */
     if (fptr instanceof File) {
-      return createFolder(fptr.parent);
+      return createFolder(fptr.parent, test);
     }
 
     /* Are we done? */
@@ -106,16 +110,20 @@ PSU = (function(GLOBAL) {
       Error.runtimeError(21, "Folder is not a Folder?");
     }
     if ((fptr.parent != null) && !fptr.parent.exists) {
-      if (!createFolder(fptr.parent)) {
+      if (!createFolder(fptr.parent, test)) {
         return false;
       }
     }
 
     /* eventually...! */
     rc = fptr.create();
-    if (!rc) {
-      Error.runtimeError(9002, "Unable to create folder " + fptr + " (" + fptr.error + ")\nPlease create it manually and run this script again.");
+    if (!rc && !test) {
+		alert('meh');
+		Error.runtimeError(9002, "Unable to create folder " + (fptr + '').replace(/%20/g, ' ') + " (" + fptr.error + ")\n\nPlease create it manually and run this script again.\n");
     }
+	else if (!rc) {
+		throw new Error('Could not create folder');
+	}
     return rc;
   };
 
@@ -197,7 +205,7 @@ PSInstaller = (function() {
     PSU.log("\nPreflight \n----------------------------");
     if ((G.MIN_VERSION <= (ref = G.CURRENT_PS_VERSION) && ref <= G.MAX_VERSION)) {
       PSU.log("OK: PS version " + G.CURRENT_PS_VERSION + " in the range [" + G.MIN_VERSION + ", " + G.MAX_VERSION + "]");
-      alert(G.COMPANY + " - " + G.PRODUCT_NAME + "\nPress OK to start the installation.\nThe process is going to be completed in a short while.");
+      //alert(G.COMPANY + " - " + G.PRODUCT_NAME + "\nPress OK to start the installation.\nThe process is going to be completed in a short while.");
       return true;
     } else {
       PSU.log("\nFAIL: PS version " + G.CURRENT_PS_VERSION + " not in the range [" + G.MIN_VERSION + ", " + G.MAX_VERSION + "]");
@@ -448,8 +456,9 @@ PSInstaller = (function() {
   };
 
   PSInstaller.prototype.wrapUp = function() {
-    alert("Complete!\nAn installation LOG file has been created in:\n" + G.LOG_FILE);
-    alert("Restart Photoshop\nYou must restart the application in orded to use " + G.PRODUCT_NAME + ", thank you!");
+    //alert("Complete!\nAn installation LOG file has been created in:\n" + G.LOG_FILE);
+	  alert("Installation complete.\n\You must restart Photoshop in orded to use " + G.PRODUCT_NAME
+			+ ", thank you!\n\nNote: an install log was created here:\n" + G.LOG_FILE);
     if (G.README) {
       return (File(G.CURRENT_PATH + "/" + G.README)).execute();
     }
@@ -527,15 +536,30 @@ PSInstaller = (function() {
 })();
 
 try {
-  psInstaller = new PSInstaller();
-  psInstaller.preflight();
-  psInstaller.init();
-  psInstaller.copy();
-  psInstaller.createUninstaller();
-  psInstaller.wrapUp();
+
+  var scriptsPath = app.path + "/" + (localize('$$$/ScriptingSupport/InstalledScripts=Presets/Scripts'));
+  var destinationPath = scriptsPath + "/" + G.COMPANY + G.PRODUCT_NAME;
+
+	try {
+		PSU.createFolder(destinationPath + '/Tych%20Panel', true);
+		psInstaller = new PSInstaller();
+		psInstaller.preflight();
+		psInstaller.init();
+		psInstaller.copy();
+		psInstaller.createUninstaller();
+		psInstaller.wrapUp();
+	}
+	catch (e) {
+		alert('Could not create folder\n'
+			+ 'Run Photoshop as administrator or create the folder manually and run this installation script again:\n\n'
+			+ destinationPath.replace(/%20/g, ' ')
+		);
+	}
+
+
 } catch (_error) {
   e = _error;
-  errorMessage = "Installation failed: " + (PSU.exceptionMessage(e));
+  errorMessage = (PSU.exceptionMessage(e));
   PSU.log(errorMessage);
   alert("Something went wrong!\n" + errorMessage + "\nPlease contact " + G.CONTACT_INFO + ", thank you.");
 }
