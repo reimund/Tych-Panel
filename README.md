@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.4.1 - Tue 15 Nov 2016
+Version 2.4.1 - Wed 16 Nov 2016
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -46,6 +46,7 @@ Changelog
 2.4.1
 -----
 *   Fixed bug in installation script preventing installation on CC 2017.
+*   Installation script now gives better error messages (hopefully). 
 
 2.4.0
 -----
