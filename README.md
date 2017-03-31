@@ -16,9 +16,17 @@ Tych Panel is the ultimate diptych, tripych & ntych automation tool.
 
 Tych Panel is released as open source and licensed under the MIT license.
 
+Download & Install
+------------------
+1. Download & unzip https://www.dropbox.com/s/3p8dr1iwoa763h7/tychpanel-2.4.1.zip
+2. In Photoshop, goto __File > Scripts > Browse...__
+3. Browse to the newly uncompressed folder. Select the __installer.jsx__ that
+corresponds to your Photoshop version.
+4. Restart Photoshop.
+5. Show the panel by going to __Window / Extensions / Tych Panel__.
 
-Installation (CC 2014, CC 2015) - Html5 panel
----------------------------------------------
+Building & testing (CC 2014, CC 2015, CC 2017) - Html5 panel
+------------------------------------------------------------
 
 1. Run __package-html__ to build the panel.
 
@@ -28,7 +36,7 @@ Installation (CC 2014, CC 2015) - Html5 panel
 
 3. Restart Photoshop.
 
-4. Enable the panel via __Window/Extensions/Tych Panel__ in Photoshop.
+4. Enable the panel via __Window / Extensions / Tych Panel__ in Photoshop.
 
 
 Installation (CS5, CS6, CC) - Flash panel
