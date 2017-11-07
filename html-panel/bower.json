@@ -18,7 +18,7 @@
   "private": true,
   "dependencies": {
     "lodash": "^4.13.1",
-    "adobe-cep": "^7.0.0",
+    "adobe-cep": "^8.0.0",
     "jquery": "^3.1.0"
   }
 }

@@ -1,5 +1,5 @@
 #!/bin/zsh
 cd dist
-zip -r tychpanel.zip CC\ 2014 CC\ 2015 CC\ 2015.5 CS5-CC readme.txt
+zip -r tychpanel.zip CC\ 2014 CC\ 2015 CC\ 2015.5 CC\ 2018 CS5-CC readme.txt
 mv tychpanel.zip ..
 cd ..

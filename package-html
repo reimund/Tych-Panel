@@ -2,46 +2,63 @@
 rm -rf dist/CC\ 2014
 rm -rf dist/CC\ 2015
 rm -rf dist/CC\ 2015.5
+rm -rf dist/CC\ 2018
 mkdir dist/CC\ 2014
 mkdir dist/CC\ 2015
 mkdir dist/CC\ 2015.5
+mkdir dist/CC\ 2018
 mkdir dist/CC\ 2014/assets
 mkdir dist/CC\ 2015/assets
 mkdir dist/CC\ 2015.5/assets
+mkdir dist/CC\ 2018/assets
 cp html-panel/installer.jsx dist/CC\ 2014
 cp html-panel/installer.jsx dist/CC\ 2015
 cp html-panel/installer.jsx dist/CC\ 2015.5
+cp html-panel/installer.jsx dist/CC\ 2018
 cp html-panel/init.json dist/CC\ 2014
 cp html-panel/init.json dist/CC\ 2015
 cp html-panel/init.json dist/CC\ 2015.5
+cp html-panel/init.json dist/CC\ 2018
 cp -r scripts/photoshop/ dist/CC\ 2014/assets/scripts
 cp -r scripts/bridge/ dist/CC\ 2014/assets/bridge-context-menu
 cp -r scripts/photoshop/ dist/CC\ 2015/assets/scripts
 cp -r scripts/bridge/ dist/CC\ 2015/assets/bridge-context-menu
 cp -r scripts/photoshop/ dist/CC\ 2015.5/assets/scripts
 cp -r scripts/bridge/ dist/CC\ 2015.5/assets/bridge-context-menu
+cp -r scripts/photoshop/ dist/CC\ 2018/assets/scripts
+cp -r scripts/bridge/ dist/CC\ 2018/assets/bridge-context-menu
 cd html-panel
 gulp
 cd ..
 cp -r html-panel/dist/ dist/temp-2014
 cp -r html-panel/dist/ dist/temp-2015
 cp -r html-panel/dist/ dist/temp-2015.5
+cp -r html-panel/dist/ dist/temp-2018
 cp html-panel/bower_components/adobe-cep/CEP_5.x/CSInterface.js dist/temp-2014/js/
 cp html-panel/bower_components/adobe-cep/CEP_6.x/CSInterface.js dist/temp-2015/js/
 cp html-panel/bower_components/adobe-cep/CEP_7.x/CSInterface.js dist/temp-2015.5/js/
+cp html-panel/bower_components/adobe-cep/CEP_8.x/CSInterface.js dist/temp-2018/js/
 
 mv dist/temp-2014/CSXS/manifest-cc-2014.xml dist/temp-2014/CSXS/manifest.xml
 rm dist/temp-2014/CSXS/manifest-cc-2015.xml
 rm dist/temp-2014/CSXS/manifest-cc-2015.5.xml
+rm dist/temp-2014/CSXS/manifest-cc-2018.xml
 rm dist/temp-2014/.debug
 mv dist/temp-2015/CSXS/manifest-cc-2015.xml dist/temp-2015/CSXS/manifest.xml
 rm dist/temp-2015/CSXS/manifest-cc-2014.xml
 rm dist/temp-2015/CSXS/manifest-cc-2015.5.xml
+rm dist/temp-2015/CSXS/manifest-cc-2018.xml
 rm dist/temp-2015/.debug
 mv dist/temp-2015.5/CSXS/manifest-cc-2015.5.xml dist/temp-2015.5/CSXS/manifest.xml
 rm dist/temp-2015.5/CSXS/manifest-cc-2014.xml
 rm dist/temp-2015.5/CSXS/manifest-cc-2015.xml
+rm dist/temp-2015.5/CSXS/manifest-cc-2018.xml
 rm dist/temp-2015.5/.debug
+mv dist/temp-2018/CSXS/manifest-cc-2018.xml dist/temp-2018/CSXS/manifest.xml
+rm dist/temp-2018/CSXS/manifest-cc-2014.xml
+rm dist/temp-2018/CSXS/manifest-cc-2015.xml
+rm dist/temp-2018/CSXS/manifest-cc-2015.5.xml
+rm dist/temp-2018/.debug
 find . -name "*.DS_Store" -type f -delete; find . -name "*.ds_store" -type f -delete;
 zxpsigncmd -sign dist/temp-2014 dist/temp-2014.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa
 zxpsigncmd -sign dist/temp-2015 dist/temp-2015.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa
@@ -49,12 +66,16 @@ zxpsigncmd -sign dist/temp-2015.5 dist/temp-2015.5.zxp lumens.p12 $1 -tsa https:
 rm -rf dist/temp-2014
 rm -rf dist/temp-2015
 rm -rf dist/temp-2015.5
+rm -rf dist/temp-2018
 unar dist/temp-2014.zxp -o dist
 unar dist/temp-2015.zxp -o dist
 unar dist/temp-2015.5.zxp -o dist
+unar dist/temp-2018.zxp -o dist
 rm dist/temp-2014.zxp
 rm dist/temp-2015.zxp
 rm dist/temp-2015.5.zxp
+rm dist/temp-2018.zxp
 mv dist/temp-2014/ dist/CC\ 2014/assets/html-panel
 mv dist/temp-2015/ dist/CC\ 2015/assets/html-panel
 mv dist/temp-2015.5/ dist/CC\ 2015.5/assets/html-panel
+mv dist/temp-2018/ dist/CC\ 2018/assets/html-panel
