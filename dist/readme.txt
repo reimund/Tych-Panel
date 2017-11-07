@@ -13,8 +13,8 @@ Photoshop CC 2014 and beyond
 4. Show the panel by going to Window / Extensions / Tych Panel.
 
 
-Photoshop CS 5, CS 6 and CC
-===========================
+Photoshop CS 5, CS 6 and CC (before CC 2014)
+============================================
 
 1. Install tychpanel_cs.zxp with Adobe Extension Manager.
 2. Show the panel by going to Window / Extensions / Tych Panel in Photoshop.

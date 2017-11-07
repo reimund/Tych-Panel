@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.4.1 - Wed 16 Nov 2016
+Version 2.5.0 - Tue 7 Nov 2017
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -18,9 +18,9 @@ Tych Panel is released as open source and licensed under the MIT license.
 
 Download & Install
 ------------------
-1. Download & unzip https://www.dropbox.com/s/3p8dr1iwoa763h7/tychpanel-2.4.1.zip
+1. Download & unzip https://www.dropbox.com/s/za66403tbm8hds6/tychpanel-2.5.0.zip
 2. Run Photoshop as *administrator*.  
-   **MacOS**: In terminal, run ´sudo /Applications/Adobe\ Photoshop\ CC\ 2017/Adobe\ Photoshop\ CC\ 2017.app/Contents/MacOS/Adobe\ Photoshop\ CC\ 2017´.  
+   **MacOS**: In terminal, run ´sudo /Applications/Adobe\ Photoshop\ CC\ 2018/Adobe\ Photoshop\ CC\ 2019.app/Contents/MacOS/Adobe\ Photoshop\ CC\ 2018´.  
    **Windows**: Right click Photoshop executable > Run as administrator. 
 3. In Photoshop, goto __File > Scripts > Browse...__
 4. Browse to the newly uncompressed folder. Select the __installer.jsx__ that
@@ -28,8 +28,8 @@ corresponds to your Photoshop version.
 5. Restart Photoshop.
 6. Show the panel by going to __Window / Extensions / Tych Panel__.
 
-Building & testing (CC 2014, CC 2015, CC 2017) - Html5 panel
-------------------------------------------------------------
+Building & testing (CC 2014, CC 2015, CC 2017, CC 2018) - Html5 panel
+---------------------------------------------------------------------
 
 1. Run __package-html__ to build the panel.
 
@@ -53,6 +53,10 @@ Installation (CS5, CS6, CC) - Flash panel
 
 Changelog
 =========
+
+2.5.0
+-----
+*   Added support for Adobe Photoshop CC 2018 (upgraded to CEP 8).
 
 2.4.1
 -----
