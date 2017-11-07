@@ -60,9 +60,10 @@ rm dist/temp-2018/CSXS/manifest-cc-2015.xml
 rm dist/temp-2018/CSXS/manifest-cc-2015.5.xml
 rm dist/temp-2018/.debug
 find . -name "*.DS_Store" -type f -delete; find . -name "*.ds_store" -type f -delete;
-zxpsigncmd -sign dist/temp-2014 dist/temp-2014.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa
-zxpsigncmd -sign dist/temp-2015 dist/temp-2015.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa
-zxpsigncmd -sign dist/temp-2015.5 dist/temp-2015.5.zxp lumens.p12 $1 -tsa https://timestamp.geotrust.com/tsa
+zxpsigncmd -sign dist/temp-2014 dist/temp-2014.zxp lumens.p12 $1 -tsa http://timestamp.digicert.com 
+zxpsigncmd -sign dist/temp-2015 dist/temp-2015.zxp lumens.p12 $1 -tsa http://timestamp.digicert.com 
+zxpsigncmd -sign dist/temp-2015.5 dist/temp-2015.5.zxp lumens.p12 $1 -tsa http://timestamp.digicert.com 
+zxpsigncmd -sign dist/temp-2018 dist/temp-2018.zxp lumens.p12 $1 -tsa http://timestamp.digicert.com 
 rm -rf dist/temp-2014
 rm -rf dist/temp-2015
 rm -rf dist/temp-2015.5
