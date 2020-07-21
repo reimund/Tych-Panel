@@ -4,9 +4,6 @@ bower_components
 *.p12
 builds
 html-panel/dist
-html-panel/CEP_5.x
-html-panel/CEP_6.x
-html-panel/src/styles/app.css
 dist/CC 2014
 dist/CC 2015
 dist/CC 2015.5
