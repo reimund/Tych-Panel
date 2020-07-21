@@ -1,58 +1,51 @@
 'use strict';
 
-var gulp         = require('gulp')
-  , less         = require('gulp-less')
-  , autoprefixer = require('gulp-autoprefixer')
-  , plug         = require('gulp-load-plugins')()
-  , runSequence  = require('run-sequence')
-  , bowerFiles   = require('main-bower-files')
-  , _            = require('lodash')
+var gulp = require('gulp')
+  , less = require('gulp-less')
+  , plug = require('gulp-load-plugins')()
+  , _    = require('lodash')
 ;
 
 var config = {
-	bower: 'bower_components/',
     styles: 'src/styles',
     panel: ['src/CSXS/**/*', 'src/images/*', 'src/js/*', 'src/Icon.png', 'src/index.html', 'src/.debug'],
 };
 
-var bowerConfig = {
-	paths: {
-		bowerDirectory: config.bower,
-		bowerrc: '.bowerrc',
-		bowerJson: 'bower.json'
-	}
-};
-
-gulp.task('dist', ['concat'], function() {
-	return gulp.src(config.panel, { base: 'src' })
-		.pipe(gulp.dest('dist'))
-	;
-    //return gulp.src(config.styles + '/tychpanel.less')
-});
-
 gulp.task('concat', function() {
-	return gulp.src(bowerFiles(bowerConfig), { base: config.bower })
-		.pipe(plug.concat('bower.js'))	
+	// console.log(npmfiles(npmfilesConfig));
+	return gulp.src([
+			'node_modules/lodash/lodash.js',
+			'node_modules/jquery/dist/jquery.min.js'
+		])
+		.pipe(plug.concat('dependencies.js'))	
 		.pipe(gulp.dest('dist/js'))
 	;
 });
 
+gulp.task('copy', function() {
+	return gulp.src(config.panel, { base: 'src' })
+	// return gulp.src('src/images/*',)
+		.pipe(gulp.dest('dist'))
+	;
+});
+
+gulp.task('dist', gulp.series('concat', 'copy'));
+
 gulp.task('styles', function() {
     return gulp.src(config.styles + '/tychpanel.less')
 		.pipe(less({ paths: config.styles }))
-		.pipe(autoprefixer('last 2 version'))
 		.pipe(plug.rename({ basename: 'app' }))
 		.pipe(gulp.dest('dist/styles'))
 		.pipe(plug.notify({ message: 'Styles task complete' }))
 	;
 });
 
-gulp.task('serve', [], function() {
+gulp.task('serve', function() {
 	gulp.watch(_.concat(['./src/styles/**/*.less', config.panel]))
-		.on('change', function() { runSequence(['styles', 'dist']); })
+		.on('change', function() { gulp.series('styles', 'dist'); })
 	;
 });
 
-gulp.task('default', ['styles', 'dist'], function() {
+gulp.task('default', gulp.series('styles', 'dist'), function() {
 	// place code for your default task here
 });
