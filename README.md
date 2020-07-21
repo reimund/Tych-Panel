@@ -1,7 +1,7 @@
 Tych Panel 
 ==========
 
-Version 2.5.0 - Tue 7 Nov 2017
+Version 2.6.0 - Tue 21 Jul 2020
 
 by Reimund Trost <reimund@code7.se>  
 Website <http://lumens.se/tychpanel/>
@@ -28,7 +28,7 @@ corresponds to your Photoshop version.
 5. Restart Photoshop.
 6. Show the panel by going to __Window / Extensions / Tych Panel__.
 
-Building & testing (CC 2014, CC 2015, CC 2017, CC 2018) - Html5 panel
+Building & testing (CC 2014, CC 2015, CC 2017, CC 2018, CC 2019, CC 2020) - Html5 panel
 ---------------------------------------------------------------------
 
 1. Run __package-html__ to build the panel.
@@ -53,6 +53,10 @@ Installation (CS5, CS6, CC) - Flash panel
 
 Changelog
 =========
+
+2.6.0
+-----
+*   Added support for Adobe Photoshop CC 2019 && 2020 (upgraded to CEP 9).
 
 2.5.0
 -----
