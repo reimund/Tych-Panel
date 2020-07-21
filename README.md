@@ -18,7 +18,7 @@ Tych Panel is released as open source and licensed under the MIT license.
 
 Download & Install
 ------------------
-1. Download & unzip https://www.dropbox.com/s/za66403tbm8hds6/tychpanel-v2.6.0.zip?dl=1
+1. Download & unzip https://www.dropbox.com/s/05fwlesonv4sbeg/tychpanel-v2.6.0.zip?dl=1
 2. Run Photoshop as *administrator*.  
    **MacOS**: In terminal, run ´sudo /Applications/Adobe\ Photoshop\ CC\ 2018/Adobe\ Photoshop\ CC\ 2019.app/Contents/MacOS/Adobe\ Photoshop\ CC\ 2018´.  
    **Windows**: Right click Photoshop executable > Run as administrator. 
